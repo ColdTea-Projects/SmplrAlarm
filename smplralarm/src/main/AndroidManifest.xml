@@ -2,4 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.coldtea.smplr.smplralarm">
 
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+
+    <application>
+        <receiver android:name=".receivers.SmplrAlarmReceiver" />
+    </application>
+
 </manifest>
