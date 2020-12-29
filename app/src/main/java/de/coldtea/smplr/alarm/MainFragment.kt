@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.coldtea.smplr.alarm.databinding.FragmentMainBinding
+import de.coldtea.smplr.alarm.extensions.nowPlus
 import de.coldtea.smplr.alarm.lockscreenalarm.ActivityLockScreenAlarm
 import de.coldtea.smplr.smplralarm.smplrAlarmCancel
 import de.coldtea.smplr.smplralarm.smplrAlarmSet
@@ -29,6 +30,7 @@ class MainFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         binding = FragmentMainBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
@@ -37,19 +39,19 @@ class MainFragment : Fragment() {
         val cal = Calendar.getInstance()
 
         binding.setAlarm1.setOnClickListener {
-            requestCodeAlarm1 = createBasicNotificationWithFullScreenIntent(cal, 1)
+            requestCodeAlarm1 = createBasicNotificationWithFullScreenIntent(cal.nowPlus(1))
         }
 
         binding.setAlarm2.setOnClickListener {
-            requestCodeAlarm2 = createBasicNotificationWithFullScreenIntent(cal, 2)
+            requestCodeAlarm2 = createBasicNotificationWithFullScreenIntent(cal.nowPlus( 2))
         }
 
         binding.setAlarm3.setOnClickListener {
-            requestCodeAlarm3 = createBasicNotificationWithFullScreenIntent(cal, 3)
+            requestCodeAlarm3 = createBasicNotificationWithFullScreenIntent(cal.nowPlus(3))
         }
 
         binding.setAlarm4.setOnClickListener {
-            requestCodeAlarm4 = createBasicNotificationWithFullScreenIntent(cal, 4)
+            requestCodeAlarm4 = createBasicNotificationWithFullScreenIntent(cal.nowPlus(4))
         }
 
         binding.cancelAlarm1.setOnClickListener {
@@ -70,9 +72,9 @@ class MainFragment : Fragment() {
 
     }
 
-    private fun createBasicNotificationWithFullScreenIntent(cal: Calendar, delay: Int) = smplrAlarmSet(requireContext().applicationContext) {
-        hour { cal.get(Calendar.HOUR_OF_DAY) }
-        min { cal.get(Calendar.MINUTE) + delay }
+    private fun createBasicNotificationWithFullScreenIntent(timePair: Pair<Int,Int>) = smplrAlarmSet(requireContext().applicationContext) {
+        hour { timePair.first }
+        min { timePair.second }
         fullScreenIntent {
             Intent(
                 requireContext().applicationContext,
