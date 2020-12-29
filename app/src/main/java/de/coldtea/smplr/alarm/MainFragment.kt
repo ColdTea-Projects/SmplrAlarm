@@ -8,15 +8,19 @@ import android.view.View
 import android.view.ViewGroup
 import de.coldtea.smplr.alarm.databinding.FragmentMainBinding
 import de.coldtea.smplr.alarm.lockscreenalarm.ActivityLockScreenAlarm
+import de.coldtea.smplr.smplralarm.smplrAlarmCancel
 import de.coldtea.smplr.smplralarm.smplrAlarmSet
+import timber.log.Timber
 import java.util.*
 
-/**
- * A simple [Fragment] subclass as the default destination in the navigation.
- */
 class MainFragment : Fragment() {
 
     lateinit var binding: FragmentMainBinding
+
+    var requestCodeAlarm1 = -1
+    var requestCodeAlarm2 = -1
+    var requestCodeAlarm3 = -1
+    var requestCodeAlarm4 = -1
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,19 +37,35 @@ class MainFragment : Fragment() {
         val cal = Calendar.getInstance()
 
         binding.setAlarm1.setOnClickListener {
-            createBasicNotificationWithFullScreenIntent(cal, 1)
+            requestCodeAlarm1 = createBasicNotificationWithFullScreenIntent(cal, 1)
         }
 
         binding.setAlarm2.setOnClickListener {
-            createBasicNotificationWithFullScreenIntent(cal, 2)
+            requestCodeAlarm2 = createBasicNotificationWithFullScreenIntent(cal, 2)
         }
 
         binding.setAlarm3.setOnClickListener {
-            createBasicNotificationWithFullScreenIntent(cal, 3)
+            requestCodeAlarm3 = createBasicNotificationWithFullScreenIntent(cal, 3)
         }
 
         binding.setAlarm4.setOnClickListener {
-            createBasicNotificationWithFullScreenIntent(cal, 4)
+            requestCodeAlarm4 = createBasicNotificationWithFullScreenIntent(cal, 4)
+        }
+
+        binding.cancelAlarm1.setOnClickListener {
+            if(requestCodeAlarm1 != -1) cancelNotification(requestCodeAlarm1)
+        }
+
+        binding.cancelAlarm2.setOnClickListener {
+            if(requestCodeAlarm2 != -1) cancelNotification(requestCodeAlarm2)
+        }
+
+        binding.cancelAlarm3.setOnClickListener {
+            if(requestCodeAlarm3 != -1) cancelNotification(requestCodeAlarm3)
+        }
+
+        binding.cancelAlarm4.setOnClickListener {
+            if(requestCodeAlarm4 != -1) cancelNotification(requestCodeAlarm4)
         }
 
     }
@@ -59,6 +79,10 @@ class MainFragment : Fragment() {
                 ActivityLockScreenAlarm::class.java
             )
         }
+    }
+
+    private fun cancelNotification(requestCode: Int) = smplrAlarmCancel(requireContext().applicationContext){
+        requestCode { requestCode }
     }
 
 }

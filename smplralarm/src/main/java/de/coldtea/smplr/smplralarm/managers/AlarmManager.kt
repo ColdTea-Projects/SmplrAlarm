@@ -11,6 +11,7 @@ import de.coldtea.smplr.smplralarm.receivers.AlarmNotification
 import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiver
 import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiverObjects.Companion.SMPLR_ALARM_RECEIVER_INTENT_ID
 import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiverObjects.Companion.alarmNotification
+import timber.log.Timber
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
@@ -75,6 +76,7 @@ class AlarmManager(val context: Context) {
 
         val calendar = Calendar.getInstance()
         requestCode = calendar.getTimeExactForAlarmInMiliseconds(hour, min).toInt()
+        Timber.v("SmplrAlarm.AlarmManager.setAlarm: $requestCode -- $hour:$min")
 
         val pendingIntent = PendingIntent.getBroadcast(
             context,
@@ -107,6 +109,7 @@ class AlarmManager(val context: Context) {
     }
 
     fun cancelAlarm() {
+        Timber.v("SmplrAlarm.AlarmManager.cancelAlarm: $requestCode -- $hour:$min")
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val pendingIntent = PendingIntent.getBroadcast(
             context,
