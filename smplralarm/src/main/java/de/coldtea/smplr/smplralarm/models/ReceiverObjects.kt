@@ -1,17 +1,21 @@
 package de.coldtea.smplr.smplralarm.receivers
 
 import android.content.Intent
-import androidx.core.app.NotificationCompat
+import androidx.annotation.DrawableRes
+import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
+import de.coldtea.smplr.smplralarm.models.NotificationItem
 
 internal class SmplrAlarmReceiverObjects {
-    companion object{
+    companion object {
         const val SMPLR_ALARM_RECEIVER_INTENT_ID = "smplr_alarm_receiver_intent_id"
-        var notificationBuilders: MutableList<NotificationBuilderItem> = mutableListOf()
+        var alarmNotification: MutableList<AlarmNotification> = mutableListOf()
     }
 }
 
-data class NotificationBuilderItem(
-        val notificationBuilderId: Int,
-        val notificationBuilder: NotificationCompat.Builder,
-        val intent: Intent
-        )
+data class AlarmNotification(
+    val alarmNotificationId: Int,
+    val notificationChannelItem: NotificationChannelItem,
+    val notificationItem: NotificationItem,
+    val intent: Intent?,
+    val fullScreenIntent: Intent?
+)

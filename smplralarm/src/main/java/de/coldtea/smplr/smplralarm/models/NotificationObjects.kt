@@ -21,10 +21,5 @@ data class NotificationItem(
 
 data class IntentNotificationItem(
     val intent: Intent,
-    @DrawableRes
-    val smallIcon: Int,
-    val title: String,
-    val message: String,
-    val bigText: String,
-    val autoCancel: Boolean
+    val notificationItem: NotificationItem
 )

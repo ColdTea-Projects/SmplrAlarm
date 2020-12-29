@@ -16,14 +16,14 @@ import de.coldtea.smplr.smplralarm.models.NotificationItem
 private fun Context.initChannelAndReturnName(notificationChannelItem: NotificationChannelItem): String =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val channelId = packageName
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         with(notificationChannelItem){
-
-            val channel = NotificationChannel(channelId, name, importance)
-            channel.description = description
-            channel.setShowBadge(showBadge)
-            this@initChannelAndReturnName.getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
-
+            val channel = NotificationChannel(channelId, name, importance).apply {
+                description = description
+                setShowBadge(showBadge)
+            }
+            notificationManager.createNotificationChannel(channel)
         }
 
         channelId
@@ -33,15 +33,15 @@ fun Context.showNotificationWithIntent(notificationChannelItem: NotificationChan
 
     val channelId = initChannelAndReturnName(notificationChannelItem)
     val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    val pendingIntent = getFullScreenIntent(intentNotificationItem.intent)
 
     val notification = NotificationCompat.Builder(this, channelId).apply {
         priority = NotificationCompat.PRIORITY_HIGH
 
-        setSmallIcon(intentNotificationItem.smallIcon)
-        setContentTitle(intentNotificationItem.title)
-        setContentText(intentNotificationItem.message)
-        setAutoCancel(intentNotificationItem.autoCancel)
-        setFullScreenIntent(intentNotificationItem.intent.getFullScreenIntent(this@showNotificationWithIntent), true)
+        setSmallIcon(intentNotificationItem.notificationItem.smallIcon)
+        setContentTitle(intentNotificationItem.notificationItem.title)
+        setContentText(intentNotificationItem.notificationItem.message)
+        setFullScreenIntent(pendingIntent, true)
     }.build()
 
     notificationManager.notify(0, notification)
@@ -72,7 +72,7 @@ private fun Context.createNotification(notificationChannelItem: NotificationChan
 
 }
 
-private fun Intent.getFullScreenIntent(context: Context): PendingIntent = PendingIntent.getActivity(context, 0, this, 0)
+private fun Context.getFullScreenIntent(intent: Intent): PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
 
 
 private const val CHANNEL_ID = "channelId"

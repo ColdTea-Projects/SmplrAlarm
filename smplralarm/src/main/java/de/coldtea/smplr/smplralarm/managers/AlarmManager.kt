@@ -1,28 +1,32 @@
-package de.coldtea.smplr.smplralarm
+package de.coldtea.smplr.smplralarm.managers
 
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import androidx.core.app.NotificationCompat
 import de.coldtea.smplr.smplralarm.extensions.getTimeExactForAlarmInMiliseconds
-import de.coldtea.smplr.smplralarm.receivers.NotificationBuilderItem
+import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
+import de.coldtea.smplr.smplralarm.models.NotificationItem
+import de.coldtea.smplr.smplralarm.receivers.AlarmNotification
 import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiver
 import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiverObjects.Companion.SMPLR_ALARM_RECEIVER_INTENT_ID
-import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiverObjects.Companion.notificationBuilders
+import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiverObjects.Companion.alarmNotification
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 
-class SmplrAlarmManager(val context: Context) {
+class AlarmManager(val context: Context) {
 
     //region properties
 
     var hour = -1
     var min = -1
     var requestCode = -1
-    var notificationBuilder: NotificationCompat.Builder? = null
-    var intent : Intent? = null
+    var intent: Intent? = null
+    var fullScreenIntent: Intent? = null
+
+    var notificationChannel: NotificationChannelItem? = null
+    var notification: NotificationItem? = null
 
     //endregion
 
@@ -43,10 +47,6 @@ class SmplrAlarmManager(val context: Context) {
         this.min = min()
     }
 
-    fun notificationBuilder(notificationBuilder: () -> NotificationCompat.Builder) {
-        this.notificationBuilder = notificationBuilder()
-    }
-
     fun requestCode(requestCode: () -> Int) {
         this.requestCode = requestCode()
     }
@@ -55,6 +55,17 @@ class SmplrAlarmManager(val context: Context) {
         this.intent = intent()
     }
 
+    fun fullScreenIntent(fullScreenIntent: () -> Intent) {
+        this.fullScreenIntent = fullScreenIntent()
+    }
+
+    fun notificationChannel(notificationChannel: () -> NotificationChannelItem) {
+        this.notificationChannel = notificationChannel()
+    }
+
+    fun notification(notification: () -> NotificationItem) {
+        this.notification = notification()
+    }
 
     // endregion
 
@@ -64,37 +75,44 @@ class SmplrAlarmManager(val context: Context) {
 
         val calendar = Calendar.getInstance()
         requestCode = calendar.getTimeExactForAlarmInMiliseconds(hour, min).toInt()
+
         val pendingIntent = PendingIntent.getBroadcast(
-                context,
-                requestCode,
-                SmplrAlarmReceiver.build(context).putExtra(SMPLR_ALARM_RECEIVER_INTENT_ID, requestCode),
-                PendingIntent.FLAG_UPDATE_CURRENT
+            context,
+            requestCode,
+            SmplrAlarmReceiver.build(context).putExtra(SMPLR_ALARM_RECEIVER_INTENT_ID, requestCode),
+            PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        val notifiactionBuilderItem = NotificationBuilderItem(
-                requestCode,
-                this.notificationBuilder as NotificationCompat.Builder,
-                intent as Intent
-        )
 
-        notificationBuilders.add(notifiactionBuilderItem)
+        val notifiactionBuilderItem = AlarmNotification(
+            requestCode,
+            notificationChannel
+                ?: ChannelManager().build(),
+            notification
+                ?: AlarmNotificationManager().build(),
+            intent,
+            fullScreenIntent
+            )
+
+        alarmNotification.add(notifiactionBuilderItem)
 
         alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                DUMMY_ALARM_DURATION.setAlarmIn(),//calendar.getTimeExactForAlarmInMiliseconds(hour, min),
-                pendingIntent
+            AlarmManager.RTC_WAKEUP,
+            calendar.getTimeExactForAlarmInMiliseconds(hour, min),//DUMMY_ALARM_DURATION.setAlarmIn(),//
+            pendingIntent
         )
 
         return requestCode
+
     }
 
     fun cancelAlarm() {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val pendingIntent = PendingIntent.getBroadcast(
-                context,
-                requestCode,
-                Intent(context, SmplrAlarmReceiver::class.java),
-                PendingIntent.FLAG_NO_CREATE
+            context,
+            requestCode,
+            Intent(context, SmplrAlarmReceiver::class.java),
+            PendingIntent.FLAG_NO_CREATE
         )
 
         alarmManager.cancel(pendingIntent)
