@@ -79,6 +79,9 @@ class MainFragment : Fragment() {
                 ActivityLockScreenAlarm::class.java
             )
         }
+        onAlarmRings{
+                alarmId -> Timber.i("SmplrAlarmApp.MainFragment.onAlarmRings: $alarmId")
+        }
     }
 
     private fun cancelNotification(requestCode: Int) = smplrAlarmCancel(requireContext().applicationContext){

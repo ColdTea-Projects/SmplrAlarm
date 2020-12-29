@@ -20,6 +20,8 @@ internal class SmplrAlarmReceiver : BroadcastReceiver() {
                     it.alarmNotificationId == intent.getIntExtra(SMPLR_ALARM_RECEIVER_INTENT_ID, 0)
                 }?.let {
 
+                    it.alarmRingEvent?.invoke(it.alarmNotificationId)
+
                     if (it.fullScreenIntent != null){
                         val cal = Calendar.getInstance()
                         Timber.i("SmplrAlarm.SmplrAlarmReceiver.fullScreenIntent: ${it.alarmNotificationId} -- ${cal.get(Calendar.HOUR_OF_DAY)}:${cal.get(Calendar.MINUTE)}")

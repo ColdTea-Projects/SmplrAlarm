@@ -2,6 +2,7 @@ package de.coldtea.smplr.smplralarm.receivers
 
 import android.content.Intent
 import androidx.annotation.DrawableRes
+import de.coldtea.smplr.smplralarm.managers.AlarmRingEvent
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 
@@ -17,5 +18,6 @@ data class AlarmNotification(
     val notificationChannelItem: NotificationChannelItem,
     val notificationItem: NotificationItem,
     val intent: Intent?,
-    val fullScreenIntent: Intent?
+    val fullScreenIntent: Intent?,
+    val alarmRingEvent: AlarmRingEvent?
 )

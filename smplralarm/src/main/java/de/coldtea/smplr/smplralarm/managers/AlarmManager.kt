@@ -15,6 +15,7 @@ import timber.log.Timber
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
+typealias AlarmRingEvent = (Int) -> Unit
 
 class AlarmManager(val context: Context) {
 
@@ -28,6 +29,8 @@ class AlarmManager(val context: Context) {
 
     var notificationChannel: NotificationChannelItem? = null
     var notification: NotificationItem? = null
+
+    var alarmRingEvent: AlarmRingEvent? = null
 
     //endregion
 
@@ -68,6 +71,10 @@ class AlarmManager(val context: Context) {
         this.notification = notification()
     }
 
+    fun onAlarmRings(alarmRingEvent: AlarmRingEvent) {
+        this.alarmRingEvent = alarmRingEvent
+    }
+
     // endregion
 
     // region functionalities
@@ -93,14 +100,18 @@ class AlarmManager(val context: Context) {
             notification
                 ?: AlarmNotificationManager().build(),
             intent,
-            fullScreenIntent
-            )
+            fullScreenIntent,
+            alarmRingEvent
+        )
 
         alarmNotification.add(notifiactionBuilderItem)
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            calendar.getTimeExactForAlarmInMiliseconds(hour, min),//DUMMY_ALARM_DURATION.setAlarmIn(),//
+            calendar.getTimeExactForAlarmInMiliseconds(
+                hour,
+                min
+            ),//DUMMY_ALARM_DURATION.setAlarmIn(),//
             pendingIntent
         )
 
