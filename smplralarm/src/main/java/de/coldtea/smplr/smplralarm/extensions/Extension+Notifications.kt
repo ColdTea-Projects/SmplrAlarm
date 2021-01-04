@@ -48,10 +48,11 @@ fun Context.showNotificationWithIntent(notificationChannelItem: NotificationChan
 
 }
 
-private fun Context.createNotification(notificationChannelItem: NotificationChannelItem, notificationItem: NotificationItem): NotificationCompat.Builder {
+fun Context.showNotification(notificationChannelItem: NotificationChannelItem, notificationItem: NotificationItem) {
     val channelId = initChannelAndReturnName(notificationChannelItem)
+    val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    return NotificationCompat.Builder(this, channelId).apply {
+    val notification =  NotificationCompat.Builder(this, channelId).apply {
         priority = NotificationCompat.PRIORITY_HIGH
         with(notificationItem){
             setSmallIcon(smallIcon)//R.drawable.ic_baseline_child_care_24) // 3
@@ -60,15 +61,10 @@ private fun Context.createNotification(notificationChannelItem: NotificationChan
             setStyle(NotificationCompat.BigTextStyle().bigText(bigText)) // 6
             priority = NotificationCompat.PRIORITY_DEFAULT // 7
             setAutoCancel(autoCancel) // 8
-
-//            val intent = Intent(this, ActivityMain::class.java)
-//            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-//
-//            val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
-//
-//            setContentIntent(pendingIntent)
         }
-    }
+    }.build()
+
+    notificationManager.notify(0, notification)
 
 }
 

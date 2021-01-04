@@ -36,22 +36,33 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val cal = Calendar.getInstance()
 
         binding.setAlarm1.setOnClickListener {
+
+            val cal = Calendar.getInstance()
             requestCodeAlarm1 = createBasicNotificationWithFullScreenIntent(cal.nowPlus(1))
+
         }
 
         binding.setAlarm2.setOnClickListener {
+
+            val cal = Calendar.getInstance()
             requestCodeAlarm2 = createBasicNotificationWithFullScreenIntent(cal.nowPlus( 2))
+
         }
 
         binding.setAlarm3.setOnClickListener {
+
+            val cal = Calendar.getInstance()
             requestCodeAlarm3 = createBasicNotificationWithFullScreenIntent(cal.nowPlus(3))
+
         }
 
         binding.setAlarm4.setOnClickListener {
-            requestCodeAlarm4 = createBasicNotificationWithFullScreenIntent(cal.nowPlus(4))
+
+            val cal = Calendar.getInstance()
+            requestCodeAlarm4 = createBasicNotificationWithFullScreenIntent(cal.nowPlus(40))
+
         }
 
         binding.cancelAlarm1.setOnClickListener {

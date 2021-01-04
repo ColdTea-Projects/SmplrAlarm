@@ -8,9 +8,11 @@ import de.coldtea.smplr.smplralarm.extensions.getTimeExactForAlarmInMiliseconds
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 import de.coldtea.smplr.smplralarm.receivers.AlarmNotification
-import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiver
+import de.coldtea.smplr.smplralarm.receivers.AlarmReceiver
 import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiverObjects.Companion.SMPLR_ALARM_RECEIVER_INTENT_ID
 import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiverObjects.Companion.alarmNotification
+import de.coldtea.smplr.smplralarm.repository.AlarmNotificationRepository
+import kotlinx.coroutines.*
 import timber.log.Timber
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
@@ -38,6 +40,10 @@ class AlarmManager(val context: Context) {
 
     private val alarmManager: AlarmManager by lazy {
         context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    }
+
+    private val alarmNotificationRepository: AlarmNotificationRepository by lazy {
+        AlarmNotificationRepository(context)
     }
 
     // endregion
@@ -88,7 +94,7 @@ class AlarmManager(val context: Context) {
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             requestCode,
-            SmplrAlarmReceiver.build(context).putExtra(SMPLR_ALARM_RECEIVER_INTENT_ID, requestCode),
+            AlarmReceiver.build(context).putExtra(SMPLR_ALARM_RECEIVER_INTENT_ID, requestCode),
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
@@ -103,6 +109,10 @@ class AlarmManager(val context: Context) {
             fullScreenIntent,
             alarmRingEvent
         )
+
+        CoroutineScope(Dispatchers.IO).launch {
+            alarmNotificationRepository.insertAlarmNotification(notifiactionBuilderItem)
+        }
 
         alarmNotification.add(notifiactionBuilderItem)
 
@@ -125,11 +135,15 @@ class AlarmManager(val context: Context) {
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             requestCode,
-            Intent(context, SmplrAlarmReceiver::class.java),
+            Intent(context, AlarmReceiver::class.java),
             PendingIntent.FLAG_NO_CREATE
         )
 
         alarmManager.cancel(pendingIntent)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            alarmNotificationRepository.deleteAlarmNotification(requestCode)
+        }
     }
 
     private fun Int.setAlarmIn() = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(toLong())

@@ -3,9 +3,18 @@
     package="de.coldtea.smplr.smplralarm">
 
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application>
-        <receiver android:name=".receivers.SmplrAlarmReceiver" />
+        <receiver android:name=".receivers.AlarmReceiver" />
+
+        <receiver android:name=".receivers.RebootReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
