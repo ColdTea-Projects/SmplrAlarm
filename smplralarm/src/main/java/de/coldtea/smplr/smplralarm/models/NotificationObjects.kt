@@ -20,6 +20,6 @@ data class NotificationItem(
 )
 
 data class IntentNotificationItem(
-    val intent: Intent,
+    val intent: Intent?,
     val notificationItem: NotificationItem
 )

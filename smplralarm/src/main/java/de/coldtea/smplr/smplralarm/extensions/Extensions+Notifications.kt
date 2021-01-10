@@ -68,7 +68,7 @@ fun Context.showNotification(notificationChannelItem: NotificationChannelItem, n
 
 }
 
-private fun Context.getFullScreenIntent(intent: Intent): PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+private fun Context.getFullScreenIntent(intent: Intent?): PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
 
 
 private const val CHANNEL_ID = "channelId"

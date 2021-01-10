@@ -5,8 +5,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import de.coldtea.smplr.smplralarm.extensions.showNotification
+import de.coldtea.smplr.smplralarm.extensions.showNotificationWithIntent
 import de.coldtea.smplr.smplralarm.managers.AlarmNotificationManager
 import de.coldtea.smplr.smplralarm.managers.ChannelManager
+import de.coldtea.smplr.smplralarm.models.IntentNotificationItem
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 import de.coldtea.smplr.smplralarm.repository.AlarmNotificationRepository
@@ -26,25 +28,23 @@ internal class AlarmReceiver : BroadcastReceiver() {
 
                 if(requestId == -1) return
 
+
+
+
+
                 CoroutineScope(Dispatchers.IO).launch {
+                    val alarmNotification = repository.getAlarmNotification(requestId)
+
+                    context.showNotificationWithIntent(
+                        alarmNotification.notificationChannelItem,
+                        IntentNotificationItem(
+                            alarmNotification.fullScreenIntent,
+                            alarmNotification.notificationItem
+                        )
+                    )
+
                     repository.deleteAlarmNotification(requestId)
                 }
-
-                context.showNotification(
-                    NotificationChannelItem(
-                        NotificationManager.IMPORTANCE_HIGH,
-                        true,
-                        ChannelManager.SMPLR_ALARM_CHANNEL_DEFAULT_NAME,
-                        ChannelManager.SMPLR_ALARM_CHANNEL_DEFAULT_DESCRIPTION
-                    ),
-                    NotificationItem(
-                        android.R.drawable.ic_lock_idle_alarm,
-                        AlarmNotificationManager.SMPLR_ALARM_CHANNEL_DEFAULT_TITLE,
-                        AlarmNotificationManager.SMPLR_ALARM_CHANNEL_DEFAULT_MESSAGE,
-                        AlarmNotificationManager.SMPLR_ALARM_CHANNEL_DEFAULT_BIG_TEXT,
-                        true
-                    )
-                )
 //
 //                alarmNotification.find {
 //                    it.alarmNotificationId == intent.getIntExtra(SMPLR_ALARM_RECEIVER_INTENT_ID, 0)

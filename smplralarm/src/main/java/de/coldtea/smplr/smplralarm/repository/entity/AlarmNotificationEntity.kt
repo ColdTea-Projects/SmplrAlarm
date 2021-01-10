@@ -8,9 +8,5 @@ import androidx.room.PrimaryKey
 data class AlarmNotificationEntity(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "alarm_notification_id")
-    val alarmNotificationId: Int,
-    @ColumnInfo(name = "intent_id")
-    val intentId: Int,
-    @ColumnInfo(name = "full_screen_intent_id")
-    val fullScreenIntentId: Int,
+    val alarmNotificationId: Int
 )

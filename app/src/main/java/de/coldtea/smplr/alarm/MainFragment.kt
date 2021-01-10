@@ -38,30 +38,57 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.setAlarm1.setOnClickListener {
+            val intent = Intent(
+                requireContext().applicationContext,
+                ActivityLockScreenAlarm::class.java
+            )
+
+            intent.putExtra("SmplrText", "You did it, you crazy bastard you did it!")
 
             val cal = Calendar.getInstance()
-            requestCodeAlarm1 = createBasicNotificationWithFullScreenIntent(cal.nowPlus(1))
+            requestCodeAlarm1 = createBasicNotificationWithFullScreenIntent(cal.nowPlus(1), intent)
 
         }
 
         binding.setAlarm2.setOnClickListener {
+            val intent = Intent(
+                requireContext().applicationContext,
+                ActivityLockScreenAlarm::class.java
+            )
+
+            intent.putExtra("SmplrText", "You did it, you crazy bastard you did it!")
+
 
             val cal = Calendar.getInstance()
-            requestCodeAlarm2 = createBasicNotificationWithFullScreenIntent(cal.nowPlus( 2))
+            requestCodeAlarm2 = createBasicNotificationWithFullScreenIntent(cal.nowPlus( 2), intent)
 
         }
 
         binding.setAlarm3.setOnClickListener {
+            val intent = Intent(
+                requireContext().applicationContext,
+                ActivityLockScreenAlarm::class.java
+            )
+
+            intent.putExtra("SmplrText", "You did it, you crazy bastard you did it!")
+
 
             val cal = Calendar.getInstance()
-            requestCodeAlarm3 = createBasicNotificationWithFullScreenIntent(cal.nowPlus(3))
+            requestCodeAlarm3 = createBasicNotificationWithFullScreenIntent(cal.nowPlus(3), intent)
 
         }
 
         binding.setAlarm4.setOnClickListener {
+            val intent = Intent(
+                requireContext().applicationContext,
+                ActivityLockScreenAlarm::class.java
+            )
+
+            intent.putExtra("SmplrText", "You did it, you crazy bastard you did it!")
+
 
             val cal = Calendar.getInstance()
-            requestCodeAlarm4 = createBasicNotificationWithFullScreenIntent(cal.nowPlus(40))
+            requestCodeAlarm4 = createBasicNotificationWithFullScreenIntent(cal.nowPlus(4), intent)
 
         }
 
@@ -83,14 +110,11 @@ class MainFragment : Fragment() {
 
     }
 
-    private fun createBasicNotificationWithFullScreenIntent(timePair: Pair<Int,Int>) = smplrAlarmSet(requireContext().applicationContext) {
+    private fun createBasicNotificationWithFullScreenIntent(timePair: Pair<Int,Int>, intent: Intent) = smplrAlarmSet(requireContext().applicationContext) {
         hour { timePair.first }
         min { timePair.second }
         fullScreenIntent {
-            Intent(
-                requireContext().applicationContext,
-                ActivityLockScreenAlarm::class.java
-            )
+            intent
         }
         onAlarmRings{
                 alarmId -> Timber.i("SmplrAlarmApp.MainFragment.onAlarmRings: $alarmId")

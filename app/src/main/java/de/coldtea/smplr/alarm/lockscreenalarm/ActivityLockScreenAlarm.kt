@@ -14,6 +14,9 @@ class ActivityLockScreenAlarm : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         binding = ActivityLockScreenAlarmBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val a = intent.getStringExtra("SmplrText")
+        binding.textView.append(a)
+
         activateLockScreen()
     }
 

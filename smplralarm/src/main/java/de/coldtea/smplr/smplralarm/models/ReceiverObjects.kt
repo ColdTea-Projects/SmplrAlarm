@@ -26,11 +26,9 @@ data class AlarmNotification(
     val alarmRingEvent: AlarmRingEvent?
 )
 
-fun AlarmNotification.extractAlarmNotificationEntity(intentId: Int, fullScreenIntentId: Int): AlarmNotificationEntity =
+fun AlarmNotification.extractAlarmNotificationEntity(): AlarmNotificationEntity =
     AlarmNotificationEntity(
-        alarmNotificationId,
-        intentId,
-        fullScreenIntentId
+        alarmNotificationId
     )
 
 fun AlarmNotification.extractNotificationEntity(fkAlarmNotificationId: Int): NotificationEntity =
