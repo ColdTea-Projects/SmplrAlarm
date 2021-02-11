@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
 
 typealias AlarmRingEvent = (Int) -> Unit
 
-class AlarmManager(val context: Context) {
+class SmplrAlarmManager(val context: Context) {
 
     //region properties
 
@@ -101,6 +101,8 @@ class AlarmManager(val context: Context) {
 
         val notifiactionBuilderItem = AlarmNotification(
             requestCode,
+            hour,
+            min,
             notificationChannel
                 ?: ChannelManager().build(),
             notification

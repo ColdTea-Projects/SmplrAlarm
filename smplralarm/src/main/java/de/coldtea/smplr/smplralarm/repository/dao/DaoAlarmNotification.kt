@@ -13,4 +13,8 @@ abstract class DaoAlarmNotification : DaoBase<AlarmNotificationEntity> {
     @Query("SELECT * From alarm_notification_table WHERE alarm_notification_id = :alarmNotificaionId")
     abstract suspend fun getAlarmNotification(alarmNotificaionId: Int) : List<AlarmNotifications>
 
+    @Transaction
+    @Query("SELECT * From alarm_notification_table")
+    abstract suspend fun getAllAlarmNotification() : List<AlarmNotifications>
+
 }

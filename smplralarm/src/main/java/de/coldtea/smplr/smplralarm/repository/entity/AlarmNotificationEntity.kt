@@ -8,5 +8,9 @@ import androidx.room.PrimaryKey
 data class AlarmNotificationEntity(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "alarm_notification_id")
-    val alarmNotificationId: Int
+    val alarmNotificationId: Int,
+    @ColumnInfo(name = "hour")
+    val hour: Int,
+    @ColumnInfo(name = "min")
+    val min: Int
 )

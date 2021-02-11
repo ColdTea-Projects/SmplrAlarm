@@ -42,12 +42,27 @@ class AlarmNotificationRepository(
 
         return AlarmNotification(
             intentId,
+            alarmNotification.alarmNotificationEntity.hour,
+            alarmNotification.alarmNotificationEntity.min,
             alarmNotification.notificationChannelEntity.convertToNotificationChannelItem(),
             alarmNotification.notificationEntity.convertToNotificationItem(),
             null,
             retrieveIntent(SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX, intentId)
         ) {}//TODO: implement intents
     }
+
+    suspend fun getAllAlarmNotifications(): List<AlarmNotification> =
+        alarmNotificationDatabase.daoAlarmNotification.getAllAlarmNotification().map { alarmNotification ->
+            AlarmNotification(
+                alarmNotification.alarmNotificationEntity.alarmNotificationId,
+                alarmNotification.alarmNotificationEntity.hour,
+                alarmNotification.alarmNotificationEntity.min,
+                alarmNotification.notificationChannelEntity.convertToNotificationChannelItem(),
+                alarmNotification.notificationEntity.convertToNotificationItem(),
+                null,
+                retrieveIntent(SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX, alarmNotification.alarmNotificationEntity.alarmNotificationId)
+            ) {}
+        }
 
     suspend fun deleteAlarmNotification(intentId: Int) {
 
@@ -98,6 +113,8 @@ class AlarmNotificationRepository(
         }catch (ex: URISyntaxException){
             null
         }
+
+
 
 
     companion object{

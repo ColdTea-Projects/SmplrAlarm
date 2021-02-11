@@ -19,6 +19,8 @@ internal class SmplrAlarmReceiverObjects {
 
 data class AlarmNotification(
     val alarmNotificationId: Int,
+    val hour: Int,
+    val min: Int,
     val notificationChannelItem: NotificationChannelItem,
     val notificationItem: NotificationItem,
     val intent: Intent?,
@@ -28,7 +30,9 @@ data class AlarmNotification(
 
 fun AlarmNotification.extractAlarmNotificationEntity(): AlarmNotificationEntity =
     AlarmNotificationEntity(
-        alarmNotificationId
+        alarmNotificationId,
+        hour,
+        min
     )
 
 fun AlarmNotification.extractNotificationEntity(fkAlarmNotificationId: Int): NotificationEntity =

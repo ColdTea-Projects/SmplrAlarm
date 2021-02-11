@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import de.coldtea.smplr.alarm.databinding.FragmentMainBinding
 import de.coldtea.smplr.alarm.extensions.nowPlus
 import de.coldtea.smplr.alarm.lockscreenalarm.ActivityLockScreenAlarm
@@ -46,7 +48,10 @@ class MainFragment : Fragment() {
             intent.putExtra("SmplrText", "You did it, you crazy bastard you did it!")
 
             val cal = Calendar.getInstance()
-            requestCodeAlarm1 = createBasicNotificationWithFullScreenIntent(cal.nowPlus(1), intent)
+            val hourMin = cal.nowPlus(1)
+            requestCodeAlarm1 = createBasicNotificationWithFullScreenIntent(hourMin, intent)
+
+            Toast.makeText(requireContext(), "${hourMin.first}:${hourMin.second}", LENGTH_SHORT).show()
 
         }
 
@@ -60,7 +65,11 @@ class MainFragment : Fragment() {
 
 
             val cal = Calendar.getInstance()
+            val hourMin = cal.nowPlus(2)
             requestCodeAlarm2 = createBasicNotificationWithFullScreenIntent(cal.nowPlus( 2), intent)
+
+            Toast.makeText(requireContext(), "${hourMin.first}:${hourMin.second}", LENGTH_SHORT).show()
+
 
         }
 
@@ -74,7 +83,10 @@ class MainFragment : Fragment() {
 
 
             val cal = Calendar.getInstance()
+            val hourMin = cal.nowPlus(3)
             requestCodeAlarm3 = createBasicNotificationWithFullScreenIntent(cal.nowPlus(3), intent)
+
+            Toast.makeText(requireContext(), "${hourMin.first}:${hourMin.second}", LENGTH_SHORT).show()
 
         }
 
@@ -88,7 +100,11 @@ class MainFragment : Fragment() {
 
 
             val cal = Calendar.getInstance()
+            val hourMin = cal.nowPlus(4)
             requestCodeAlarm4 = createBasicNotificationWithFullScreenIntent(cal.nowPlus(4), intent)
+
+            Toast.makeText(requireContext(), "${hourMin.first}:${hourMin.second}", LENGTH_SHORT).show()
+
 
         }
 
