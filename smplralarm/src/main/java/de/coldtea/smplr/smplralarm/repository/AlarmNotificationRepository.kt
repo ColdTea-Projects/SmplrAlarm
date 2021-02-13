@@ -14,6 +14,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.lang.Exception
 import java.net.URISyntaxException
+import java.util.*
 
 class AlarmNotificationRepository(
     private val context: Context
@@ -71,6 +72,16 @@ class AlarmNotificationRepository(
         alarmNotificationDatabase.daoNotificationChannel.delete(alarmNotification.notificationChannelEntity)
         alarmNotificationDatabase.daoNotification.delete(alarmNotification.notificationEntity)
         alarmNotificationDatabase.daoAlarmNotification.delete(alarmNotification.alarmNotificationEntity)
+
+    }
+
+    suspend fun deleteAlarmsBeforeNow(){
+
+        val calendar = Calendar.getInstance()
+
+        alarmNotificationDatabase.daoNotificationChannel.deleteNotificationBefore(calendar.timeInMillis.toInt())
+        alarmNotificationDatabase.daoNotification.deleteNotificationBefore(calendar.timeInMillis.toInt())
+        alarmNotificationDatabase.daoAlarmNotification.deleteNotificationBefore(calendar.timeInMillis.toInt())
 
     }
 

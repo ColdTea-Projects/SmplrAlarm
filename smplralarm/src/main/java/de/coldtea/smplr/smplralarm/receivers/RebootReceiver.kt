@@ -30,7 +30,8 @@ internal class RebootReceiver : BroadcastReceiver() {
             val calendar = Calendar.getInstance()
 
             CoroutineScope(Dispatchers.IO).launch {
-                val alarms = AlarmNotificationRepository(context).getAllAlarmNotifications()
+                val notificationRepository = AlarmNotificationRepository(context)
+                val alarms = notificationRepository.getAllAlarmNotifications()
 
                 alarms.map {
                     val pendingIntent = PendingIntent.getBroadcast(
@@ -52,6 +53,8 @@ internal class RebootReceiver : BroadcastReceiver() {
                         pendingIntent
                     )
                 }
+
+                notificationRepository.deleteAlarmsBeforeNow()
             }
 
         } catch (e: Exception) {

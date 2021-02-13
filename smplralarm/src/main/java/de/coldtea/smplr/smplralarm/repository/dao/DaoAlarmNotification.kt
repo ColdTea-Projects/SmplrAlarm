@@ -17,4 +17,7 @@ abstract class DaoAlarmNotification : DaoBase<AlarmNotificationEntity> {
     @Query("SELECT * From alarm_notification_table")
     abstract suspend fun getAllAlarmNotification() : List<AlarmNotifications>
 
+    @Query("DELETE From alarm_notification_table WHERE alarm_notification_id < :timestamp" )
+    abstract suspend fun deleteNotificationBefore(timestamp: Int)
+
 }

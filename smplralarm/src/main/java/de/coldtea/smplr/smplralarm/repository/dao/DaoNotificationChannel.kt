@@ -8,6 +8,9 @@ import de.coldtea.smplr.smplralarm.repository.entity.NotificationChannelEntity
 abstract class DaoNotificationChannel : DaoBase<NotificationChannelEntity> {
 
     @Query("SELECT * From notification_channel_table")
-    abstract fun getNotificationChannel() : List<NotificationChannelEntity>
+    abstract suspend fun getNotificationChannel() : List<NotificationChannelEntity>
+
+    @Query("DELETE From notification_channel_table WHERE fk_alarm_notification_id < :timestamp" )
+    abstract suspend fun deleteNotificationBefore(timestamp: Int)
 
 }

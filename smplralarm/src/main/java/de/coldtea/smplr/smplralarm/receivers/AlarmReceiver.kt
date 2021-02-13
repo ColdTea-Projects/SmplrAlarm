@@ -24,13 +24,9 @@ internal class AlarmReceiver : BroadcastReceiver() {
                 val repository = AlarmNotificationRepository(context)
                 val requestId = intent.getIntExtra(SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID, -1)
 
-                Timber.v("SmplrAlarm.AlarmReceiver.onReceive: $requestId")
+                Timber.v("SmplrAlarm.AlarmReceiver.onReceive --> $requestId")
 
                 if(requestId == -1) return
-
-
-
-
 
                 CoroutineScope(Dispatchers.IO).launch {
                     val alarmNotification = repository.getAlarmNotification(requestId)
@@ -45,25 +41,8 @@ internal class AlarmReceiver : BroadcastReceiver() {
 
                     repository.deleteAlarmNotification(requestId)
                 }
-//
-//                alarmNotification.find {
-//                    it.alarmNotificationId == intent.getIntExtra(SMPLR_ALARM_RECEIVER_INTENT_ID, 0)
-//                }?.let {
-//
-//                    it.alarmRingEvent?.invoke(it.alarmNotificationId)
-//
-//                    if (it.fullScreenIntent != null){
-//                        val cal = Calendar.getInstance()
-//                        Timber.i("SmplrAlarm.SmplrAlarmReceiver.fullScreenIntent: ${it.alarmNotificationId} -- ${cal.get(Calendar.HOUR_OF_DAY)}:${cal.get(Calendar.MINUTE)}")
-//                        context.showNotificationWithIntent(
-//                            it.notificationChannelItem,
-//                            IntentNotificationItem(it.fullScreenIntent, it.notificationItem)
-//                        )
-//                    }
-//
-//                }
             } catch (e: Exception) {
-                Timber.e("SmplrAlarm.AlarmReceiver.onReceive: $e")
+                Timber.e("SmplrAlarm.AlarmReceiver.onReceive: exception --> $e")
             }
     }
 
