@@ -48,7 +48,8 @@ internal class RebootReceiver : BroadcastReceiver() {
                         AlarmManager.RTC_WAKEUP,
                         calendar.getTimeExactForAlarmInMiliseconds(
                             it.hour,
-                            it.min
+                            it.min,
+                            it.weekDays
                         ),
                         pendingIntent
                     )

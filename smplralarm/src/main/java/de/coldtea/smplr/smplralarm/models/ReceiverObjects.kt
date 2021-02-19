@@ -3,9 +3,12 @@ package de.coldtea.smplr.smplralarm.receivers
 import android.app.NotificationChannelGroup
 import android.content.Intent
 import androidx.annotation.DrawableRes
+import de.coldtea.smplr.smplralarm.extensions.activeDaysAsJsonString
 import de.coldtea.smplr.smplralarm.managers.AlarmRingEvent
+import de.coldtea.smplr.smplralarm.models.ActiveWeekDays
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 import de.coldtea.smplr.smplralarm.models.NotificationItem
+import de.coldtea.smplr.smplralarm.models.WeekDays
 import de.coldtea.smplr.smplralarm.repository.entity.AlarmNotificationEntity
 import de.coldtea.smplr.smplralarm.repository.entity.NotificationChannelEntity
 import de.coldtea.smplr.smplralarm.repository.entity.NotificationEntity
@@ -21,6 +24,7 @@ data class AlarmNotification(
     val alarmNotificationId: Int,
     val hour: Int,
     val min: Int,
+    val weekDays: List<WeekDays>,
     val notificationChannelItem: NotificationChannelItem,
     val notificationItem: NotificationItem,
     val intent: Intent?,
@@ -32,7 +36,8 @@ fun AlarmNotification.extractAlarmNotificationEntity(): AlarmNotificationEntity 
     AlarmNotificationEntity(
         alarmNotificationId,
         hour,
-        min
+        min,
+        weekDays.activeDaysAsJsonString()
     )
 
 fun AlarmNotification.extractNotificationEntity(fkAlarmNotificationId: Int): NotificationEntity =

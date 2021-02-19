@@ -12,5 +12,7 @@ data class AlarmNotificationEntity(
     @ColumnInfo(name = "hour")
     val hour: Int,
     @ColumnInfo(name = "min")
-    val min: Int
+    val min: Int,
+    @ColumnInfo(name = "week_days")
+    val weekDays: String
 )

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.Intent.URI_ALLOW_UNSAFE
+import de.coldtea.smplr.smplralarm.extensions.activeDaysAsWeekdaysList
 import de.coldtea.smplr.smplralarm.receivers.AlarmNotification
 import de.coldtea.smplr.smplralarm.receivers.extractAlarmNotificationEntity
 import de.coldtea.smplr.smplralarm.receivers.extractNotificationChannelEntity
@@ -45,6 +46,7 @@ class AlarmNotificationRepository(
             intentId,
             alarmNotification.alarmNotificationEntity.hour,
             alarmNotification.alarmNotificationEntity.min,
+            alarmNotification.alarmNotificationEntity.weekDays.activeDaysAsWeekdaysList()?: listOf(),
             alarmNotification.notificationChannelEntity.convertToNotificationChannelItem(),
             alarmNotification.notificationEntity.convertToNotificationItem(),
             null,
@@ -58,6 +60,7 @@ class AlarmNotificationRepository(
                 alarmNotification.alarmNotificationEntity.alarmNotificationId,
                 alarmNotification.alarmNotificationEntity.hour,
                 alarmNotification.alarmNotificationEntity.min,
+                alarmNotification.alarmNotificationEntity.weekDays.activeDaysAsWeekdaysList()?: listOf(),
                 alarmNotification.notificationChannelEntity.convertToNotificationChannelItem(),
                 alarmNotification.notificationEntity.convertToNotificationItem(),
                 null,

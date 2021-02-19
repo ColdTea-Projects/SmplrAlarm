@@ -135,6 +135,12 @@ class MainFragment : Fragment() {
         onAlarmRings{
                 alarmId -> Timber.i("SmplrAlarmApp.MainFragment.onAlarmRings: $alarmId")
         }
+        weekdays {
+            monday()
+            tuesday()
+            wednesday()
+            friday()
+        }
     }
 
     private fun cancelNotification(requestCode: Int) = smplrAlarmCancel(requireContext().applicationContext){
