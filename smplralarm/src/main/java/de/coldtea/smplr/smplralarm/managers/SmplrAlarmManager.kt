@@ -4,11 +4,6 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import de.coldtea.smplr.smplralarm.extensions.activeDaysAsJsonString
-import de.coldtea.smplr.smplralarm.extensions.activeDaysAsWeekdaysList
-import de.coldtea.smplr.smplralarm.extensions.getClosestDay
 import de.coldtea.smplr.smplralarm.extensions.getTimeExactForAlarmInMiliseconds
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 import de.coldtea.smplr.smplralarm.models.NotificationItem
@@ -16,7 +11,6 @@ import de.coldtea.smplr.smplralarm.receivers.AlarmNotification
 import de.coldtea.smplr.smplralarm.receivers.AlarmReceiver
 import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiverObjects.Companion.SMPLR_ALARM_RECEIVER_INTENT_ID
 import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiverObjects.Companion.alarmNotification
-import de.coldtea.smplr.smplralarm.models.ActiveWeekDays
 import de.coldtea.smplr.smplralarm.models.WeekDays
 import de.coldtea.smplr.smplralarm.repository.AlarmNotificationRepository
 import kotlinx.coroutines.*

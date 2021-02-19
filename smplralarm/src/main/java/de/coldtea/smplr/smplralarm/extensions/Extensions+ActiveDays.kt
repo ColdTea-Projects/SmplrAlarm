@@ -4,6 +4,7 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import de.coldtea.smplr.smplralarm.models.ActiveWeekDays
 import de.coldtea.smplr.smplralarm.models.WeekDays
+import de.coldtea.smplr.smplralarm.repository.entity.AlarmNotificationEntity
 
 fun List<WeekDays>.activeDaysAsJsonString(): String =
     Moshi
@@ -14,10 +15,10 @@ fun List<WeekDays>.activeDaysAsJsonString(): String =
             ActiveWeekDays(this)
         )
 
-fun String.activeDaysAsWeekdaysList(): List<WeekDays>? =
+fun AlarmNotificationEntity.activeDaysAsWeekdaysList(): List<WeekDays>? =
     Moshi
         .Builder()
         .build()
         .adapter(ActiveWeekDays::class.java)
-        .fromJson(this)
+        .fromJson(this.weekDays)
         ?.days
