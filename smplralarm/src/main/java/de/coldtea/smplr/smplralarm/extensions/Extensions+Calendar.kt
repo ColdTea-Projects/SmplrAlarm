@@ -27,6 +27,6 @@ internal fun List<WeekDays>.getClosestDay(): Int =
     this.map { it.ordinal +  1}
         .firstOrNull {
             val today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
-            it > today
+            it >= today
         }
         ?:this.first().ordinal + 1
