@@ -126,7 +126,7 @@ class SmplrAlarmManager(val context: Context) {
         alarmNotification.add(notifiactionBuilderItem)
 
 
-        Timber.i("resetTest: ${
+        Timber.i("resetTest (first time): ${
             calendar.getTimeExactForAlarmInMiliseconds(
                 hour,
                 min,

@@ -22,6 +22,7 @@ private fun Calendar.getTimeExactForAlarm(
     weekDays: List<WeekDays>,
     daysToSkip: Int
 ): Calendar {
+    val now = Calendar.getInstance()
     timeInMillis = System.currentTimeMillis()
 
     set(Calendar.HOUR_OF_DAY, hour)
@@ -29,18 +30,20 @@ private fun Calendar.getTimeExactForAlarm(
     set(Calendar.SECOND, 0)
     set(Calendar.MILLISECOND, 0)
 
-    if (weekDays.isNotEmpty()) setTheDay(weekDays.getClosestDay(daysToSkip), isTimeAhead(hour, minute))
+    if (weekDays.isNotEmpty()) setTheDay(weekDays.getClosestDay(daysToSkip), now.isTimeAhead(hour, minute))
 
-    if (timeInMillis <= System.currentTimeMillis()) {
-        set(Calendar.DAY_OF_MONTH, get(Calendar.DAY_OF_MONTH) + 1)
-    }
+//    if (timeInMillis <= System.currentTimeMillis()) {
+//        set(Calendar.DAY_OF_MONTH, get(Calendar.DAY_OF_MONTH) + 1)
+//    }
 
     return this
 }
 
 private fun Calendar.setTheDay(nextWeekDay: Int, isTimeAhead: Boolean) {
-    if((get(Calendar.DAY_OF_WEEK) == nextWeekDay && isTimeAhead) == get(Calendar.DAY_OF_WEEK) < nextWeekDay) {
-        set(Calendar.DAY_OF_WEEK, nextWeekDay)
+    if(get(Calendar.DAY_OF_WEEK) - 1 == nextWeekDay && isTimeAhead) return
+
+    if (get(Calendar.DAY_OF_WEEK) - 1 < nextWeekDay) {
+        set(Calendar.DAY_OF_WEEK, nextWeekDay + 1)
         return
     }
 
@@ -69,7 +72,10 @@ private fun Calendar.setTheDay(nextWeekDay: Int, isTimeAhead: Boolean) {
     }
 }
 
-private fun Calendar.isTimeAhead(hour: Int, minute: Int) = get(Calendar.HOUR_OF_DAY) < hour || (get(Calendar.HOUR_OF_DAY) == hour && get(Calendar.MINUTE) < minute)
+private fun Calendar.isTimeAhead(hour: Int, minute: Int) =
+    get(Calendar.HOUR_OF_DAY) < hour
+            || (get(Calendar.HOUR_OF_DAY) == hour &&
+            get(Calendar.MINUTE) < minute)
 
 private fun List<WeekDays>.getClosestDay(daysToSkip: Int): Int =
     this.map { it.ordinal }

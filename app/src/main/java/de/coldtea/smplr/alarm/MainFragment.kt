@@ -136,10 +136,9 @@ class MainFragment : Fragment() {
                 alarmId -> Timber.i("SmplrAlarmApp.MainFragment.onAlarmRings: $alarmId")
         }
         weekdays {
-            monday()
-            tuesday()
+            sunday()
             wednesday()
-            friday()
+            saturday()
         }
     }
 
