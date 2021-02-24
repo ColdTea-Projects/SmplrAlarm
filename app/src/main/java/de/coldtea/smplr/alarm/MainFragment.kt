@@ -36,8 +36,11 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val cal = Calendar.getInstance()
 
         binding.setAlarm1.setOnClickListener {
             val intent = Intent(
@@ -47,7 +50,6 @@ class MainFragment : Fragment() {
 
             intent.putExtra("SmplrText", "You did it, you crazy bastard you did it!")
 
-            val cal = Calendar.getInstance()
             val hourMin = cal.nowPlus(1)
             requestCodeAlarm1 = createBasicNotificationWithFullScreenIntent(hourMin, intent)
 
@@ -64,7 +66,6 @@ class MainFragment : Fragment() {
             intent.putExtra("SmplrText", "You did it, you crazy bastard you did it!")
 
 
-            val cal = Calendar.getInstance()
             val hourMin = cal.nowPlus(2)
             requestCodeAlarm2 = createBasicNotificationWithFullScreenIntent(cal.nowPlus( 2), intent)
 
@@ -82,7 +83,6 @@ class MainFragment : Fragment() {
             intent.putExtra("SmplrText", "You did it, you crazy bastard you did it!")
 
 
-            val cal = Calendar.getInstance()
             val hourMin = cal.nowPlus(3)
             requestCodeAlarm3 = createBasicNotificationWithFullScreenIntent(cal.nowPlus(3), intent)
 
@@ -99,12 +99,10 @@ class MainFragment : Fragment() {
             intent.putExtra("SmplrText", "You did it, you crazy bastard you did it!")
 
 
-            val cal = Calendar.getInstance()
             val hourMin = cal.nowPlus(4)
             requestCodeAlarm4 = createBasicNotificationWithFullScreenIntent(cal.nowPlus(4), intent)
 
             Toast.makeText(requireContext(), "${hourMin.first}:${hourMin.second}", LENGTH_SHORT).show()
-
 
         }
 
@@ -124,6 +122,52 @@ class MainFragment : Fragment() {
             if(requestCodeAlarm4 != -1) cancelNotification(requestCodeAlarm4)
         }
 
+        val defaultTime = cal.nowPlus(5)
+
+        binding.hour.setText(defaultTime.first.toString())
+        binding.minute.setText(defaultTime.second.toString())
+
+        binding.setRepeatingAlarm.setOnClickListener {
+
+            val intent = Intent(
+                requireContext().applicationContext,
+                ActivityLockScreenAlarm::class.java
+            )
+
+            intent.putExtra("SmplrText", "You did it, you crazy bastard you did it!")
+
+            smplrAlarmSet(requireContext().applicationContext) {
+                hour { binding.hour.text.toString().toInt() }
+                min { binding.minute.text.toString().toInt() }
+                fullScreenIntent {
+                    intent
+                }
+                onAlarmRings{
+                        alarmId -> Timber.i("SmplrAlarmApp.MainFragment.onAlarmRings: $alarmId")
+                }
+                weekdays {
+                    if( binding.monday.isChecked ) monday()
+                    if( binding.tuesday.isChecked ) tuesday()
+                    if( binding.wednesday.isChecked ) wednesday()
+                    if( binding.thursday.isChecked ) thursday()
+                    if( binding.friday.isChecked ) friday()
+                    if( binding.saturday.isChecked ) saturday()
+                    if( binding.sunday.isChecked ) sunday()
+                }
+            }
+
+            var toastText = "${binding.hour.text}:${binding.minute.text}"
+            if( binding.monday.isChecked ) toastText = toastText.plus(" Monday")
+            if( binding.tuesday.isChecked ) toastText = toastText.plus(" Tuesday")
+            if( binding.wednesday.isChecked ) toastText = toastText.plus(" Wednesday")
+            if( binding.thursday.isChecked ) toastText = toastText.plus(" Thursday")
+            if( binding.friday.isChecked ) toastText = toastText.plus(" Friday")
+            if( binding.saturday.isChecked ) toastText = toastText.plus(" Saturday")
+            if( binding.sunday.isChecked ) toastText = toastText.plus(" Sunday")
+
+            Toast.makeText(requireContext(), toastText, LENGTH_SHORT).show()
+
+        }
     }
 
     private fun createBasicNotificationWithFullScreenIntent(timePair: Pair<Int,Int>, intent: Intent) = smplrAlarmSet(requireContext().applicationContext) {
@@ -134,11 +178,6 @@ class MainFragment : Fragment() {
         }
         onAlarmRings{
                 alarmId -> Timber.i("SmplrAlarmApp.MainFragment.onAlarmRings: $alarmId")
-        }
-        weekdays {
-            sunday()
-            wednesday()
-            saturday()
         }
     }
 
