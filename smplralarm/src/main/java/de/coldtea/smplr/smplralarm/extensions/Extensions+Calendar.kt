@@ -39,9 +39,7 @@ private fun Calendar.getTimeExactForAlarm(
 }
 
 private fun Calendar.setTheDay(nextWeekDay: Int, isTimeAhead: Boolean) {
-    if((get(Calendar.DAY_OF_WEEK) == nextWeekDay && isTimeAhead)) return
-
-    if (get(Calendar.DAY_OF_WEEK) < nextWeekDay) {
+    if((get(Calendar.DAY_OF_WEEK) == nextWeekDay && isTimeAhead) == get(Calendar.DAY_OF_WEEK) < nextWeekDay) {
         set(Calendar.DAY_OF_WEEK, nextWeekDay)
         return
     }
