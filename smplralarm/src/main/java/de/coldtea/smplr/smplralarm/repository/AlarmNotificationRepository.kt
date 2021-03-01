@@ -13,7 +13,6 @@ import de.coldtea.smplr.smplralarm.repository.entity.convertToNotificationChanne
 import de.coldtea.smplr.smplralarm.repository.entity.convertToNotificationItem
 import org.json.JSONException
 import org.json.JSONObject
-import java.lang.Exception
 import java.net.URISyntaxException
 import java.util.*
 
@@ -76,6 +75,23 @@ class AlarmNotificationRepository(
         alarmNotificationDatabase.daoNotification.delete(alarmNotification.notificationEntity)
         alarmNotificationDatabase.daoAlarmNotification.delete(alarmNotification.alarmNotificationEntity)
 
+    }
+
+    /**
+     * This function attempts to delete the alarm from database. If there are weekdays assigned,
+     * it does not delete. In either case, it let's the caller know if the record deleted.
+     *
+     * @param intentId primary key of the alarm
+     */
+    suspend fun deleteAlarmNotificationWithResult(intentId: Int): Boolean{
+        val alarmNotification = alarmNotificationDatabase.daoAlarmNotification.getAlarmNotification(intentId).first()
+
+        if(alarmNotification.alarmNotificationEntity.weekDays.isNotEmpty()) return false
+
+        alarmNotificationDatabase.daoNotificationChannel.delete(alarmNotification.notificationChannelEntity)
+        alarmNotificationDatabase.daoNotification.delete(alarmNotification.notificationEntity)
+        alarmNotificationDatabase.daoAlarmNotification.delete(alarmNotification.alarmNotificationEntity)
+        return true
     }
 
     suspend fun deleteAlarmsBeforeNow(){

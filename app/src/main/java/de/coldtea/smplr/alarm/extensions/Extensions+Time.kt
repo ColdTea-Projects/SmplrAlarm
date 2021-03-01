@@ -1,5 +1,7 @@
 package de.coldtea.smplr.alarm.extensions
 
+import de.coldtea.smplr.smplralarm.models.WeekDays
+import java.time.DayOfWeek
 import java.util.*
 
 fun Calendar.nowPlus(minute: Int):Pair<Int, Int>{

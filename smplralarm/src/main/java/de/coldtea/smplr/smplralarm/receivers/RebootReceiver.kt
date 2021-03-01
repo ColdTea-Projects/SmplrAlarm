@@ -49,7 +49,8 @@ internal class RebootReceiver : BroadcastReceiver() {
                         calendar.getTimeExactForAlarmInMiliseconds(
                             it.hour,
                             it.min,
-                            it.weekDays
+                            it.weekDays,
+                            0
                         ),
                         pendingIntent
                     )

@@ -41,13 +41,13 @@ class WeekDaysManager {
     }
 
     fun getWeekDays(): List<WeekDays> = mutableListOf<WeekDays>().also {
+        if (sunday) it.add(WeekDays.SUNDAY)
         if (monday) it.add(WeekDays.MONDAY)
         if (tuesday) it.add(WeekDays.TUESDAY)
         if (wednesday) it.add(WeekDays.WEDNESDAY)
         if (thursday) it.add(WeekDays.THURSDAY)
         if (friday) it.add(WeekDays.FRIDAY)
         if (saturday) it.add(WeekDays.SATURDAY)
-        if (sunday) it.add(WeekDays.SUNDAY)
-    }.toList()
+    }.sortedBy { it.ordinal }.toList()
 
 }

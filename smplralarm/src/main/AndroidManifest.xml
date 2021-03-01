@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application>
+
         <receiver android:name=".receivers.AlarmReceiver" />
 
         <receiver android:name=".receivers.RebootReceiver" >

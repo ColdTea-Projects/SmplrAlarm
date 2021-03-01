@@ -95,7 +95,7 @@ class SmplrAlarmManager(val context: Context) {
     fun setAlarm(): Int {
 
         val calendar = Calendar.getInstance()
-        requestCode = calendar.getTimeExactForAlarmInMiliseconds(hour, min, weekdays).toInt()
+        requestCode = (calendar.getTimeExactForAlarmInMiliseconds(hour, min, weekdays, 0) / 1000).toInt()
         Timber.v("SmplrAlarm.AlarmManager.setAlarm: $requestCode -- $hour:$min")
 
         val pendingIntent = PendingIntent.getBroadcast(
@@ -125,12 +125,23 @@ class SmplrAlarmManager(val context: Context) {
 
         alarmNotification.add(notifiactionBuilderItem)
 
+
+        Timber.i("resetTest: ${
+            calendar.getTimeExactForAlarmInMiliseconds(
+                hour,
+                min,
+                weekdays,
+                0
+            )
+        }")
+
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             calendar.getTimeExactForAlarmInMiliseconds(
                 hour,
                 min,
-                weekdays
+                weekdays,
+                0
             ),
             pendingIntent
         )
