@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/MainFragment"
-        android:name="de.coldtea.smplr.alarm.MainFragment"
+        android:name="de.coldtea.smplr.alarm.alarms.AlarmFragment"
         android:label="@string/main_fragment_label"
-        tools:layout="@layout/fragment_main">
+        tools:layout="@layout/fragment_alarms">
     </fragment>
 
 </navigation>

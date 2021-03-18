@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "762932834075",
+    "project_id": "smplralarm",
+    "storage_bucket": "smplralarm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:762932834075:android:10da94985692474d43edbe",
+        "android_client_info": {
+          "package_name": "de.coldtea.smplr.alarm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "762932834075-v5f01237g2l8gs0ka7r9a7mh1h8iuisb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwu-7taO9aHZwviyc5OpdMI_bE5SPcSyU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "762932834075-v5f01237g2l8gs0ka7r9a7mh1h8iuisb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

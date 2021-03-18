@@ -125,16 +125,6 @@ class SmplrAlarmManager(val context: Context) {
 
         alarmNotification.add(notifiactionBuilderItem)
 
-
-        Timber.i("resetTest (first time): ${
-            calendar.getTimeExactForAlarmInMiliseconds(
-                hour,
-                min,
-                weekdays,
-                0
-            )
-        }")
-
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             calendar.getTimeExactForAlarmInMiliseconds(
