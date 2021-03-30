@@ -4,7 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import de.coldtea.smplr.smplralarm.extensions.getTimeExactForAlarmInMiliseconds
+import de.coldtea.smplr.smplralarm.extensions.getTimeExactForAlarmInMilliseconds
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 import de.coldtea.smplr.smplralarm.receivers.AlarmNotification
@@ -84,7 +84,7 @@ class SmplrAlarmManager(val context: Context) {
         this.alarmRingEvent = alarmRingEvent
     }
 
-    fun weekdays(lambda: WeekDaysManager.() -> Unit){
+    fun weekdays(lambda: WeekDaysManager.() -> Unit) {
         weekdays = WeekDaysManager().apply(lambda).getWeekDays()
     }
 
@@ -95,54 +95,26 @@ class SmplrAlarmManager(val context: Context) {
     fun setAlarm(): Int {
 
         val calendar = Calendar.getInstance()
-        requestCode = (calendar.getTimeExactForAlarmInMiliseconds(hour, min, weekdays, 0) / 1000).toInt()
+        requestCode =
+            (calendar.getTimeExactForAlarmInMilliseconds(hour, min, weekdays, 0) / 1000).toInt()
         Timber.v("SmplrAlarm.AlarmManager.setAlarm: $requestCode -- $hour:$min")
 
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            requestCode,
-            AlarmReceiver.build(context).putExtra(SMPLR_ALARM_RECEIVER_INTENT_ID, requestCode),
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val notifiactionBuilderItem = AlarmNotification(
-            requestCode,
-            hour,
-            min,
-            weekdays,
-            notificationChannel
-                ?: ChannelManager().build(),
-            notification
-                ?: AlarmNotificationManager().build(),
-            intent,
-            fullScreenIntent,
-            alarmRingEvent
-        )
+        val pendingIntent = createPendingIntent()
+        val notifiactionBuilderItem = createAlarmNotification()
 
         CoroutineScope(Dispatchers.IO).launch {
-            alarmNotificationRepository.insertAlarmNotification(notifiactionBuilderItem)
+            saveAlarmNotificationToDatabase(notifiactionBuilderItem)
         }
 
-        alarmNotification.add(notifiactionBuilderItem)
-
-
-        Timber.i("resetTest (first time): ${
-            calendar.getTimeExactForAlarmInMiliseconds(
-                hour,
-                min,
-                weekdays,
-                0
-            )
-        }")
+        val exactAlarmTime = calendar.getTimeExactForAlarmInMilliseconds(
+            hour,
+            min,
+            weekdays
+        )
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            calendar.getTimeExactForAlarmInMiliseconds(
-                hour,
-                min,
-                weekdays,
-                0
-            ),
+            exactAlarmTime,
             pendingIntent
         )
 
@@ -152,21 +124,59 @@ class SmplrAlarmManager(val context: Context) {
     fun cancelAlarm() {
         Timber.v("SmplrAlarm.AlarmManager.cancelAlarm: $requestCode -- $hour:$min")
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            requestCode,
-            Intent(context, AlarmReceiver::class.java),
-            PendingIntent.FLAG_NO_CREATE
-        )
+        val pendingIntent = getPendingIntent()
 
         alarmManager.cancel(pendingIntent)
 
         CoroutineScope(Dispatchers.IO).launch {
-            alarmNotificationRepository.deleteAlarmNotification(requestCode)
+            deleteAlarmNotificationFromDatabase()
         }
     }
 
-    private fun Int.setAlarmIn() = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(toLong())
+    private fun createPendingIntent() = PendingIntent.getBroadcast(
+        context,
+        requestCode,
+        AlarmReceiver.build(context).putExtra(SMPLR_ALARM_RECEIVER_INTENT_ID, requestCode),
+        PendingIntent.FLAG_UPDATE_CURRENT
+    )
+
+    private fun getPendingIntent() = PendingIntent.getBroadcast(
+        context,
+        requestCode,
+        Intent(context, AlarmReceiver::class.java),
+        PendingIntent.FLAG_NO_CREATE
+    )
+
+    private fun createAlarmNotification() = AlarmNotification(
+        requestCode,
+        hour,
+        min,
+        weekdays,
+        notificationChannel
+            ?: ChannelManager().build(),
+        notification
+            ?: AlarmNotificationManager().build(),
+        intent,
+        fullScreenIntent,
+        alarmRingEvent
+    )
+
+    private suspend fun saveAlarmNotificationToDatabase(notifiactionBuilderItem: AlarmNotification) {
+            try {
+                alarmNotificationRepository.insertAlarmNotification(notifiactionBuilderItem)
+                alarmNotification.add(notifiactionBuilderItem)
+            } catch (exception: Exception) {
+                Timber.e("SmplrAlarm.AlarmManager.saveAlarmNotificationToDatabase: Alarm Notification could not be saved to the database --> $exception")
+            }
+        }
+
+    private suspend fun deleteAlarmNotificationFromDatabase() {
+        try {
+            alarmNotificationRepository.deleteAlarmNotification(requestCode)
+        } catch (exception: Exception) {
+            Timber.e("SmplrAlarm.AlarmManager.saveAlarmNotificationToDatabase: Alarm Notification with id $requestCode could not be removed from the database --> $exception")
+        }
+    }
 
     // endregion
 

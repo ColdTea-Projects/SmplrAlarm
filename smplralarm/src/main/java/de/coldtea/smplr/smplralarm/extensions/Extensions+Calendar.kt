@@ -7,11 +7,11 @@ import java.time.ZoneId
 import java.time.temporal.TemporalAdjusters
 import java.util.Calendar
 
-internal fun Calendar.getTimeExactForAlarmInMiliseconds(
+internal fun Calendar.getTimeExactForAlarmInMilliseconds(
     hour: Int,
     minute: Int,
     weekDays: List<WeekDays>,
-    daysToSkip: Int
+    daysToSkip: Int = 0
 ): Long {
     return getTimeExactForAlarm(hour, minute, weekDays, daysToSkip).timeInMillis
 }
@@ -31,10 +31,6 @@ private fun Calendar.getTimeExactForAlarm(
     set(Calendar.MILLISECOND, 0)
 
     if (weekDays.isNotEmpty()) setTheDay(weekDays.getClosestDay(daysToSkip), now.isTimeAhead(hour, minute))
-
-//    if (timeInMillis <= System.currentTimeMillis()) {
-//        set(Calendar.DAY_OF_MONTH, get(Calendar.DAY_OF_MONTH) + 1)
-//    }
 
     return this
 }
@@ -68,7 +64,10 @@ private fun Calendar.setTheDay(nextWeekDay: Int, isTimeAhead: Boolean) {
             .with(TemporalAdjusters.next(temporalDayOfWeek))
         set(Calendar.DAY_OF_YEAR, localDate.dayOfYear)
     } else {
-        set(Calendar.DAY_OF_MONTH, time.date + (nextWeekDay + 7 - time.day) % 7)
+        val date = get(Calendar.DAY_OF_MONTH)
+        val day = get(Calendar.DAY_OF_WEEK)
+
+        set(Calendar.DAY_OF_MONTH, date + (nextWeekDay + 7 - day) % 7)
     }
 }
 
