@@ -23,12 +23,3 @@ data class NotificationEntity(
     @ColumnInfo(name = "auto_cancel")
     val autoCancel: Boolean
 )
-
-fun NotificationEntity.convertToNotificationItem() =
-    NotificationItem(
-        smallIcon,
-        title,
-        message,
-        bigText,
-        autoCancel
-    )

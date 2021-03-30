@@ -2,7 +2,9 @@ package de.coldtea.smplr.smplralarm.extensions
 
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
+import de.coldtea.smplr.smplralarm.models.ActiveAlarmList
 import de.coldtea.smplr.smplralarm.models.ActiveWeekDays
+import de.coldtea.smplr.smplralarm.models.AlarmItem
 import de.coldtea.smplr.smplralarm.models.WeekDays
 import de.coldtea.smplr.smplralarm.repository.entity.AlarmNotificationEntity
 
@@ -22,3 +24,9 @@ fun AlarmNotificationEntity.activeDaysAsWeekdaysList(): List<WeekDays>? =
         .adapter(ActiveWeekDays::class.java)
         .fromJson(this.weekDays)
         ?.days
+
+fun ActiveAlarmList.alarmsAsJsonString(): String? =
+    Moshi.Builder()
+        .build()
+        .adapter(ActiveAlarmList::class.java)
+        .toJson(this)
