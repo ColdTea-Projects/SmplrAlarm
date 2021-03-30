@@ -16,7 +16,6 @@ import de.coldtea.smplr.smplralarm.repository.AlarmNotificationRepository
 import kotlinx.coroutines.*
 import timber.log.Timber
 import java.util.Calendar
-import java.util.concurrent.TimeUnit
 
 typealias AlarmRingEvent = (Int) -> Unit
 
@@ -90,13 +89,12 @@ class SmplrAlarmManager(val context: Context) {
 
     // endregion
 
-    // region functionalities
+    // region functionality
 
     fun setAlarm(): Int {
 
         val calendar = Calendar.getInstance()
-        requestCode =
-            (calendar.getTimeExactForAlarmInMilliseconds(hour, min, weekdays, 0) / 1000).toInt()
+        requestCode = getUniqueIdBasedNow()
         Timber.v("SmplrAlarm.AlarmManager.setAlarm: $requestCode -- $hour:$min")
 
         val pendingIntent = createPendingIntent()
@@ -161,10 +159,10 @@ class SmplrAlarmManager(val context: Context) {
         alarmRingEvent
     )
 
-    private suspend fun saveAlarmNotificationToDatabase(notifiactionBuilderItem: AlarmNotification) {
+    private suspend fun saveAlarmNotificationToDatabase(notificationBuilderItem: AlarmNotification) {
             try {
-                alarmNotificationRepository.insertAlarmNotification(notifiactionBuilderItem)
-                alarmNotification.add(notifiactionBuilderItem)
+                alarmNotificationRepository.insertAlarmNotification(notificationBuilderItem)
+                alarmNotification.add(notificationBuilderItem)
             } catch (exception: Exception) {
                 Timber.e("SmplrAlarm.AlarmManager.saveAlarmNotificationToDatabase: Alarm Notification could not be saved to the database --> $exception")
             }
@@ -178,13 +176,7 @@ class SmplrAlarmManager(val context: Context) {
         }
     }
 
-    // endregion
-
-    // region companion
-
-    companion object {
-        private const val DUMMY_ALARM_DURATION = 5
-    }
+    private fun getUniqueIdBasedNow() = System.currentTimeMillis().toInt() * -1
 
     // endregion
 }
