@@ -16,6 +16,7 @@ import de.coldtea.smplr.smplralarm.repository.AlarmNotificationRepository
 import kotlinx.coroutines.*
 import timber.log.Timber
 import java.util.Calendar
+import kotlin.math.absoluteValue
 
 typealias AlarmRingEvent = (Int) -> Unit
 
@@ -176,7 +177,7 @@ class SmplrAlarmManager(val context: Context) {
         }
     }
 
-    private fun getUniqueIdBasedNow() = System.currentTimeMillis().toInt() * -1
+    private fun getUniqueIdBasedNow() = System.currentTimeMillis().toInt().absoluteValue
 
     // endregion
 }
