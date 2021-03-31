@@ -2,13 +2,17 @@ package de.coldtea.smplr.alarm.alarms
 
 import android.content.Context
 import android.content.Intent
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.coldtea.smplr.alarm.alarms.models.AlarmInfo
 import de.coldtea.smplr.alarm.alarms.models.WeekInfo
 import de.coldtea.smplr.alarm.extensions.getTimeFormattedString
 import de.coldtea.smplr.alarm.extensions.nowPlus
 import de.coldtea.smplr.alarm.lockscreenalarm.ActivityLockScreenAlarm
+import de.coldtea.smplr.smplralarm.managers.SmplrAlarmManager
 import de.coldtea.smplr.smplralarm.smplrAlarmCancel
+import de.coldtea.smplr.smplralarm.smplrAlarmChangeOrRequestListener
 import de.coldtea.smplr.smplralarm.smplrAlarmSet
 import timber.log.Timber
 import java.util.*
@@ -17,6 +21,16 @@ class AlarmViewModel: ViewModel() {
 
     private val cal = Calendar.getInstance()
     private val now = cal.getTimeFormattedString("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+
+    private val _alarmListAsJson = MutableLiveData<String>()
+    val alarmListAsJson: LiveData<String>
+        get() = _alarmListAsJson
+
+    init {
+        smplrAlarmChangeOrRequestListener {
+            _alarmListAsJson.postValue(it)
+        }
+    }
 
     fun setAlarm(hour:Int, minute: Int, weekInfo: WeekInfo, applicationContext: Context){
         val intent = Intent(

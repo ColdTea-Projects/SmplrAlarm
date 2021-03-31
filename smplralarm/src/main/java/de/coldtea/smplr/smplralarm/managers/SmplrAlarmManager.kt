@@ -36,15 +36,13 @@ class SmplrAlarmManager(val context: Context) {
 
     var weekdays: List<WeekDays> = listOf()
 
-    var alarmListUpdatedOrRequestedListener: ((String) -> Unit)? = null
-
     private var alarmListJson: String = ""
         set(value) {
 
             if (value == field) return
             field = value
 
-            alarmListUpdatedOrRequestedListener?.invoke(value)
+            alarmListChangeOrRequestedListener?.invoke(value)
 
         }
 
@@ -208,6 +206,10 @@ class SmplrAlarmManager(val context: Context) {
     }
 
     private fun getUniqueIdBasedNow() = System.currentTimeMillis().toInt().absoluteValue
+
+    companion object{
+        internal var alarmListChangeOrRequestedListener: ((String) -> Unit)? = null
+    }
 
     // endregion
 }

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleOwner
 import de.coldtea.smplr.alarm.alarms.models.WeekInfo
 import de.coldtea.smplr.alarm.databinding.FragmentAlarmsBinding
 import de.coldtea.smplr.alarm.extensions.nowPlus
@@ -35,6 +36,10 @@ class AlarmFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         binding = FragmentAlarmsBinding.inflate(inflater, container, false)
+
+        viewModel.alarmListAsJson.observe(viewLifecycleOwner){
+            binding.alarmListJson.text = it
+        }
 
         return binding.root
     }
