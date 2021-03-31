@@ -128,6 +128,8 @@ class SmplrAlarmManager(val context: Context) {
             pendingIntent
         )
 
+        requestAlarmList()
+
         return requestCode
     }
 
@@ -140,6 +142,23 @@ class SmplrAlarmManager(val context: Context) {
 
         CoroutineScope(Dispatchers.IO).launch {
             deleteAlarmNotificationFromDatabase()
+        }
+
+        requestAlarmList()
+    }
+
+    fun requestAlarmList() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val alarmList = alarmNotificationRepository.getAllAlarmNotifications().map {
+                AlarmItem(
+                    it.alarmNotificationId,
+                    it.hour,
+                    it.min,
+                    it.weekDays
+                )
+            }
+
+            alarmListJson = ActiveAlarmList(alarmList).alarmsAsJsonString().orEmpty()
         }
     }
 
@@ -172,13 +191,13 @@ class SmplrAlarmManager(val context: Context) {
     )
 
     private suspend fun saveAlarmNotificationToDatabase(notificationBuilderItem: AlarmNotification) {
-            try {
-                alarmNotificationRepository.insertAlarmNotification(notificationBuilderItem)
-                alarmNotification.add(notificationBuilderItem)
-            } catch (exception: Exception) {
-                Timber.e("SmplrAlarm.AlarmManager.saveAlarmNotificationToDatabase: Alarm Notification could not be saved to the database --> $exception")
-            }
+        try {
+            alarmNotificationRepository.insertAlarmNotification(notificationBuilderItem)
+            alarmNotification.add(notificationBuilderItem)
+        } catch (exception: Exception) {
+            Timber.e("SmplrAlarm.AlarmManager.saveAlarmNotificationToDatabase: Alarm Notification could not be saved to the database --> $exception")
         }
+    }
 
     private suspend fun deleteAlarmNotificationFromDatabase() {
         try {
