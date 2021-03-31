@@ -21,8 +21,6 @@ class AlarmFragment : Fragment() {
 
     var requestCodeAlarm1 = -1
     var requestCodeAlarm2 = -1
-    var requestCodeAlarm3 = -1
-    var requestCodeAlarm4 = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +35,11 @@ class AlarmFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentAlarmsBinding.inflate(inflater, container, false)
 
+        viewModel.initAlarmListListener(requireContext().applicationContext)
         viewModel.alarmListAsJson.observe(viewLifecycleOwner){
             binding.alarmListJson.text = it
         }
+
 
         return binding.root
     }
@@ -72,30 +72,6 @@ class AlarmFragment : Fragment() {
 
         }
 
-        binding.setAlarm3.setOnClickListener {
-
-            val alarmInfo = viewModel.setAlarmIn(3, requireContext().applicationContext)
-            Toast.makeText(
-                requireContext(),
-                "${alarmInfo.time.first}:${alarmInfo.time.second}",
-                LENGTH_SHORT
-            ).show()
-            requestCodeAlarm3 = alarmInfo.requestCode
-
-        }
-
-        binding.setAlarm4.setOnClickListener {
-
-            val alarmInfo = viewModel.setAlarmIn(4, requireContext().applicationContext)
-            Toast.makeText(
-                requireContext(),
-                "${alarmInfo.time.first}:${alarmInfo.time.second}",
-                LENGTH_SHORT
-            ).show()
-            requestCodeAlarm4 = alarmInfo.requestCode
-
-        }
-
         binding.cancelAlarm1.setOnClickListener {
             if (requestCodeAlarm1 != -1) viewModel.cancelAlarm(
                 requestCodeAlarm1,
@@ -106,20 +82,6 @@ class AlarmFragment : Fragment() {
         binding.cancelAlarm2.setOnClickListener {
             if (requestCodeAlarm2 != -1) viewModel.cancelAlarm(
                 requestCodeAlarm2,
-                requireContext().applicationContext
-            )
-        }
-
-        binding.cancelAlarm3.setOnClickListener {
-            if (requestCodeAlarm3 != -1) viewModel.cancelAlarm(
-                requestCodeAlarm3,
-                requireContext().applicationContext
-            )
-        }
-
-        binding.cancelAlarm4.setOnClickListener {
-            if (requestCodeAlarm4 != -1) viewModel.cancelAlarm(
-                requestCodeAlarm4,
                 requireContext().applicationContext
             )
         }
@@ -160,6 +122,10 @@ class AlarmFragment : Fragment() {
 
             Toast.makeText(requireContext(), toastText, LENGTH_SHORT).show()
 
+        }
+
+        binding.updateList.setOnClickListener {
+            viewModel.requestAlarmList()
         }
     }
 }

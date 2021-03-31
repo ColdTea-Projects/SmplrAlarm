@@ -36,16 +36,6 @@ class SmplrAlarmManager(val context: Context) {
 
     var weekdays: List<WeekDays> = listOf()
 
-    private var alarmListJson: String = ""
-        set(value) {
-
-            if (value == field) return
-            field = value
-
-            alarmListChangeOrRequestedListener?.invoke(value)
-
-        }
-
     //endregion
 
     // region computed properties
@@ -126,8 +116,6 @@ class SmplrAlarmManager(val context: Context) {
             pendingIntent
         )
 
-        requestAlarmList()
-
         return requestCode
     }
 
@@ -141,24 +129,8 @@ class SmplrAlarmManager(val context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             deleteAlarmNotificationFromDatabase()
         }
-
-        requestAlarmList()
     }
 
-    fun requestAlarmList() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val alarmList = alarmNotificationRepository.getAllAlarmNotifications().map {
-                AlarmItem(
-                    it.alarmNotificationId,
-                    it.hour,
-                    it.min,
-                    it.weekDays
-                )
-            }
-
-            alarmListJson = ActiveAlarmList(alarmList).alarmsAsJsonString().orEmpty()
-        }
-    }
 
     private fun createPendingIntent() = PendingIntent.getBroadcast(
         context,
@@ -207,9 +179,6 @@ class SmplrAlarmManager(val context: Context) {
 
     private fun getUniqueIdBasedNow() = System.currentTimeMillis().toInt().absoluteValue
 
-    companion object{
-        internal var alarmListChangeOrRequestedListener: ((String) -> Unit)? = null
-    }
 
     // endregion
 }

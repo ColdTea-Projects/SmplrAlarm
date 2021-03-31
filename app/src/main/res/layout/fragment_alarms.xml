@@ -46,43 +46,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cancelAlarm1" />
 
-        <Button
-            android:id="@+id/setAlarm3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Set Alarm 3 in 3 minutes"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/setAlarm2" />
-
-        <Button
-            android:id="@+id/cancelAlarm3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancel Alarm 3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cancelAlarm2" />
-
-        <Button
-            android:id="@+id/setAlarm4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Set Alarm 4 in 4 minutes"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/setAlarm3" />
-
-        <Button
-            android:id="@+id/cancelAlarm4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancel Alarm 4"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cancelAlarm3" />
-
         <TextView
             android:id="@+id/repeating_alarm_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/setAlarm4"
+            app:layout_constraintTop_toBottomOf="@id/setAlarm2"
             android:text="Repeating alarm"/>
 
         <EditText
@@ -169,8 +137,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Set Repeating Alarm"
+            android:layout_margin="5dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/monday"/>
+
+        <Button
+            android:id="@+id/updateList"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Update List"
+            android:layout_margin="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/setRepeatingAlarm"
+            app:layout_constraintTop_toBottomOf="@id/monday" />
 
         <TextView
             android:id="@+id/alarmListJson"

@@ -1,6 +1,7 @@
 package de.coldtea.smplr.smplralarm
 
 import android.content.Context
+import de.coldtea.smplr.smplralarm.managers.AlarmListRequestManager
 import de.coldtea.smplr.smplralarm.managers.SmplrAlarmManager
 import de.coldtea.smplr.smplralarm.managers.AlarmNotificationManager
 import de.coldtea.smplr.smplralarm.managers.ChannelManager
@@ -17,9 +18,10 @@ fun smplrAlarmCancel(context: Context, lambda: SmplrAlarmManager.() -> Unit) =
 fun channel(lambda: ChannelManager.() -> Unit): NotificationChannelItem =
     ChannelManager().apply(lambda).build()
 
-fun alarmNotification(lamda: AlarmNotificationManager.() -> Unit): NotificationItem =
-    AlarmNotificationManager().apply(lamda).build()
+fun alarmNotification(lambda: AlarmNotificationManager.() -> Unit): NotificationItem =
+    AlarmNotificationManager().apply(lambda).build()
 
-fun smplrAlarmChangeOrRequestListener(listener: (String) -> Unit) {
-    SmplrAlarmManager.alarmListChangeOrRequestedListener = listener
-}
+fun smplrAlarmChangeOrRequestListener(context: Context, lambda:  ((String) -> Unit)) =
+    AlarmListRequestManager(context).apply {
+        alarmListChangeOrRequestedListener = lambda
+    }
