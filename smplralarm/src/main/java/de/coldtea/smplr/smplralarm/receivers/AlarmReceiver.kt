@@ -6,7 +6,9 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import de.coldtea.smplr.smplralarm.extensions.getTimeExactForAlarmInMiliseconds
+import de.coldtea.smplr.smplralarm.alarmlogs.LogsRepository
+import de.coldtea.smplr.smplralarm.alarmlogs.RangAlarmObject
+import de.coldtea.smplr.smplralarm.extensions.getTimeExactForAlarmInMilliseconds
 import de.coldtea.smplr.smplralarm.extensions.showNotification
 import de.coldtea.smplr.smplralarm.extensions.showNotificationWithIntent
 import de.coldtea.smplr.smplralarm.managers.AlarmNotificationManager
@@ -19,6 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.text.SimpleDateFormat
 import java.util.*
 
 internal class AlarmReceiver : BroadcastReceiver() {
@@ -100,19 +103,6 @@ internal class AlarmReceiver : BroadcastReceiver() {
         ),
         PendingIntent.FLAG_UPDATE_CURRENT
     )
-
-        alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            calendar.getTimeExactForAlarmInMiliseconds(
-                alarm.hour,
-                alarm.min,
-                alarm.weekDays,
-                1
-            ),
-            pendingIntent
-        )
-
-    }
 
     private fun Calendar.dateTime():Pair<String, String>{
         val sdfDate = SimpleDateFormat("dd/M/yyyy", Locale.getDefault())

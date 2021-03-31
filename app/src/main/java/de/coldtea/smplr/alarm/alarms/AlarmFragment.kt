@@ -9,9 +9,6 @@ import android.widget.Toast.LENGTH_SHORT
 import androidx.fragment.app.viewModels
 import de.coldtea.smplr.alarm.R
 import de.coldtea.smplr.alarm.alarmlogs.AlarmLogsFragment
-import de.coldtea.smplr.alarm.R
-import de.coldtea.smplr.alarm.alarmlogs.AlarmLogsFragment
-import androidx.lifecycle.LifecycleOwner
 import de.coldtea.smplr.alarm.alarms.models.WeekInfo
 import de.coldtea.smplr.alarm.databinding.FragmentAlarmsBinding
 import de.coldtea.smplr.alarm.extensions.nowPlus
@@ -131,19 +128,19 @@ class AlarmFragment : Fragment() {
         binding.updateList.setOnClickListener {
             viewModel.requestAlarmList()
         }
+    }
 
-        override fun onOptionsItemSelected(item: MenuItem): Boolean {
-            return when (item.itemId) {
-                R.id.actions_log -> {
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.nav_host_fragment, AlarmLogsFragment())
-                        .addToBackStack(null)
-                        .commit()
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.actions_log -> {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.nav_host_fragment, AlarmLogsFragment())
+                    .addToBackStack(null)
+                    .commit()
 
-                    true
-                }
-                else -> super.onOptionsItemSelected(item)
+                true
             }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }
