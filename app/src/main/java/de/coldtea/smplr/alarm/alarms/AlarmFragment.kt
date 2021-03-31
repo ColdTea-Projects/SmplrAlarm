@@ -9,10 +9,12 @@ import android.widget.Toast.LENGTH_SHORT
 import androidx.fragment.app.viewModels
 import de.coldtea.smplr.alarm.R
 import de.coldtea.smplr.alarm.alarmlogs.AlarmLogsFragment
+import de.coldtea.smplr.alarm.R
+import de.coldtea.smplr.alarm.alarmlogs.AlarmLogsFragment
+import androidx.lifecycle.LifecycleOwner
 import de.coldtea.smplr.alarm.alarms.models.WeekInfo
 import de.coldtea.smplr.alarm.databinding.FragmentAlarmsBinding
 import de.coldtea.smplr.alarm.extensions.nowPlus
-import kotlinx.android.synthetic.main.content_main.*
 import java.util.*
 
 class AlarmFragment : Fragment() {
@@ -23,8 +25,6 @@ class AlarmFragment : Fragment() {
 
     var requestCodeAlarm1 = -1
     var requestCodeAlarm2 = -1
-    var requestCodeAlarm3 = -1
-    var requestCodeAlarm4 = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +38,12 @@ class AlarmFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         binding = FragmentAlarmsBinding.inflate(inflater, container, false)
+
+        viewModel.initAlarmListListener(requireContext().applicationContext)
+        viewModel.alarmListAsJson.observe(viewLifecycleOwner){
+            binding.alarmListJson.text = it
+        }
+
 
         return binding.root
     }
@@ -70,30 +76,6 @@ class AlarmFragment : Fragment() {
 
         }
 
-        binding.setAlarm3.setOnClickListener {
-
-            val alarmInfo = viewModel.setAlarmIn(3, requireContext().applicationContext)
-            Toast.makeText(
-                requireContext(),
-                "${alarmInfo.time.first}:${alarmInfo.time.second}",
-                LENGTH_SHORT
-            ).show()
-            requestCodeAlarm3 = alarmInfo.requestCode
-
-        }
-
-        binding.setAlarm4.setOnClickListener {
-
-            val alarmInfo = viewModel.setAlarmIn(4, requireContext().applicationContext)
-            Toast.makeText(
-                requireContext(),
-                "${alarmInfo.time.first}:${alarmInfo.time.second}",
-                LENGTH_SHORT
-            ).show()
-            requestCodeAlarm4 = alarmInfo.requestCode
-
-        }
-
         binding.cancelAlarm1.setOnClickListener {
             if (requestCodeAlarm1 != -1) viewModel.cancelAlarm(
                 requestCodeAlarm1,
@@ -104,20 +86,6 @@ class AlarmFragment : Fragment() {
         binding.cancelAlarm2.setOnClickListener {
             if (requestCodeAlarm2 != -1) viewModel.cancelAlarm(
                 requestCodeAlarm2,
-                requireContext().applicationContext
-            )
-        }
-
-        binding.cancelAlarm3.setOnClickListener {
-            if (requestCodeAlarm3 != -1) viewModel.cancelAlarm(
-                requestCodeAlarm3,
-                requireContext().applicationContext
-            )
-        }
-
-        binding.cancelAlarm4.setOnClickListener {
-            if (requestCodeAlarm4 != -1) viewModel.cancelAlarm(
-                requestCodeAlarm4,
                 requireContext().applicationContext
             )
         }
@@ -159,19 +127,23 @@ class AlarmFragment : Fragment() {
             Toast.makeText(requireContext(), toastText, LENGTH_SHORT).show()
 
         }
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.actions_log -> {
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.nav_host_fragment, AlarmLogsFragment())
-                    .addToBackStack(null)
-                    .commit()
+        binding.updateList.setOnClickListener {
+            viewModel.requestAlarmList()
+        }
 
-                true
+        override fun onOptionsItemSelected(item: MenuItem): Boolean {
+            return when (item.itemId) {
+                R.id.actions_log -> {
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.nav_host_fragment, AlarmLogsFragment())
+                        .addToBackStack(null)
+                        .commit()
+
+                    true
+                }
+                else -> super.onOptionsItemSelected(item)
             }
-            else -> super.onOptionsItemSelected(item)
         }
     }
 }

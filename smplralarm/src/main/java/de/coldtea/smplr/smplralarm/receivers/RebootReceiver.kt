@@ -5,7 +5,7 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import de.coldtea.smplr.smplralarm.extensions.getTimeExactForAlarmInMiliseconds
+import de.coldtea.smplr.smplralarm.extensions.getTimeExactForAlarmInMilliseconds
 import de.coldtea.smplr.smplralarm.repository.AlarmNotificationRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,26 +31,17 @@ internal class RebootReceiver : BroadcastReceiver() {
 
             CoroutineScope(Dispatchers.IO).launch {
                 val notificationRepository = AlarmNotificationRepository(context)
-                val alarms = notificationRepository.getAllAlarmNotifications()
+                val alarmNotifications = notificationRepository.getAllAlarmNotifications()
 
-                alarms.map {
-                    val pendingIntent = PendingIntent.getBroadcast(
-                        context,
-                        it.alarmNotificationId,
-                        AlarmReceiver.build(context).putExtra(
-                            SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID,
-                            it.alarmNotificationId
-                        ),
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                    )
+                alarmNotifications.map {
+                    val pendingIntent = createPendingIntent(context, it)
 
                     alarmManager.setExactAndAllowWhileIdle(
                         AlarmManager.RTC_WAKEUP,
-                        calendar.getTimeExactForAlarmInMiliseconds(
+                        calendar.getTimeExactForAlarmInMilliseconds(
                             it.hour,
                             it.min,
-                            it.weekDays,
-                            0
+                            it.weekDays
                         ),
                         pendingIntent
                     )
@@ -62,6 +53,17 @@ internal class RebootReceiver : BroadcastReceiver() {
         } catch (e: Exception) {
             Timber.e(e.toString())
         }
+
+    private fun createPendingIntent(context: Context, alarmNotification: AlarmNotification) =
+        PendingIntent.getBroadcast(
+            context,
+            alarmNotification.alarmNotificationId,
+            AlarmReceiver.build(context).putExtra(
+                SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID,
+                alarmNotification.alarmNotificationId
+            ),
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
     companion object {
         fun build(context: Context): Intent {

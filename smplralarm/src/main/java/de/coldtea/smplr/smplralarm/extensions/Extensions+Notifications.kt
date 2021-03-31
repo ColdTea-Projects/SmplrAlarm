@@ -9,6 +9,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import de.coldtea.smplr.smplralarm.R
+import de.coldtea.smplr.smplralarm.models.AlarmItem
 import de.coldtea.smplr.smplralarm.models.IntentNotificationItem
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 import de.coldtea.smplr.smplralarm.models.NotificationItem
@@ -16,9 +17,10 @@ import de.coldtea.smplr.smplralarm.models.NotificationItem
 private fun Context.initChannelAndReturnName(notificationChannelItem: NotificationChannelItem): String =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val channelId = packageName
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        with(notificationChannelItem){
+        with(notificationChannelItem) {
             val channel = NotificationChannel(channelId, name, importance).apply {
                 description = description
                 setShowBadge(showBadge)
@@ -27,9 +29,12 @@ private fun Context.initChannelAndReturnName(notificationChannelItem: Notificati
         }
 
         channelId
-    }else packageName
+    } else packageName
 
-fun Context.showNotificationWithIntent(notificationChannelItem: NotificationChannelItem, intentNotificationItem: IntentNotificationItem) {
+fun Context.showNotificationWithIntent(
+    notificationChannelItem: NotificationChannelItem,
+    intentNotificationItem: IntentNotificationItem
+) {
 
     val channelId = initChannelAndReturnName(notificationChannelItem)
     val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -48,13 +53,16 @@ fun Context.showNotificationWithIntent(notificationChannelItem: NotificationChan
 
 }
 
-fun Context.showNotification(notificationChannelItem: NotificationChannelItem, notificationItem: NotificationItem) {
+fun Context.showNotification(
+    notificationChannelItem: NotificationChannelItem,
+    notificationItem: NotificationItem
+) {
     val channelId = initChannelAndReturnName(notificationChannelItem)
     val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    val notification =  NotificationCompat.Builder(this, channelId).apply {
+    val notification = NotificationCompat.Builder(this, channelId).apply {
         priority = NotificationCompat.PRIORITY_HIGH
-        with(notificationItem){
+        with(notificationItem) {
             setSmallIcon(smallIcon)//R.drawable.ic_baseline_child_care_24) // 3
             setContentTitle(title) // 4
             setContentText(message) // 5
@@ -68,7 +76,5 @@ fun Context.showNotification(notificationChannelItem: NotificationChannelItem, n
 
 }
 
-private fun Context.getFullScreenIntent(intent: Intent?): PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
-
-
-private const val CHANNEL_ID = "channelId"
+private fun Context.getFullScreenIntent(intent: Intent?): PendingIntent =
+    PendingIntent.getActivity(this, 0, intent, 0)

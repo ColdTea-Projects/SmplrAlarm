@@ -6,8 +6,6 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import de.coldtea.smplr.smplralarm.alarmlogs.LogsRepository
-import de.coldtea.smplr.smplralarm.alarmlogs.RangAlarmObject
 import de.coldtea.smplr.smplralarm.extensions.getTimeExactForAlarmInMiliseconds
 import de.coldtea.smplr.smplralarm.extensions.showNotification
 import de.coldtea.smplr.smplralarm.extensions.showNotificationWithIntent
@@ -21,7 +19,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.text.SimpleDateFormat
 import java.util.*
 
 internal class AlarmReceiver : BroadcastReceiver() {
@@ -54,7 +51,7 @@ internal class AlarmReceiver : BroadcastReceiver() {
                         )
 
                         if(!it.deleteAlarmNotificationWithResult(requestId)){
-                            resetTheAlarmForTheNextDayOnTheList(context, requestId)
+                            resetTheAlarmForTheNextDayOnTheList(context, alarmNotification)
                         }
 
                     }
@@ -76,20 +73,33 @@ internal class AlarmReceiver : BroadcastReceiver() {
             }
     }
 
-    private suspend fun resetTheAlarmForTheNextDayOnTheList(context: Context, requestId: Int) = repository?.let{
+    private fun resetTheAlarmForTheNextDayOnTheList(context: Context, alarmNotification: AlarmNotification) = repository?.let{
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val calendar = Calendar.getInstance()
-        val alarm = it.getAlarmNotification(requestId)
+        val pendingIntent = createPendingIntent(context, alarmNotification)
 
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            alarm.alarmNotificationId,
-            build(context).putExtra(
-                SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID,
-                alarm.alarmNotificationId
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            calendar.getTimeExactForAlarmInMilliseconds(
+                alarmNotification.hour,
+                alarmNotification.min,
+                alarmNotification.weekDays,
+                1
             ),
-            PendingIntent.FLAG_UPDATE_CURRENT
+            pendingIntent
         )
+
+    }
+
+    private fun createPendingIntent(context: Context, alarmNotification: AlarmNotification) = PendingIntent.getBroadcast(
+        context,
+        alarmNotification.alarmNotificationId,
+        build(context).putExtra(
+            SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID,
+            alarmNotification.alarmNotificationId
+        ),
+        PendingIntent.FLAG_UPDATE_CURRENT
+    )
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
