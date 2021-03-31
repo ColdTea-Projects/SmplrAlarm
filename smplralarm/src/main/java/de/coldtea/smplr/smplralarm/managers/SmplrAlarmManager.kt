@@ -4,14 +4,13 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import de.coldtea.smplr.smplralarm.extensions.alarmsAsJsonString
 import de.coldtea.smplr.smplralarm.extensions.getTimeExactForAlarmInMilliseconds
-import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
-import de.coldtea.smplr.smplralarm.models.NotificationItem
+import de.coldtea.smplr.smplralarm.models.*
 import de.coldtea.smplr.smplralarm.receivers.AlarmNotification
 import de.coldtea.smplr.smplralarm.receivers.AlarmReceiver
 import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiverObjects.Companion.SMPLR_ALARM_RECEIVER_INTENT_ID
 import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiverObjects.Companion.alarmNotification
-import de.coldtea.smplr.smplralarm.models.WeekDays
 import de.coldtea.smplr.smplralarm.repository.AlarmNotificationRepository
 import kotlinx.coroutines.*
 import timber.log.Timber
@@ -36,6 +35,18 @@ class SmplrAlarmManager(val context: Context) {
     var alarmRingEvent: AlarmRingEvent? = null
 
     var weekdays: List<WeekDays> = listOf()
+
+    var alarmListUpdatedOrRequestedListener: ((String) -> Unit)? = null
+
+    private var alarmListJson: String = ""
+        set(value) {
+
+            if (value == field) return
+            field = value
+
+            alarmListUpdatedOrRequestedListener?.invoke(value)
+
+        }
 
     //endregion
 
