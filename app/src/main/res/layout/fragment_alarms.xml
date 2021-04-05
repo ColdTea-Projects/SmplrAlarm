@@ -8,49 +8,12 @@
         android:layout_height="match_parent"
         tools:context=".alarms.AlarmFragment">
 
-        <TextView
-            android:id="@+id/single_alarm_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="Single alarm"/>
-        <Button
-            android:id="@+id/setAlarm1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Set Alarm 1 in 1 minute"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/single_alarm_header"/>
-
-        <Button
-            android:id="@+id/cancelAlarm1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancel Alarm 1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/setAlarm1" />
-
-        <Button
-            android:id="@+id/setAlarm2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Set Alarm 2 in 2 minutes"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/setAlarm1" />
-
-        <Button
-            android:id="@+id/cancelAlarm2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancel Alarm 2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cancelAlarm1" />
 
         <TextView
             android:id="@+id/repeating_alarm_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/setAlarm2"
+            app:layout_constraintTop_toTopOf="parent"
             android:text="Repeating alarm"/>
 
         <EditText
@@ -132,6 +95,7 @@
             app:layout_constraintTop_toBottomOf="@id/hour"
             app:layout_constraintStart_toEndOf="@id/saturday"
             android:text="S"/>
+
         <Button
             android:id="@+id/setRepeatingAlarm"
             android:layout_width="wrap_content"

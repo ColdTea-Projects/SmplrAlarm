@@ -47,45 +47,6 @@ class AlarmFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        binding.setAlarm1.setOnClickListener {
-
-            val alarmInfo = viewModel.setAlarmIn(1, requireContext().applicationContext)
-            Toast.makeText(
-                requireContext(),
-                "${alarmInfo.time.first}:${alarmInfo.time.second}",
-                LENGTH_SHORT
-            ).show()
-            requestCodeAlarm1 = alarmInfo.requestCode
-
-        }
-
-        binding.setAlarm2.setOnClickListener {
-
-            val alarmInfo = viewModel.setAlarmIn(2, requireContext().applicationContext)
-            Toast.makeText(
-                requireContext(),
-                "${alarmInfo.time.first}:${alarmInfo.time.second}",
-                LENGTH_SHORT
-            ).show()
-            requestCodeAlarm2 = alarmInfo.requestCode
-
-        }
-
-        binding.cancelAlarm1.setOnClickListener {
-            if (requestCodeAlarm1 != -1) viewModel.cancelAlarm(
-                requestCodeAlarm1,
-                requireContext().applicationContext
-            )
-        }
-
-        binding.cancelAlarm2.setOnClickListener {
-            if (requestCodeAlarm2 != -1) viewModel.cancelAlarm(
-                requestCodeAlarm2,
-                requireContext().applicationContext
-            )
-        }
-
         val defaultTime = Calendar.getInstance().nowPlus(1)
 
         binding.hour.setText(defaultTime.first.toString())
