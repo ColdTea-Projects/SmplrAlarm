@@ -3,7 +3,7 @@ package de.coldtea.smplr.smplralarm.models
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class AlarmItem(
+internal data class AlarmItem(
     val requestId: Int,
     val hour: Int,
     val minute: Int,

@@ -21,7 +21,7 @@ import de.coldtea.smplr.smplralarm.repository.entity.NotificationEntity
     version = 1,
     exportSchema = false
 )
-abstract class AlarmNotificationDatabase : RoomDatabase() {
+internal abstract class AlarmNotificationDatabase : RoomDatabase() {
 
     abstract val daoAlarmNotification: DaoAlarmNotification
     abstract val daoNotificationChannel: DaoNotificationChannel
@@ -30,7 +30,7 @@ abstract class AlarmNotificationDatabase : RoomDatabase() {
     companion object {
         @Volatile
         private var INSTANCE: AlarmNotificationDatabase? = null
-        fun getInstance(context: Context): AlarmNotificationDatabase {
+        internal fun getInstance(context: Context): AlarmNotificationDatabase {
             synchronized(this) {
                 var instance = INSTANCE
 

@@ -6,7 +6,7 @@ import de.coldtea.smplr.smplralarm.repository.entity.AlarmNotificationEntity
 import de.coldtea.smplr.smplralarm.repository.entity.NotificationChannelEntity
 import de.coldtea.smplr.smplralarm.repository.entity.NotificationEntity
 
-data class AlarmNotifications (
+internal data class AlarmNotifications (
     @Embedded val alarmNotificationEntity: AlarmNotificationEntity,
     @Relation(
         parentColumn = "alarm_notification_id",

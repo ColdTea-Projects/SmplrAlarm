@@ -5,7 +5,7 @@ import de.coldtea.smplr.smplralarm.models.NotificationItem
 import de.coldtea.smplr.smplralarm.repository.entity.AlarmNotificationEntity
 import de.coldtea.smplr.smplralarm.repository.entity.NotificationEntity
 
-fun NotificationEntity.convertToNotificationItem() =
+internal fun NotificationEntity.convertToNotificationItem() =
     NotificationItem(
         smallIcon,
         title,
@@ -14,7 +14,7 @@ fun NotificationEntity.convertToNotificationItem() =
         autoCancel
     )
 
-fun AlarmNotificationEntity.convertToAlarmItem() =
+internal fun AlarmNotificationEntity.convertToAlarmItem() =
     AlarmItem(
         alarmNotificationId,
         hour,

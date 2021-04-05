@@ -7,7 +7,7 @@ import de.coldtea.smplr.smplralarm.repository.entity.AlarmNotificationEntity
 import de.coldtea.smplr.smplralarm.repository.relations.AlarmNotifications
 
 @Dao
-abstract class DaoAlarmNotification : DaoBase<AlarmNotificationEntity> {
+internal abstract class DaoAlarmNotification : DaoBase<AlarmNotificationEntity> {
 
     @Transaction
     @Query("SELECT * From alarm_notification_table WHERE alarm_notification_id = :alarmNotificaionId")

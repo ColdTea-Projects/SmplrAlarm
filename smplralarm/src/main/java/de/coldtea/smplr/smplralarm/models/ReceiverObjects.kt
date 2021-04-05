@@ -15,12 +15,12 @@ import de.coldtea.smplr.smplralarm.repository.entity.NotificationEntity
 
 internal class SmplrAlarmReceiverObjects {
     companion object {
-        const val SMPLR_ALARM_RECEIVER_INTENT_ID = "smplr_alarm_receiver_intent_id"
-        var alarmNotification: MutableList<AlarmNotification> = mutableListOf()
+        internal const val SMPLR_ALARM_RECEIVER_INTENT_ID = "smplr_alarm_receiver_intent_id"
+        internal var alarmNotification: MutableList<AlarmNotification> = mutableListOf()
     }
 }
 
-data class AlarmNotification(
+internal data class AlarmNotification(
     val alarmNotificationId: Int,
     val hour: Int,
     val min: Int,
@@ -32,7 +32,7 @@ data class AlarmNotification(
     val alarmRingEvent: AlarmRingEvent?
 )
 
-fun AlarmNotification.extractAlarmNotificationEntity(): AlarmNotificationEntity =
+internal fun AlarmNotification.extractAlarmNotificationEntity(): AlarmNotificationEntity =
     AlarmNotificationEntity(
         alarmNotificationId,
         hour,
@@ -40,7 +40,7 @@ fun AlarmNotification.extractAlarmNotificationEntity(): AlarmNotificationEntity 
         weekDays.activeDaysAsJsonString()
     )
 
-fun AlarmNotification.extractNotificationEntity(fkAlarmNotificationId: Int): NotificationEntity =
+internal fun AlarmNotification.extractNotificationEntity(fkAlarmNotificationId: Int): NotificationEntity =
     NotificationEntity(
         0,
         fkAlarmNotificationId,
@@ -51,7 +51,7 @@ fun AlarmNotification.extractNotificationEntity(fkAlarmNotificationId: Int): Not
         notificationItem.autoCancel
     )
 
-fun AlarmNotification.extractNotificationChannelEntity(fkAlarmNotificationId: Int): NotificationChannelEntity =
+internal fun AlarmNotification.extractNotificationChannelEntity(fkAlarmNotificationId: Int): NotificationChannelEntity =
     NotificationChannelEntity(
         0,
         fkAlarmNotificationId,

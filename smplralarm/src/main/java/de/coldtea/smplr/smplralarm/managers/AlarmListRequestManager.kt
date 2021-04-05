@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class AlarmListRequestManager(val context: Context) {
 
-    var alarmListChangeOrRequestedListener: ((String) -> Unit)? = null
+    internal var alarmListChangeOrRequestedListener: ((String) -> Unit)? = null
 
     private var alarmListJson: String = ""
         set(value) {

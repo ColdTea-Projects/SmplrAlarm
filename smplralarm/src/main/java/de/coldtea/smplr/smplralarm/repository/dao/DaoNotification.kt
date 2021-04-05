@@ -6,7 +6,7 @@ import de.coldtea.smplr.smplralarm.repository.entity.NotificationEntity
 import java.sql.Timestamp
 
 @Dao
-abstract class DaoNotification : DaoBase<NotificationEntity> {
+internal abstract class DaoNotification : DaoBase<NotificationEntity> {
 
     @Query("SELECT * From notification_table")
     abstract suspend fun getNotification() : List<NotificationEntity>

@@ -16,7 +16,7 @@ import org.json.JSONObject
 import java.net.URISyntaxException
 import java.util.*
 
-class AlarmNotificationRepository(
+internal class AlarmNotificationRepository(
     private val context: Context
 ) {
     private val alarmNotificationDatabase by lazy {

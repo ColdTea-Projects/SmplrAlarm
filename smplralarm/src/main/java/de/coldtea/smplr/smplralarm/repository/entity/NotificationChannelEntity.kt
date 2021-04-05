@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 
 @Entity(tableName = "notification_channel_table")
-data class NotificationChannelEntity(
+internal data class NotificationChannelEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "channel_id")
     val channelId: Int,
@@ -22,7 +22,7 @@ data class NotificationChannelEntity(
     val description: String
 )
 
-fun NotificationChannelEntity.convertToNotificationChannelItem() =
+internal fun NotificationChannelEntity.convertToNotificationChannelItem() =
     NotificationChannelItem(
         importance,
         showBadge,

@@ -23,18 +23,18 @@ class SmplrAlarmManager(val context: Context) {
 
     //region properties
 
-    var hour = -1
-    var min = -1
-    var requestCode = -1
-    var intent: Intent? = null
-    var fullScreenIntent: Intent? = null
+    private var hour = -1
+    private var min = -1
+    private var requestCode = -1
+    private var intent: Intent? = null
+    private var fullScreenIntent: Intent? = null
 
-    var notificationChannel: NotificationChannelItem? = null
-    var notification: NotificationItem? = null
+    private var notificationChannel: NotificationChannelItem? = null
+    private var notification: NotificationItem? = null
 
-    var alarmRingEvent: AlarmRingEvent? = null
+    private var alarmRingEvent: AlarmRingEvent? = null
 
-    var weekdays: List<WeekDays> = listOf()
+    private var weekdays: List<WeekDays> = listOf()
 
     //endregion
 
@@ -91,7 +91,7 @@ class SmplrAlarmManager(val context: Context) {
 
     // region functionality
 
-    fun setAlarm(): Int {
+    internal fun setAlarm(): Int {
 
         val calendar = Calendar.getInstance()
         requestCode = getUniqueIdBasedNow()
@@ -119,7 +119,7 @@ class SmplrAlarmManager(val context: Context) {
         return requestCode
     }
 
-    fun cancelAlarm() {
+    internal fun cancelAlarm() {
         Timber.v("SmplrAlarm.AlarmManager.cancelAlarm: $requestCode -- $hour:$min")
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val pendingIntent = getPendingIntent()

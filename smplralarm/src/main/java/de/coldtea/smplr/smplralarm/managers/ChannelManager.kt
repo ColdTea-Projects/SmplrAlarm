@@ -9,28 +9,28 @@ class ChannelManager {
 
     //region properties
 
-    var importance: Int = NotificationManager.IMPORTANCE_HIGH
-    var showBadge: Boolean = false
-    var name: String = SMPLR_ALARM_CHANNEL_DEFAULT_NAME
-    var description: String = SMPLR_ALARM_CHANNEL_DEFAULT_DESCRIPTION
+    internal var importance: Int = NotificationManager.IMPORTANCE_HIGH
+    internal var showBadge: Boolean = false
+    internal var name: String = SMPLR_ALARM_CHANNEL_DEFAULT_NAME
+    internal var description: String = SMPLR_ALARM_CHANNEL_DEFAULT_DESCRIPTION
 
     //endregion
 
     //region setters
 
-    fun importance(importance: () -> Int) {
+    internal fun importance(importance: () -> Int) {
         this.importance = importance()
     }
 
-    fun showBadge(showBadge: () -> Boolean) {
+    internal fun showBadge(showBadge: () -> Boolean) {
         this.showBadge = showBadge()
     }
 
-    fun name(name: () -> String) {
+    internal fun name(name: () -> String) {
         this.name = name()
     }
 
-    fun description(description: () -> String) {
+    internal fun description(description: () -> String) {
         this.description = description()
     }
 
@@ -38,7 +38,7 @@ class ChannelManager {
 
     //region build
 
-    fun build(): NotificationChannelItem =
+    internal fun build(): NotificationChannelItem =
         NotificationChannelItem(
             importance,
             showBadge,
@@ -51,8 +51,8 @@ class ChannelManager {
     //region companion
 
     companion object{
-        const val SMPLR_ALARM_CHANNEL_DEFAULT_NAME = "de.coldtea.smplr.alarm.channel"
-        const val SMPLR_ALARM_CHANNEL_DEFAULT_DESCRIPTION = "this notification channel is created by SmplrAlarm"
+        internal const val SMPLR_ALARM_CHANNEL_DEFAULT_NAME = "de.coldtea.smplr.alarm.channel"
+        internal const val SMPLR_ALARM_CHANNEL_DEFAULT_DESCRIPTION = "this notification channel is created by SmplrAlarm"
     }
 
     //endregion

@@ -31,7 +31,7 @@ private fun Context.initChannelAndReturnName(notificationChannelItem: Notificati
         channelId
     } else packageName
 
-fun Context.showNotificationWithIntent(
+internal fun Context.showNotificationWithIntent(
     notificationChannelItem: NotificationChannelItem,
     intentNotificationItem: IntentNotificationItem
 ) {
@@ -53,7 +53,7 @@ fun Context.showNotificationWithIntent(
 
 }
 
-fun Context.showNotification(
+internal fun Context.showNotification(
     notificationChannelItem: NotificationChannelItem,
     notificationItem: NotificationItem
 ) {
