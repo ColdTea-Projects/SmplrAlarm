@@ -29,6 +29,7 @@ internal data class AlarmNotification(
     val notificationItem: NotificationItem,
     val intent: Intent?,
     val fullScreenIntent: Intent?,
+    val isActive: Boolean,
     val alarmRingEvent: AlarmRingEvent?
 )
 
@@ -37,7 +38,8 @@ internal fun AlarmNotification.extractAlarmNotificationEntity(): AlarmNotificati
         alarmNotificationId,
         hour,
         min,
-        weekDays.activeDaysAsJsonString()
+        weekDays.activeDaysAsJsonString(),
+        isActive
     )
 
 internal fun AlarmNotification.extractNotificationEntity(fkAlarmNotificationId: Int): NotificationEntity =

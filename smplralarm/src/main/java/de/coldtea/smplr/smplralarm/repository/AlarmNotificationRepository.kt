@@ -27,49 +27,78 @@ internal class AlarmNotificationRepository(
         context.getSharedPreferences(SMPLR_ALARM_INTENTS_SHARED_PREFERENCES, MODE_PRIVATE)
     }
 
-    suspend fun insertAlarmNotification(alarmNotification: AlarmNotification){
+    suspend fun insertAlarmNotification(alarmNotification: AlarmNotification) {
 
-        saveIntent(SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_INTENT_PREFIX, alarmNotification.alarmNotificationId, alarmNotification.intent)
-        saveIntent(SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX, alarmNotification.alarmNotificationId, alarmNotification.fullScreenIntent)
+        saveIntent(
+            SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_INTENT_PREFIX,
+            alarmNotification.alarmNotificationId,
+            alarmNotification.intent
+        )
+        saveIntent(
+            SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX,
+            alarmNotification.alarmNotificationId,
+            alarmNotification.fullScreenIntent
+        )
 
         alarmNotificationDatabase.daoAlarmNotification.insert(alarmNotification.extractAlarmNotificationEntity())
-        alarmNotificationDatabase.daoNotificationChannel.insert(alarmNotification.extractNotificationChannelEntity(alarmNotification.alarmNotificationId))
-        alarmNotificationDatabase.daoNotification.insert(alarmNotification.extractNotificationEntity(alarmNotification.alarmNotificationId))
+        alarmNotificationDatabase.daoNotificationChannel.insert(
+            alarmNotification.extractNotificationChannelEntity(
+                alarmNotification.alarmNotificationId
+            )
+        )
+        alarmNotificationDatabase.daoNotification.insert(
+            alarmNotification.extractNotificationEntity(
+                alarmNotification.alarmNotificationId
+            )
+        )
 
     }
 
-    suspend fun getAlarmNotification(intentId: Int): AlarmNotification{
-        val alarmNotification = alarmNotificationDatabase.daoAlarmNotification.getAlarmNotification(intentId).first()
+    suspend fun getAlarmNotification(intentId: Int): AlarmNotification {
+        val alarmNotification =
+            alarmNotificationDatabase.daoAlarmNotification.getAlarmNotification(intentId).first()
 
         return AlarmNotification(
-            intentId,
-            alarmNotification.alarmNotificationEntity.hour,
-            alarmNotification.alarmNotificationEntity.min,
-            alarmNotification.alarmNotificationEntity.activeDaysAsWeekdaysList()?: listOf(),
-            alarmNotification.notificationChannelEntity.convertToNotificationChannelItem(),
-            alarmNotification.notificationEntity.convertToNotificationItem(),
-            null,
-            retrieveIntent(SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX, intentId)
+            alarmNotificationId = intentId,
+            hour = alarmNotification.alarmNotificationEntity.hour,
+            min = alarmNotification.alarmNotificationEntity.min,
+            weekDays = alarmNotification.alarmNotificationEntity.activeDaysAsWeekdaysList()
+                ?: listOf(),
+            notificationChannelItem = alarmNotification.notificationChannelEntity.convertToNotificationChannelItem(),
+            notificationItem = alarmNotification.notificationEntity.convertToNotificationItem(),
+            intent = null,
+            fullScreenIntent = retrieveIntent(
+                SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX,
+                intentId
+            ),
+            isActive = alarmNotification.alarmNotificationEntity.isActive
         ) {}//TODO: implement intents
     }
 
     suspend fun getAllAlarmNotifications(): List<AlarmNotification> =
-        alarmNotificationDatabase.daoAlarmNotification.getAllAlarmNotification().map { alarmNotification ->
-            AlarmNotification(
-                alarmNotification.alarmNotificationEntity.alarmNotificationId,
-                alarmNotification.alarmNotificationEntity.hour,
-                alarmNotification.alarmNotificationEntity.min,
-                alarmNotification.alarmNotificationEntity.activeDaysAsWeekdaysList()?: listOf(),
-                alarmNotification.notificationChannelEntity.convertToNotificationChannelItem(),
-                alarmNotification.notificationEntity.convertToNotificationItem(),
-                null,
-                retrieveIntent(SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX, alarmNotification.alarmNotificationEntity.alarmNotificationId)
-            ) {}
-        }
+        alarmNotificationDatabase.daoAlarmNotification.getAllAlarmNotification()
+            .map { alarmNotification ->
+                AlarmNotification(
+                    alarmNotificationId = alarmNotification.alarmNotificationEntity.alarmNotificationId,
+                    hour = alarmNotification.alarmNotificationEntity.hour,
+                    min = alarmNotification.alarmNotificationEntity.min,
+                    weekDays = alarmNotification.alarmNotificationEntity.activeDaysAsWeekdaysList()
+                        ?: listOf(),
+                    notificationChannelItem = alarmNotification.notificationChannelEntity.convertToNotificationChannelItem(),
+                    notificationItem = alarmNotification.notificationEntity.convertToNotificationItem(),
+                    intent = null,
+                    fullScreenIntent = retrieveIntent(
+                        SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX,
+                        alarmNotification.alarmNotificationEntity.alarmNotificationId
+                    ),
+                    isActive = alarmNotification.alarmNotificationEntity.isActive
+                ) {}
+            }
 
     suspend fun deleteAlarmNotification(intentId: Int) {
 
-        val alarmNotification = alarmNotificationDatabase.daoAlarmNotification.getAlarmNotification(intentId).first()
+        val alarmNotification =
+            alarmNotificationDatabase.daoAlarmNotification.getAlarmNotification(intentId).first()
 
         alarmNotificationDatabase.daoNotificationChannel.delete(alarmNotification.notificationChannelEntity)
         alarmNotificationDatabase.daoNotification.delete(alarmNotification.notificationEntity)
@@ -83,10 +112,11 @@ internal class AlarmNotificationRepository(
      *
      * @param intentId primary key of the alarm
      */
-    suspend fun deleteAlarmNotificationWithResult(intentId: Int): Boolean{
-        val alarmNotification = alarmNotificationDatabase.daoAlarmNotification.getAlarmNotification(intentId).first()
+    suspend fun deleteAlarmNotificationWithResult(intentId: Int): Boolean {
+        val alarmNotification =
+            alarmNotificationDatabase.daoAlarmNotification.getAlarmNotification(intentId).first()
 
-        if(alarmNotification.alarmNotificationEntity.weekDays.isNotEmpty()) return false
+        if (alarmNotification.alarmNotificationEntity.weekDays.isNotEmpty()) return false
 
         alarmNotificationDatabase.daoNotificationChannel.delete(alarmNotification.notificationChannelEntity)
         alarmNotificationDatabase.daoNotification.delete(alarmNotification.notificationEntity)
@@ -94,7 +124,7 @@ internal class AlarmNotificationRepository(
         return true
     }
 
-    suspend fun deleteAlarmsBeforeNow(){
+    suspend fun deleteAlarmsBeforeNow() {
 
         val calendar = Calendar.getInstance()
 
@@ -112,27 +142,46 @@ internal class AlarmNotificationRepository(
 
         val extrasKeySet = intent.extras?.keySet()
 
-        sharedPreferencesEditor.putStringSet(prefix.plus(SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_KEYSET_PREFIX).plus(requestId), extrasKeySet)
+        sharedPreferencesEditor.putStringSet(
+            prefix.plus(
+                SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_KEYSET_PREFIX
+            ).plus(requestId), extrasKeySet
+        )
 
         val jsonObject = JSONObject()
         extrasKeySet?.map {
             try {
                 jsonObject.put(it, JSONObject.wrap(intent.extras?.get(it)))
-            }catch (ex: JSONException){
+            } catch (ex: JSONException) {
 
             }
         }
 
-        sharedPreferencesEditor.putString(prefix.plus(SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_BUNDLE_PREFIX).plus(requestId), jsonObject.toString())
+        sharedPreferencesEditor.putString(
+            prefix.plus(
+                SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_BUNDLE_PREFIX
+            ).plus(requestId), jsonObject.toString()
+        )
         sharedPreferencesEditor.apply()
     }
 
     private fun retrieveIntent(prefix: String, requestId: Int): Intent? =
         try {
 
-            val intent = Intent.parseUri(sharedPreferences.getString(prefix.plus(requestId), null), URI_ALLOW_UNSAFE)
-            val extrasKeySet = sharedPreferences.getStringSet(prefix.plus(SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_KEYSET_PREFIX).plus(requestId), null)
-            val jsonObject = JSONObject(sharedPreferences.getString(prefix.plus(SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_BUNDLE_PREFIX).plus(requestId),"")?:"")
+            val intent = Intent.parseUri(
+                sharedPreferences.getString(prefix.plus(requestId), null),
+                URI_ALLOW_UNSAFE
+            )
+            val extrasKeySet = sharedPreferences.getStringSet(
+                prefix.plus(SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_KEYSET_PREFIX).plus(requestId),
+                null
+            )
+            val jsonObject = JSONObject(
+                sharedPreferences.getString(
+                    prefix.plus(SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_BUNDLE_PREFIX)
+                        .plus(requestId), ""
+                ) ?: ""
+            )
 
             extrasKeySet?.map {
                 intent.putExtra(it, jsonObject.get(it).toString())
@@ -140,17 +189,17 @@ internal class AlarmNotificationRepository(
 
             intent
 
-        }catch (ex: URISyntaxException){
+        } catch (ex: URISyntaxException) {
             null
         }
 
 
-
-
-    companion object{
-        private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES = "smplr_alarm_intents_shared_preferences"
+    companion object {
+        private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES =
+            "smplr_alarm_intents_shared_preferences"
         private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_INTENT_PREFIX = "INTENT_"
-        private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX = "FULLSCREEN_INTENT_"
+        private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX =
+            "FULLSCREEN_INTENT_"
         private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_BUNDLE_PREFIX = "BUNDLE_"
         private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_KEYSET_PREFIX = "KEYSET_"
     }

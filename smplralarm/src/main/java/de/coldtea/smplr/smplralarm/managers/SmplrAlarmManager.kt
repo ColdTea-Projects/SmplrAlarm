@@ -157,6 +157,7 @@ class SmplrAlarmManager(val context: Context) {
             ?: AlarmNotificationManager().build(),
         intent,
         fullScreenIntent,
+        true,
         alarmRingEvent
     )
 

@@ -19,5 +19,6 @@ internal fun AlarmNotificationEntity.convertToAlarmItem() =
         alarmNotificationId,
         hour,
         min,
-        activeDaysAsWeekdaysList().orEmpty()
+        activeDaysAsWeekdaysList().orEmpty(),
+        isActive
     )

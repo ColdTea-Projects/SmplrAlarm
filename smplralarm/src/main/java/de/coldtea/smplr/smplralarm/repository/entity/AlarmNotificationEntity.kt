@@ -14,5 +14,7 @@ internal data class AlarmNotificationEntity(
     @ColumnInfo(name = "min")
     val min: Int,
     @ColumnInfo(name = "week_days")
-    val weekDays: String
+    val weekDays: String,
+    @ColumnInfo(name = "isActive")
+    val isActive: Boolean
 )

@@ -34,7 +34,8 @@ class AlarmListRequestManager(val context: Context) {
                     it.alarmNotificationId,
                     it.hour,
                     it.min,
-                    it.weekDays
+                    it.weekDays,
+                    it.isActive
                 )
             }
 
