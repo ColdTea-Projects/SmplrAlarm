@@ -19,9 +19,6 @@ class AlarmFragment : Fragment() {
 
     private val viewModel by viewModels<AlarmViewModel>()
 
-    var requestCodeAlarm1 = -1
-    var requestCodeAlarm2 = -1
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -65,7 +62,7 @@ class AlarmFragment : Fragment() {
                 binding.sunday.isChecked
             )
 
-            viewModel.setAlarm(
+            val alarmId = viewModel.setAlarm(
                 binding.hour.text.toString().toInt(),
                 binding.minute.text.toString().toInt(),
                 weekInfo,
@@ -83,10 +80,49 @@ class AlarmFragment : Fragment() {
 
             Toast.makeText(requireContext(), toastText, LENGTH_SHORT).show()
 
+            binding.alarmId.setText(alarmId.toString())
         }
 
         binding.updateList.setOnClickListener {
             viewModel.requestAlarmList()
+        }
+
+        binding.updateAlarms.setOnClickListener {
+            val weekInfo = WeekInfo(
+                binding.monday.isChecked,
+                binding.tuesday.isChecked,
+                binding.wednesday.isChecked,
+                binding.thursday.isChecked,
+                binding.friday.isChecked,
+                binding.saturday.isChecked,
+                binding.sunday.isChecked
+            )
+
+            if(weekInfo.isSingleAlarm()){
+                viewModel.updateSingleAlarm(
+                    binding.alarmId.text.toString().toInt(),
+                    binding.hour.text.toString().toInt(),
+                    binding.minute.text.toString().toInt(),
+                    binding.isActive.isChecked,
+                    requireContext().applicationContext
+                )
+            }else{
+                viewModel.updateRepeatingAlarm(
+                    binding.alarmId.text.toString().toInt(),
+                    binding.hour.text.toString().toInt(),
+                    binding.minute.text.toString().toInt(),
+                    weekInfo,
+                    binding.isActive.isChecked,
+                    requireContext().applicationContext
+                )
+            }
+        }
+
+        binding.cancelAlarm.setOnClickListener {
+            viewModel.cancelAlarm(
+                binding.alarmId.text.toString().toInt(),
+                requireContext().applicationContext
+            )
         }
     }
 }

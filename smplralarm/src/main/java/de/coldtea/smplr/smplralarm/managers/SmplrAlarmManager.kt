@@ -129,6 +129,7 @@ class SmplrAlarmManager(val context: Context) {
 
         val calendar = Calendar.getInstance()
         cancelAlarm()
+        val updatedActivation = isActive
 
         CoroutineScope(Dispatchers.IO).launch {
             val notificationRepository = AlarmNotificationRepository(context)
@@ -145,10 +146,10 @@ class SmplrAlarmManager(val context: Context) {
                 updatedHour,
                 updatedMinute,
                 updatedWeekdays,
-                isActive
+                updatedActivation
             )
 
-            if (isActive) {
+            if (updatedActivation) {
                 alarmManager.setExactAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
                     calendar.getTimeExactForAlarmInMilliseconds(
@@ -211,7 +212,7 @@ class SmplrAlarmManager(val context: Context) {
 
     private fun cancelAlarm() {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val pendingIntent = getPendingIntent()
+        val pendingIntent = getPendingIntent() ?: return
 
         alarmManager.cancel(pendingIntent)
     }
@@ -279,6 +280,7 @@ class SmplrAlarmManager(val context: Context) {
         weekDays: List<WeekDays>?,
         isActive: Boolean?
     ) {
+
         try {
             alarmNotificationRepository.updateRepeatingAlarmNotification(
                 alarmNotificationId,

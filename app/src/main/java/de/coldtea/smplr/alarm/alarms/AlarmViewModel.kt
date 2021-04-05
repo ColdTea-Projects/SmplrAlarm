@@ -10,11 +10,9 @@ import de.coldtea.smplr.alarm.alarms.models.WeekInfo
 import de.coldtea.smplr.alarm.extensions.getTimeFormattedString
 import de.coldtea.smplr.alarm.extensions.nowPlus
 import de.coldtea.smplr.alarm.lockscreenalarm.ActivityLockScreenAlarm
+import de.coldtea.smplr.smplralarm.*
 import de.coldtea.smplr.smplralarm.managers.AlarmListRequestManager
 import de.coldtea.smplr.smplralarm.managers.SmplrAlarmManager
-import de.coldtea.smplr.smplralarm.smplrAlarmCancel
-import de.coldtea.smplr.smplralarm.smplrAlarmChangeOrRequestListener
-import de.coldtea.smplr.smplralarm.smplrAlarmSet
 import timber.log.Timber
 import java.util.*
 
@@ -37,7 +35,7 @@ class AlarmViewModel : ViewModel() {
             alarmListRequestManager = it
         }
 
-    fun setAlarm(hour: Int, minute: Int, weekInfo: WeekInfo, applicationContext: Context) {
+    fun setAlarm(hour: Int, minute: Int, weekInfo: WeekInfo, applicationContext: Context): Int {
         val intent = Intent(
             applicationContext,
             ActivityLockScreenAlarm::class.java
@@ -45,7 +43,7 @@ class AlarmViewModel : ViewModel() {
 
         intent.putExtra("SmplrText", "You did it, you crazy bastard you did it!")
 
-        smplrAlarmSet(applicationContext) {
+        return smplrAlarmSet(applicationContext) {
             hour { hour }
             min { minute }
             fullScreenIntent {
@@ -66,20 +64,44 @@ class AlarmViewModel : ViewModel() {
         }
     }
 
-    fun setAlarmIn(minutes: Int, applicationContext: Context): AlarmInfo {
-        val intent = Intent(
-            applicationContext,
-            ActivityLockScreenAlarm::class.java
-        )
+    fun updateRepeatingAlarm(
+        requestCode: Int,
+        hour: Int,
+        minute: Int,
+        weekInfo: WeekInfo,
+        isActive: Boolean,
+        applicationContext: Context
+    ) {
+        smplrAlarmUpdateRepeatingAlarm(applicationContext) {
+            requestCode { requestCode }
+            hour { hour }
+            min { minute }
+            weekdays {
+                if (weekInfo.monday) monday()
+                if (weekInfo.tuesday) tuesday()
+                if (weekInfo.wednesday) wednesday()
+                if (weekInfo.thursday) thursday()
+                if (weekInfo.friday) friday()
+                if (weekInfo.saturday) saturday()
+                if (weekInfo.sunday) sunday()
+            }
+            isActive { isActive }
+        }
+    }
 
-        val hourMin = cal.nowPlus(minutes)
-
-        intent.putExtra("SmplrText", "You did it, you crazy bastard you did it!")
-
-        val requestCode =
-            createBasicNotificationWithFullScreenIntent(hourMin, intent, applicationContext)
-
-        return AlarmInfo(requestCode, hourMin)
+    fun updateSingleAlarm(
+        requestCode: Int,
+        hour: Int,
+        minute: Int,
+        isActive: Boolean,
+        applicationContext: Context
+    ) {
+        smplrAlarmUpdateSingleAlarm(applicationContext) {
+            requestCode { requestCode }
+            hour { hour }
+            min { minute }
+            isActive { isActive }
+        }
     }
 
     fun requestAlarmList() = alarmListRequestManager.requestAlarmList()

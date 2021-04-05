@@ -16,12 +16,14 @@ internal fun List<WeekDays>.activeDaysAsJsonString(): String =
         )
 
 internal fun AlarmNotificationEntity.activeDaysAsWeekdaysList(): List<WeekDays>? =
-    Moshi
-        .Builder()
-        .build()
-        .adapter(ActiveWeekDays::class.java)
-        .fromJson(this.weekDays)
-        ?.days
+    if (this.weekDays == "[]") listOf()
+    else
+        Moshi
+            .Builder()
+            .build()
+            .adapter(ActiveWeekDays::class.java)
+            .fromJson(this.weekDays)
+            ?.days
 
 internal fun ActiveAlarmList.alarmsAsJsonString(): String? =
     Moshi.Builder()
