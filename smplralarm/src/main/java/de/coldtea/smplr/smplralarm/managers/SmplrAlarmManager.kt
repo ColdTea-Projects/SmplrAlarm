@@ -4,7 +4,6 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import de.coldtea.smplr.smplralarm.extensions.alarmsAsJsonString
 import de.coldtea.smplr.smplralarm.extensions.getTimeExactForAlarmInMilliseconds
 import de.coldtea.smplr.smplralarm.models.*
 import de.coldtea.smplr.smplralarm.receivers.AlarmNotification
@@ -25,6 +24,9 @@ class SmplrAlarmManager(val context: Context) {
 
     private var hour = -1
     private var min = -1
+    private var weekdays: List<WeekDays> = listOf()
+    private var isActive: Boolean = true
+
     private var requestCode = -1
     private var intent: Intent? = null
     private var fullScreenIntent: Intent? = null
@@ -34,7 +36,6 @@ class SmplrAlarmManager(val context: Context) {
 
     private var alarmRingEvent: AlarmRingEvent? = null
 
-    private var weekdays: List<WeekDays> = listOf()
 
     //endregion
 
@@ -87,6 +88,10 @@ class SmplrAlarmManager(val context: Context) {
         weekdays = WeekDaysManager().apply(lambda).getWeekDays()
     }
 
+    fun isActive(isActive: () -> Boolean) {
+        this.isActive = isActive()
+    }
+
     // endregion
 
     // region functionality
@@ -119,18 +124,97 @@ class SmplrAlarmManager(val context: Context) {
         return requestCode
     }
 
-    internal fun cancelAlarm() {
-        Timber.v("SmplrAlarm.AlarmManager.cancelAlarm: $requestCode -- $hour:$min")
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val pendingIntent = getPendingIntent()
+    internal fun updateRepeatingAlarm() {
+        if (requestCode == -1) return
 
-        alarmManager.cancel(pendingIntent)
+        val calendar = Calendar.getInstance()
+        cancelAlarm()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val notificationRepository = AlarmNotificationRepository(context)
+            val alarmNotification = notificationRepository.getAlarmNotification(requestCode)
+
+            val pendingIntent = createPendingIntent()
+
+            val updatedHour = if (hour == -1) alarmNotification.hour else hour
+            val updatedMinute = if (min == -1) alarmNotification.min else min
+            val updatedWeekdays = if (weekdays.isEmpty()) alarmNotification.weekDays else weekdays
+
+            updateRepeatingAlarmNotification(
+                requestCode,
+                updatedHour,
+                updatedMinute,
+                updatedWeekdays,
+                isActive
+            )
+
+            if (isActive) {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeExactForAlarmInMilliseconds(
+                        updatedHour,
+                        updatedMinute,
+                        updatedWeekdays
+                    ),
+                    pendingIntent
+                )
+            }
+
+        }
+    }
+
+    internal fun updateSingleAlarm(){
+        if (requestCode == -1) return
+
+        val calendar = Calendar.getInstance()
+        cancelAlarm()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val notificationRepository = AlarmNotificationRepository(context)
+            val alarmNotification = notificationRepository.getAlarmNotification(requestCode)
+
+            val pendingIntent = createPendingIntent()
+
+            val updatedHour = if (hour == -1) alarmNotification.hour else hour
+            val updatedMinute = if (min == -1) alarmNotification.min else min
+
+            updateSingleAlarmNotification(
+                requestCode,
+                updatedHour,
+                updatedMinute,
+                isActive
+            )
+
+            if (isActive) {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeExactForAlarmInMilliseconds(
+                        updatedHour,
+                        updatedMinute,
+                        listOf()
+                    ),
+                    pendingIntent
+                )
+            }
+
+        }
+    }
+
+    internal fun removeAlarm() {
+        Timber.v("SmplrAlarm.AlarmManager.cancelAlarm: $requestCode -- $hour:$min")
+        cancelAlarm()
 
         CoroutineScope(Dispatchers.IO).launch {
             deleteAlarmNotificationFromDatabase()
         }
     }
 
+    private fun cancelAlarm() {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val pendingIntent = getPendingIntent()
+
+        alarmManager.cancel(pendingIntent)
+    }
 
     private fun createPendingIntent() = PendingIntent.getBroadcast(
         context,
@@ -167,6 +251,44 @@ class SmplrAlarmManager(val context: Context) {
             alarmNotification.add(notificationBuilderItem)
         } catch (exception: Exception) {
             Timber.e("SmplrAlarm.AlarmManager.saveAlarmNotificationToDatabase: Alarm Notification could not be saved to the database --> $exception")
+        }
+    }
+
+    private suspend fun updateSingleAlarmNotification(
+        alarmNotificationId: Int,
+        hour: Int?,
+        min: Int?,
+        isActive: Boolean?
+    ) {
+        try {
+            alarmNotificationRepository.updateSingleAlarmNotification(
+                alarmNotificationId,
+                hour,
+                min,
+                isActive
+            )
+        } catch (exception: Exception) {
+            Timber.e("SmplrAlarm.AlarmManager.saveAlarmNotificationToDatabase: Alarm Notification could not be updated to the database --> $exception")
+        }
+    }
+
+    private suspend fun updateRepeatingAlarmNotification(
+        alarmNotificationId: Int,
+        hour: Int?,
+        min: Int?,
+        weekDays: List<WeekDays>?,
+        isActive: Boolean?
+    ) {
+        try {
+            alarmNotificationRepository.updateRepeatingAlarmNotification(
+                alarmNotificationId,
+                hour,
+                min,
+                weekDays,
+                isActive
+            )
+        } catch (exception: Exception) {
+            Timber.e("SmplrAlarm.AlarmManager.saveAlarmNotificationToDatabase: Alarm Notification could not be updated to the database --> $exception")
         }
     }
 

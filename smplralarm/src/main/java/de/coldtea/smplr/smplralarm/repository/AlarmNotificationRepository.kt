@@ -4,12 +4,15 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.Intent.URI_ALLOW_UNSAFE
+import de.coldtea.smplr.smplralarm.extensions.activeDaysAsJsonString
 import de.coldtea.smplr.smplralarm.extensions.activeDaysAsWeekdaysList
 import de.coldtea.smplr.smplralarm.extensions.convertToNotificationItem
+import de.coldtea.smplr.smplralarm.models.WeekDays
 import de.coldtea.smplr.smplralarm.receivers.AlarmNotification
 import de.coldtea.smplr.smplralarm.receivers.extractAlarmNotificationEntity
 import de.coldtea.smplr.smplralarm.receivers.extractNotificationChannelEntity
 import de.coldtea.smplr.smplralarm.receivers.extractNotificationEntity
+import de.coldtea.smplr.smplralarm.repository.entity.AlarmNotificationEntity
 import de.coldtea.smplr.smplralarm.repository.entity.convertToNotificationChannelItem
 import org.json.JSONException
 import org.json.JSONObject
@@ -51,6 +54,58 @@ internal class AlarmNotificationRepository(
                 alarmNotification.alarmNotificationId
             )
         )
+
+    }
+
+    suspend fun updateSingleAlarmNotification(
+        alarmNotificationId: Int,
+        hour: Int?,
+        min: Int?,
+        isActive: Boolean?
+    ) {
+
+        val alarmNotification = getAlarmNotification(alarmNotificationId)
+
+        val updatedHour = hour ?: alarmNotification.hour
+        val updatedMinute = min ?: alarmNotification.min
+        val updatedActivationState = isActive ?: alarmNotification.isActive
+
+        val newAlarmNotificationEntity = AlarmNotificationEntity(
+            alarmNotificationId,
+            updatedHour,
+            updatedMinute,
+            listOf<WeekDays>().toString(),
+            updatedActivationState
+        )
+
+        alarmNotificationDatabase.daoAlarmNotification.update(newAlarmNotificationEntity)
+
+    }
+
+    suspend fun updateRepeatingAlarmNotification(
+        alarmNotificationId: Int,
+        hour: Int?,
+        min: Int?,
+        weekDays: List<WeekDays>?,
+        isActive: Boolean?
+    ) {
+
+        val alarmNotification = getAlarmNotification(alarmNotificationId)
+
+        val updatedHour = hour ?: alarmNotification.hour
+        val updatedMinute = min ?: alarmNotification.min
+        val updatedWeekDays = weekDays ?: alarmNotification.weekDays
+        val updatedActivationState = isActive ?: alarmNotification.isActive
+
+        val newAlarmNotificationEntity = AlarmNotificationEntity(
+            alarmNotificationId,
+            updatedHour,
+            updatedMinute,
+            updatedWeekDays.activeDaysAsJsonString(),
+            updatedActivationState
+        )
+
+        alarmNotificationDatabase.daoAlarmNotification.update(newAlarmNotificationEntity)
 
     }
 

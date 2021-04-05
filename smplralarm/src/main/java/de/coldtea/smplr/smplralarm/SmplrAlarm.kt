@@ -13,13 +13,13 @@ fun smplrAlarmSet(context: Context, lambda: SmplrAlarmManager.() -> Unit): Int =
     SmplrAlarmManager(context).apply(lambda).setAlarm()
 
 fun smplrAlarmCancel(context: Context, lambda: SmplrAlarmManager.() -> Unit) =
-    SmplrAlarmManager(context).apply(lambda).cancelAlarm()
+    SmplrAlarmManager(context).apply(lambda).removeAlarm()
 
-fun channel(lambda: ChannelManager.() -> Unit): NotificationChannelItem =
-    ChannelManager().apply(lambda).build()
+fun smplrAlarmUpdateRepeatingAlarm(context: Context, lambda: SmplrAlarmManager.() -> Unit) =
+    SmplrAlarmManager(context).apply(lambda).updateRepeatingAlarm()
 
-fun alarmNotification(lambda: AlarmNotificationManager.() -> Unit): NotificationItem =
-    AlarmNotificationManager().apply(lambda).build()
+fun smplrAlarmUpdateSingleAlarm(context: Context, lambda: SmplrAlarmManager.() -> Unit) =
+    SmplrAlarmManager(context).apply(lambda).updateSingleAlarm()
 
 fun smplrAlarmChangeOrRequestListener(context: Context, lambda:  ((String) -> Unit)) =
     AlarmListRequestManager(context).apply {
