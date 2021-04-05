@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AlarmListRequestManager(val context: Context) {
+class SmplrAlarmListRequestManager(val context: Context) {
 
     internal var alarmListChangeOrRequestedListener: ((String) -> Unit)? = null
 
