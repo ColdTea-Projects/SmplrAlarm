@@ -164,7 +164,7 @@ class SmplrAlarmManager(val context: Context) {
         }
     }
 
-    internal fun updateSingleAlarm(){
+    internal fun updateSingleAlarm() {
         if (requestCode == -1) return
 
         val calendar = Calendar.getInstance()
@@ -179,6 +179,9 @@ class SmplrAlarmManager(val context: Context) {
             val updatedHour = if (hour == -1) alarmNotification.hour else hour
             val updatedMinute = if (min == -1) alarmNotification.min else min
 
+            val daysToSkip =
+                if (alarmNotification.hour == updatedHour && alarmNotification.min == updatedMinute) 1 else 0
+
             updateSingleAlarmNotification(
                 requestCode,
                 updatedHour,
@@ -192,7 +195,8 @@ class SmplrAlarmManager(val context: Context) {
                     calendar.getTimeExactForAlarmInMilliseconds(
                         updatedHour,
                         updatedMinute,
-                        listOf()
+                        listOf(),
+                        daysToSkip
                     ),
                     pendingIntent
                 )

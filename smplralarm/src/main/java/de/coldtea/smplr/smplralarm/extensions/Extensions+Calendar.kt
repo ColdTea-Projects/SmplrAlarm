@@ -31,6 +31,7 @@ private fun Calendar.getTimeExactForAlarm(
     set(Calendar.MILLISECOND, 0)
 
     if (weekDays.isNotEmpty()) setTheDay(weekDays.getClosestDay(daysToSkip), now.isTimeAhead(hour, minute))
+    else add(Calendar.DATE, daysToSkip)
 
     return this
 }
