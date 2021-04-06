@@ -162,21 +162,21 @@ internal class AlarmNotificationRepository(
     }
 
     /**
-     * This function attempts to delete the alarm from database. If there are weekdays assigned,
-     * it does not delete. In either case, it let's the caller know if the record deleted.
+     * This function attempts to deactivate the alarm from database. If there are weekdays assigned,
+     * it does not delete. In either case, it let's the caller know if the record deactivated.
      *
      * @param intentId primary key of the alarm
      */
-    suspend fun deleteAlarmNotificationWithResult(intentId: Int): Boolean {
+    suspend fun deactivateSingleAlarmNotification(intentId: Int) {
         val alarmNotification =
             alarmNotificationDatabase.daoAlarmNotification.getAlarmNotification(intentId).first()
 
-        if (alarmNotification.alarmNotificationEntity.weekDays.isNotEmpty()) return false
-
-        alarmNotificationDatabase.daoNotificationChannel.delete(alarmNotification.notificationChannelEntity)
-        alarmNotificationDatabase.daoNotification.delete(alarmNotification.notificationEntity)
-        alarmNotificationDatabase.daoAlarmNotification.delete(alarmNotification.alarmNotificationEntity)
-        return true
+        updateSingleAlarmNotification(
+            alarmNotification.alarmNotificationEntity.alarmNotificationId,
+            alarmNotification.alarmNotificationEntity.hour,
+            alarmNotification.alarmNotificationEntity.min,
+            false
+        )
     }
 
     suspend fun deleteAlarmsBeforeNow() {

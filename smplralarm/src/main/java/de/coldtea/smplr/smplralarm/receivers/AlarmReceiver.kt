@@ -19,41 +19,46 @@ internal class AlarmReceiver : BroadcastReceiver() {
     private var repository: AlarmNotificationRepository? = null
 
     override fun onReceive(context: Context, intent: Intent) {
-            try {
-                repository = AlarmNotificationRepository(context)
-                val requestId = intent.getIntExtra(SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID, -1)
+        try {
+            repository = AlarmNotificationRepository(context)
+            val requestId =
+                intent.getIntExtra(SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID, -1)
 
-                Timber.v("SmplrAlarm.AlarmReceiver.onReceive --> $requestId")
+            Timber.v("SmplrAlarm.AlarmReceiver.onReceive --> $requestId")
 
-                if(requestId == -1) return
+            if (requestId == -1) return
 
-                CoroutineScope(Dispatchers.IO).launch {
+            CoroutineScope(Dispatchers.IO).launch {
 
-                    repository?.let {
+                repository?.let {
 
-                        val alarmNotification = it.getAlarmNotification(requestId)
+                    val alarmNotification = it.getAlarmNotification(requestId)
 
-                        context.showNotificationWithIntent(
-                            alarmNotification.notificationChannelItem,
-                            IntentNotificationItem(
-                                alarmNotification.fullScreenIntent,
-                                alarmNotification.notificationItem
-                            )
+                    context.showNotificationWithIntent(
+                        alarmNotification.notificationChannelItem,
+                        IntentNotificationItem(
+                            alarmNotification.fullScreenIntent,
+                            alarmNotification.notificationItem
                         )
+                    )
 
-                        if(!it.deleteAlarmNotificationWithResult(requestId)){
-                            resetTheAlarmForTheNextDayOnTheList(context, alarmNotification)
-                        }
-
-                    }
+                    if (alarmNotification.weekDays.isNullOrEmpty())
+                        it.deactivateSingleAlarmNotification(requestId)
+                    else
+                        resetTheAlarmForTheNextDayOnTheList(context, alarmNotification)
 
                 }
-            } catch (e: Exception) {
-                Timber.e("SmplrAlarm.AlarmReceiver.onReceive: exception --> $e")
+
             }
+        } catch (e: Exception) {
+            Timber.e("SmplrAlarm.AlarmReceiver.onReceive: exception --> $e")
+        }
     }
 
-    private fun resetTheAlarmForTheNextDayOnTheList(context: Context, alarmNotification: AlarmNotification) = repository?.let{
+    private fun resetTheAlarmForTheNextDayOnTheList(
+        context: Context,
+        alarmNotification: AlarmNotification
+    ) = repository?.let {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val calendar = Calendar.getInstance()
         val pendingIntent = createPendingIntent(context, alarmNotification)
@@ -71,15 +76,16 @@ internal class AlarmReceiver : BroadcastReceiver() {
 
     }
 
-    private fun createPendingIntent(context: Context, alarmNotification: AlarmNotification) = PendingIntent.getBroadcast(
-        context,
-        alarmNotification.alarmNotificationId,
-        build(context).putExtra(
-            SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID,
-            alarmNotification.alarmNotificationId
-        ),
-        PendingIntent.FLAG_UPDATE_CURRENT
-    )
+    private fun createPendingIntent(context: Context, alarmNotification: AlarmNotification) =
+        PendingIntent.getBroadcast(
+            context,
+            alarmNotification.alarmNotificationId,
+            build(context).putExtra(
+                SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID,
+                alarmNotification.alarmNotificationId
+            ),
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
     companion object {
         fun build(context: Context): Intent {
