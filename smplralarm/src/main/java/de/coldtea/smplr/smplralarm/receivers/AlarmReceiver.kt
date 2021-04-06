@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.lang.IllegalArgumentException
 import java.util.*
 
 internal class AlarmReceiver : BroadcastReceiver() {
@@ -31,21 +32,26 @@ internal class AlarmReceiver : BroadcastReceiver() {
             CoroutineScope(Dispatchers.IO).launch {
 
                 repository?.let {
+                    try {
+                        val alarmNotification = it.getAlarmNotification(requestId)
 
-                    val alarmNotification = it.getAlarmNotification(requestId)
-
-                    context.showNotificationWithIntent(
-                        alarmNotification.notificationChannelItem,
-                        IntentNotificationItem(
-                            alarmNotification.fullScreenIntent,
-                            alarmNotification.notificationItem
+                        context.showNotificationWithIntent(
+                            alarmNotification.notificationChannelItem,
+                            IntentNotificationItem(
+                                alarmNotification.fullScreenIntent,
+                                alarmNotification.notificationItem
+                            )
                         )
-                    )
 
-                    if (alarmNotification.weekDays.isNullOrEmpty())
-                        it.deactivateSingleAlarmNotification(requestId)
-                    else
-                        resetTheAlarmForTheNextDayOnTheList(context, alarmNotification)
+                        if (alarmNotification.weekDays.isNullOrEmpty())
+                            it.deactivateSingleAlarmNotification(requestId)
+                        else
+                            resetTheAlarmForTheNextDayOnTheList(context, alarmNotification)
+                    } catch (ex: IllegalArgumentException) {
+                        Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: The alarm intended to be removed does not exist! ")
+                    } catch (ex: Exception) {
+                        Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: $ex ")
+                    }
 
                 }
 

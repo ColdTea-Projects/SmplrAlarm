@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.Intent.URI_ALLOW_UNSAFE
+import android.content.res.Resources
 import de.coldtea.smplr.smplralarm.extensions.activeDaysAsJsonString
 import de.coldtea.smplr.smplralarm.extensions.activeDaysAsWeekdaysList
 import de.coldtea.smplr.smplralarm.extensions.convertToNotificationItem
@@ -16,6 +17,8 @@ import de.coldtea.smplr.smplralarm.repository.entity.AlarmNotificationEntity
 import de.coldtea.smplr.smplralarm.repository.entity.convertToNotificationChannelItem
 import org.json.JSONException
 import org.json.JSONObject
+import timber.log.Timber
+import java.lang.NullPointerException
 import java.net.URISyntaxException
 import java.util.*
 
@@ -108,10 +111,11 @@ internal class AlarmNotificationRepository(
         alarmNotificationDatabase.daoAlarmNotification.update(newAlarmNotificationEntity)
 
     }
-
+    @Throws(IllegalArgumentException::class)
     suspend fun getAlarmNotification(intentId: Int): AlarmNotification {
         val alarmNotification =
-            alarmNotificationDatabase.daoAlarmNotification.getAlarmNotification(intentId).first()
+            alarmNotificationDatabase.daoAlarmNotification.getAlarmNotification(intentId).firstOrNull()
+                ?: throw IllegalArgumentException()
 
         return AlarmNotification(
             alarmNotificationId = intentId,

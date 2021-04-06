@@ -13,6 +13,8 @@ import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiverObjects.Companion
 import de.coldtea.smplr.smplralarm.repository.AlarmNotificationRepository
 import kotlinx.coroutines.*
 import timber.log.Timber
+import java.lang.IllegalArgumentException
+import java.lang.NullPointerException
 import java.util.Calendar
 import kotlin.math.absoluteValue
 
@@ -133,34 +135,41 @@ class SmplrAlarmManager(val context: Context) {
 
         CoroutineScope(Dispatchers.IO).launch {
             val notificationRepository = AlarmNotificationRepository(context)
-            val alarmNotification = notificationRepository.getAlarmNotification(requestCode)
+            try {
+                val alarmNotification = notificationRepository.getAlarmNotification(requestCode)
 
-            val pendingIntent = createPendingIntent()
+                val pendingIntent = createPendingIntent()
 
-            val updatedHour = if (hour == -1) alarmNotification.hour else hour
-            val updatedMinute = if (min == -1) alarmNotification.min else min
-            val updatedWeekdays = if (weekdays.isEmpty()) alarmNotification.weekDays else weekdays
+                val updatedHour = if (hour == -1) alarmNotification.hour else hour
+                val updatedMinute = if (min == -1) alarmNotification.min else min
+                val updatedWeekdays =
+                    if (weekdays.isEmpty()) alarmNotification.weekDays else weekdays
 
-            updateRepeatingAlarmNotification(
-                requestCode,
-                updatedHour,
-                updatedMinute,
-                updatedWeekdays,
-                updatedActivation
-            )
-
-            if (updatedActivation) {
-                alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.getTimeExactForAlarmInMilliseconds(
-                        updatedHour,
-                        updatedMinute,
-                        updatedWeekdays
-                    ),
-                    pendingIntent
+                updateRepeatingAlarmNotification(
+                    requestCode,
+                    updatedHour,
+                    updatedMinute,
+                    updatedWeekdays,
+                    updatedActivation
                 )
-            }
 
+                if (updatedActivation) {
+                    alarmManager.setExactAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        calendar.getTimeExactForAlarmInMilliseconds(
+                            updatedHour,
+                            updatedMinute,
+                            updatedWeekdays
+                        ),
+                        pendingIntent
+                    )
+                }
+
+            } catch (ex: IllegalArgumentException) {
+                Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: The alarm intended to be removed does not exist! ")
+            } catch (ex: Exception) {
+                Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: $ex ")
+            }
         }
     }
 
@@ -171,35 +180,41 @@ class SmplrAlarmManager(val context: Context) {
         cancelAlarm()
 
         CoroutineScope(Dispatchers.IO).launch {
-            val notificationRepository = AlarmNotificationRepository(context)
-            val alarmNotification = notificationRepository.getAlarmNotification(requestCode)
+            try {
+                val notificationRepository = AlarmNotificationRepository(context)
+                val alarmNotification = notificationRepository.getAlarmNotification(requestCode)
 
-            val pendingIntent = createPendingIntent()
+                val pendingIntent = createPendingIntent()
 
-            val updatedHour = if (hour == -1) alarmNotification.hour else hour
-            val updatedMinute = if (min == -1) alarmNotification.min else min
+                val updatedHour = if (hour == -1) alarmNotification.hour else hour
+                val updatedMinute = if (min == -1) alarmNotification.min else min
 
-            val daysToSkip =
-                if (alarmNotification.hour == updatedHour && alarmNotification.min == updatedMinute) 1 else 0
+                val daysToSkip =
+                    if (alarmNotification.hour == updatedHour && alarmNotification.min == updatedMinute) 1 else 0
 
-            updateSingleAlarmNotification(
-                requestCode,
-                updatedHour,
-                updatedMinute,
-                isActive
-            )
-
-            if (isActive) {
-                alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.getTimeExactForAlarmInMilliseconds(
-                        updatedHour,
-                        updatedMinute,
-                        listOf(),
-                        daysToSkip
-                    ),
-                    pendingIntent
+                updateSingleAlarmNotification(
+                    requestCode,
+                    updatedHour,
+                    updatedMinute,
+                    isActive
                 )
+
+                if (isActive) {
+                    alarmManager.setExactAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        calendar.getTimeExactForAlarmInMilliseconds(
+                            updatedHour,
+                            updatedMinute,
+                            listOf(),
+                            daysToSkip
+                        ),
+                        pendingIntent
+                    )
+                }
+            } catch (ex: IllegalArgumentException) {
+                Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: The alarm intended to be removed does not exist! ")
+            } catch (ex: Exception) {
+                Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: $ex ")
             }
 
         }
