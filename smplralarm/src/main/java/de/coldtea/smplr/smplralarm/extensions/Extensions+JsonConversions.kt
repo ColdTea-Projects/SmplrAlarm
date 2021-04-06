@@ -1,14 +1,12 @@
 package de.coldtea.smplr.smplralarm.extensions
 
-import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import de.coldtea.smplr.smplralarm.models.ActiveAlarmList
 import de.coldtea.smplr.smplralarm.models.ActiveWeekDays
-import de.coldtea.smplr.smplralarm.models.AlarmItem
 import de.coldtea.smplr.smplralarm.models.WeekDays
 import de.coldtea.smplr.smplralarm.repository.entity.AlarmNotificationEntity
 
-fun List<WeekDays>.activeDaysAsJsonString(): String =
+internal fun List<WeekDays>.activeDaysAsJsonString(): String =
     Moshi
         .Builder()
         .build()
@@ -17,15 +15,17 @@ fun List<WeekDays>.activeDaysAsJsonString(): String =
             ActiveWeekDays(this)
         )
 
-fun AlarmNotificationEntity.activeDaysAsWeekdaysList(): List<WeekDays>? =
-    Moshi
-        .Builder()
-        .build()
-        .adapter(ActiveWeekDays::class.java)
-        .fromJson(this.weekDays)
-        ?.days
+internal fun AlarmNotificationEntity.activeDaysAsWeekdaysList(): List<WeekDays>? =
+    if (this.weekDays == "[]") listOf()
+    else
+        Moshi
+            .Builder()
+            .build()
+            .adapter(ActiveWeekDays::class.java)
+            .fromJson(this.weekDays)
+            ?.days
 
-fun ActiveAlarmList.alarmsAsJsonString(): String? =
+internal fun ActiveAlarmList.alarmsAsJsonString(): String? =
     Moshi.Builder()
         .build()
         .adapter(ActiveAlarmList::class.java)

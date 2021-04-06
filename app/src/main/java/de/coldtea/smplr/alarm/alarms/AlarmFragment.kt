@@ -20,9 +20,6 @@ class AlarmFragment : Fragment() {
 
     private val viewModel by viewModels<AlarmViewModel>()
 
-    var requestCodeAlarm1 = -1
-    var requestCodeAlarm2 = -1
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -48,45 +45,6 @@ class AlarmFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        binding.setAlarm1.setOnClickListener {
-
-            val alarmInfo = viewModel.setAlarmIn(1, requireContext().applicationContext)
-            Toast.makeText(
-                requireContext(),
-                "${alarmInfo.time.first}:${alarmInfo.time.second}",
-                LENGTH_SHORT
-            ).show()
-            requestCodeAlarm1 = alarmInfo.requestCode
-
-        }
-
-        binding.setAlarm2.setOnClickListener {
-
-            val alarmInfo = viewModel.setAlarmIn(2, requireContext().applicationContext)
-            Toast.makeText(
-                requireContext(),
-                "${alarmInfo.time.first}:${alarmInfo.time.second}",
-                LENGTH_SHORT
-            ).show()
-            requestCodeAlarm2 = alarmInfo.requestCode
-
-        }
-
-        binding.cancelAlarm1.setOnClickListener {
-            if (requestCodeAlarm1 != -1) viewModel.cancelAlarm(
-                requestCodeAlarm1,
-                requireContext().applicationContext
-            )
-        }
-
-        binding.cancelAlarm2.setOnClickListener {
-            if (requestCodeAlarm2 != -1) viewModel.cancelAlarm(
-                requestCodeAlarm2,
-                requireContext().applicationContext
-            )
-        }
-
         val defaultTime = Calendar.getInstance().nowPlus(1)
 
         binding.hour.setText(defaultTime.first.toString())
@@ -105,7 +63,7 @@ class AlarmFragment : Fragment() {
                 binding.sunday.isChecked
             )
 
-            viewModel.setAlarm(
+            val alarmId = viewModel.setAlarm(
                 binding.hour.text.toString().toInt(),
                 binding.minute.text.toString().toInt(),
                 weekInfo,
@@ -123,10 +81,49 @@ class AlarmFragment : Fragment() {
 
             Toast.makeText(requireContext(), toastText, LENGTH_SHORT).show()
 
+            binding.alarmId.setText(alarmId.toString())
         }
 
         binding.updateList.setOnClickListener {
             viewModel.requestAlarmList()
+        }
+
+        binding.updateAlarms.setOnClickListener {
+            val weekInfo = WeekInfo(
+                binding.monday.isChecked,
+                binding.tuesday.isChecked,
+                binding.wednesday.isChecked,
+                binding.thursday.isChecked,
+                binding.friday.isChecked,
+                binding.saturday.isChecked,
+                binding.sunday.isChecked
+            )
+
+            if(weekInfo.isSingleAlarm()){
+                viewModel.updateSingleAlarm(
+                    binding.alarmId.text.toString().toInt(),
+                    binding.hour.text.toString().toInt(),
+                    binding.minute.text.toString().toInt(),
+                    binding.isActive.isChecked,
+                    requireContext().applicationContext
+                )
+            }else{
+                viewModel.updateRepeatingAlarm(
+                    binding.alarmId.text.toString().toInt(),
+                    binding.hour.text.toString().toInt(),
+                    binding.minute.text.toString().toInt(),
+                    weekInfo,
+                    binding.isActive.isChecked,
+                    requireContext().applicationContext
+                )
+            }
+        }
+
+        binding.cancelAlarm.setOnClickListener {
+            viewModel.cancelAlarm(
+                binding.alarmId.text.toString().toInt(),
+                requireContext().applicationContext
+            )
         }
     }
 

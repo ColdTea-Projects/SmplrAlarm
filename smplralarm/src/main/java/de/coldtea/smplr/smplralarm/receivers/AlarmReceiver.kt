@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.text.SimpleDateFormat
+import java.lang.IllegalArgumentException
 import java.util.*
 
 internal class AlarmReceiver : BroadcastReceiver() {
@@ -35,14 +36,14 @@ internal class AlarmReceiver : BroadcastReceiver() {
 
                 val requestId = intent.getIntExtra(SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID, -1)
 
-                Timber.v("SmplrAlarm.AlarmReceiver.onReceive --> $requestId")
+            Timber.v("SmplrAlarm.AlarmReceiver.onReceive --> $requestId")
 
-                if(requestId == -1) return
+            if (requestId == -1) return
 
-                CoroutineScope(Dispatchers.IO).launch {
+            CoroutineScope(Dispatchers.IO).launch {
 
-                    repository?.let {
-
+                repository?.let {
+                    try {
                         val alarmNotification = it.getAlarmNotification(requestId)
 
                         context.showNotificationWithIntent(
@@ -53,11 +54,17 @@ internal class AlarmReceiver : BroadcastReceiver() {
                             )
                         )
 
-                        if(!it.deleteAlarmNotificationWithResult(requestId)){
+                        if (alarmNotification.weekDays.isNullOrEmpty())
+                            it.deactivateSingleAlarmNotification(requestId)
+                        else
                             resetTheAlarmForTheNextDayOnTheList(context, alarmNotification)
-                        }
-
+                    } catch (ex: IllegalArgumentException) {
+                        Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: The alarm intended to be removed does not exist! ")
+                    } catch (ex: Exception) {
+                        Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: $ex ")
                     }
+
+                }
 
                 }
 
@@ -76,7 +83,10 @@ internal class AlarmReceiver : BroadcastReceiver() {
             }
     }
 
-    private fun resetTheAlarmForTheNextDayOnTheList(context: Context, alarmNotification: AlarmNotification) = repository?.let{
+    private fun resetTheAlarmForTheNextDayOnTheList(
+        context: Context,
+        alarmNotification: AlarmNotification
+    ) = repository?.let {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val calendar = Calendar.getInstance()
         val pendingIntent = createPendingIntent(context, alarmNotification)
@@ -94,15 +104,16 @@ internal class AlarmReceiver : BroadcastReceiver() {
 
     }
 
-    private fun createPendingIntent(context: Context, alarmNotification: AlarmNotification) = PendingIntent.getBroadcast(
-        context,
-        alarmNotification.alarmNotificationId,
-        build(context).putExtra(
-            SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID,
-            alarmNotification.alarmNotificationId
-        ),
-        PendingIntent.FLAG_UPDATE_CURRENT
-    )
+    private fun createPendingIntent(context: Context, alarmNotification: AlarmNotification) =
+        PendingIntent.getBroadcast(
+            context,
+            alarmNotification.alarmNotificationId,
+            build(context).putExtra(
+                SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID,
+                alarmNotification.alarmNotificationId
+            ),
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
     private fun Calendar.dateTime():Pair<String, String>{
         val sdfDate = SimpleDateFormat("dd/M/yyyy", Locale.getDefault())

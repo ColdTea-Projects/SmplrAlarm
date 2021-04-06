@@ -33,7 +33,7 @@ internal class RebootReceiver : BroadcastReceiver() {
                 val notificationRepository = AlarmNotificationRepository(context)
                 val alarmNotifications = notificationRepository.getAllAlarmNotifications()
 
-                alarmNotifications.map {
+                alarmNotifications.filter { it.isActive }.map {
                     val pendingIntent = createPendingIntent(context, it)
 
                     alarmManager.setExactAndAllowWhileIdle(

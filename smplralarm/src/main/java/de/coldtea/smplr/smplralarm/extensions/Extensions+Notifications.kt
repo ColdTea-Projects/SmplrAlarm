@@ -7,9 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import de.coldtea.smplr.smplralarm.R
-import de.coldtea.smplr.smplralarm.models.AlarmItem
 import de.coldtea.smplr.smplralarm.models.IntentNotificationItem
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 import de.coldtea.smplr.smplralarm.models.NotificationItem
@@ -31,7 +28,7 @@ private fun Context.initChannelAndReturnName(notificationChannelItem: Notificati
         channelId
     } else packageName
 
-fun Context.showNotificationWithIntent(
+internal fun Context.showNotificationWithIntent(
     notificationChannelItem: NotificationChannelItem,
     intentNotificationItem: IntentNotificationItem
 ) {
@@ -53,7 +50,7 @@ fun Context.showNotificationWithIntent(
 
 }
 
-fun Context.showNotification(
+internal fun Context.showNotification(
     notificationChannelItem: NotificationChannelItem,
     notificationItem: NotificationItem
 ) {

@@ -5,7 +5,7 @@ import androidx.room.Query
 import de.coldtea.smplr.smplralarm.repository.entity.NotificationChannelEntity
 
 @Dao
-abstract class DaoNotificationChannel : DaoBase<NotificationChannelEntity> {
+internal abstract class DaoNotificationChannel : DaoBase<NotificationChannelEntity> {
 
     @Query("SELECT * From notification_channel_table")
     abstract suspend fun getNotificationChannel() : List<NotificationChannelEntity>

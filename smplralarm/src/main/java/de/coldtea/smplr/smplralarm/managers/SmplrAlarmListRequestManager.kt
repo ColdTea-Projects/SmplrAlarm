@@ -9,9 +9,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AlarmListRequestManager(val context: Context) {
+class SmplrAlarmListRequestManager(val context: Context) {
 
-    var alarmListChangeOrRequestedListener: ((String) -> Unit)? = null
+    internal var alarmListChangeOrRequestedListener: ((String) -> Unit)? = null
 
     private var alarmListJson: String = ""
         set(value) {
@@ -34,7 +34,8 @@ class AlarmListRequestManager(val context: Context) {
                     it.alarmNotificationId,
                     it.hour,
                     it.min,
-                    it.weekDays
+                    it.weekDays,
+                    it.isActive
                 )
             }
 

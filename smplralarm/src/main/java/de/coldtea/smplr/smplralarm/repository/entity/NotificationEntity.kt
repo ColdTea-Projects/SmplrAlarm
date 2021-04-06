@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 
 @Entity(tableName = "notification_table")
-data class NotificationEntity(
+internal data class NotificationEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "full_screen_intent_id")
     val notificationId: Int,

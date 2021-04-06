@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "alarm_notification_table")
-data class AlarmNotificationEntity(
+internal data class AlarmNotificationEntity(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "alarm_notification_id")
     val alarmNotificationId: Int,
@@ -14,5 +14,7 @@ data class AlarmNotificationEntity(
     @ColumnInfo(name = "min")
     val min: Int,
     @ColumnInfo(name = "week_days")
-    val weekDays: String
+    val weekDays: String,
+    @ColumnInfo(name = "isActive")
+    val isActive: Boolean
 )

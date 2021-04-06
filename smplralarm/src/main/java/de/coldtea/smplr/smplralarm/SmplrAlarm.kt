@@ -1,27 +1,23 @@
 package de.coldtea.smplr.smplralarm
 
 import android.content.Context
-import de.coldtea.smplr.smplralarm.managers.AlarmListRequestManager
+import de.coldtea.smplr.smplralarm.managers.SmplrAlarmListRequestManager
 import de.coldtea.smplr.smplralarm.managers.SmplrAlarmManager
-import de.coldtea.smplr.smplralarm.managers.AlarmNotificationManager
-import de.coldtea.smplr.smplralarm.managers.ChannelManager
-import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
-import de.coldtea.smplr.smplralarm.models.NotificationItem
 
 
 fun smplrAlarmSet(context: Context, lambda: SmplrAlarmManager.() -> Unit): Int =
     SmplrAlarmManager(context).apply(lambda).setAlarm()
 
 fun smplrAlarmCancel(context: Context, lambda: SmplrAlarmManager.() -> Unit) =
-    SmplrAlarmManager(context).apply(lambda).cancelAlarm()
+    SmplrAlarmManager(context).apply(lambda).removeAlarm()
 
-fun channel(lambda: ChannelManager.() -> Unit): NotificationChannelItem =
-    ChannelManager().apply(lambda).build()
+fun smplrAlarmUpdateRepeatingAlarm(context: Context, lambda: SmplrAlarmManager.() -> Unit) =
+    SmplrAlarmManager(context).apply(lambda).updateRepeatingAlarm()
 
-fun alarmNotification(lambda: AlarmNotificationManager.() -> Unit): NotificationItem =
-    AlarmNotificationManager().apply(lambda).build()
+fun smplrAlarmUpdateSingleAlarm(context: Context, lambda: SmplrAlarmManager.() -> Unit) =
+    SmplrAlarmManager(context).apply(lambda).updateSingleAlarm()
 
 fun smplrAlarmChangeOrRequestListener(context: Context, lambda:  ((String) -> Unit)) =
-    AlarmListRequestManager(context).apply {
+    SmplrAlarmListRequestManager(context).apply {
         alarmListChangeOrRequestedListener = lambda
     }

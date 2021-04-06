@@ -2,7 +2,7 @@ package de.coldtea.smplr.smplralarm.repository.dao
 
 import androidx.room.*
 
-interface DaoBase<T> {
+internal interface DaoBase<T> {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(obj: T): Long
@@ -19,7 +19,7 @@ interface DaoBase<T> {
 }
 
 @Transaction
-suspend inline fun <reified T> DaoBase<T>.insertOrUpdate(item: T) {
+internal suspend inline fun <reified T> DaoBase<T>.insertOrUpdate(item: T) {
     if (insert(item) != -1L) return
     update(item)
 }
