@@ -240,7 +240,7 @@ class SmplrAlarmManager(val context: Context) {
         context,
         requestCode,
         AlarmReceiver.build(context).putExtra(SMPLR_ALARM_RECEIVER_INTENT_ID, requestCode),
-        PendingIntent.FLAG_UPDATE_CURRENT
+        0
     )
 
     private fun getPendingIntent() = PendingIntent.getBroadcast(
