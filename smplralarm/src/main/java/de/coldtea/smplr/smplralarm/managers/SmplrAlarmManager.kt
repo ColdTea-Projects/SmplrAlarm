@@ -221,7 +221,6 @@ class SmplrAlarmManager(val context: Context) {
     }
 
     internal fun removeAlarm() {
-        Timber.v("SmplrAlarm.AlarmManager.cancelAlarm: $requestCode -- $hour:$min")
         cancelAlarm()
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -234,6 +233,7 @@ class SmplrAlarmManager(val context: Context) {
         val pendingIntent = getPendingIntent() ?: return
 
         alarmManager.cancel(pendingIntent)
+        Timber.v("SmplrAlarm.AlarmManager.cancelAlarm: $requestCode -- $hour:$min")
     }
 
     private fun createPendingIntent() = PendingIntent.getBroadcast(
