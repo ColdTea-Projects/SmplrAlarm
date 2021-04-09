@@ -325,4 +325,15 @@ class SmplrAlarmManager(val context: Context) {
 
 
     // endregion
+
+    companion object{
+
+        fun getAlarmIntent(requestCode: Int, context: Context) = PendingIntent.getBroadcast(
+            context,
+            requestCode,
+            AlarmReceiver.build(context).putExtra(SMPLR_ALARM_RECEIVER_INTENT_ID, requestCode),
+            PendingIntent.FLAG_NO_CREATE
+        )
+
+    }
 }

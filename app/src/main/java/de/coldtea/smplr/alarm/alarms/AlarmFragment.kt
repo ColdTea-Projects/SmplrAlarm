@@ -12,6 +12,7 @@ import de.coldtea.smplr.alarm.alarmlogs.AlarmLogsFragment
 import de.coldtea.smplr.alarm.alarms.models.WeekInfo
 import de.coldtea.smplr.alarm.databinding.FragmentAlarmsBinding
 import de.coldtea.smplr.alarm.extensions.nowPlus
+import de.coldtea.smplr.smplralarm.managers.SmplrAlarmManager
 import java.util.*
 
 class AlarmFragment : Fragment() {
@@ -124,6 +125,15 @@ class AlarmFragment : Fragment() {
                 binding.alarmId.text.toString().toInt(),
                 requireContext().applicationContext
             )
+        }
+
+        binding.checkAlarm.setOnClickListener {
+            val intent = SmplrAlarmManager.getAlarmIntent(
+                binding.alarmId.text.toString().toInt(),
+                requireContext().applicationContext
+            )
+
+            Toast.makeText(requireContext(), intent?.toString().orEmpty(), Toast.LENGTH_LONG).show()
         }
     }
 
