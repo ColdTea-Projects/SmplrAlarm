@@ -13,39 +13,26 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 
-internal class RebootReceiver : BroadcastReceiver() {
+internal class TimeChangeReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        Timber.i("SmplrAlarm.RebootReceiver.onRecieve --> ${intent.action}")
+        Timber.i("SmplrAlarm.TimeChangeReceiver.onRecieve --> ${intent.action}")
         when (intent.action) {
-            Intent.ACTION_BOOT_COMPLETED,
-            Intent.ACTION_LOCKED_BOOT_COMPLETED -> onBootComplete(context)
+            Intent.ACTION_TIME_CHANGED,
+            Intent.ACTION_DATE_CHANGED,
+            Intent.ACTION_TIMEZONE_CHANGED -> onBootComplete(context)
             else -> Timber.w("SmplrAlarm --> Recieved illegal broadcast!")
         }
     }
 
     private fun onBootComplete(context: Context) =
         try {
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val calendar = Calendar.getInstance()
 
             CoroutineScope(Dispatchers.IO).launch {
                 val notificationRepository = AlarmNotificationRepository(context)
                 val alarmNotifications = notificationRepository.getAllAlarmNotifications()
 
-                alarmNotifications.filter { it.isActive }.map {
-                    val pendingIntent = createPendingIntent(context, it.alarmNotificationId)
-
-                    alarmManager.setExactAndAllowWhileIdle(
-                        AlarmManager.RTC_WAKEUP,
-                        calendar.getTimeExactForAlarmInMilliseconds(
-                            it.hour,
-                            it.min,
-                            it.weekDays
-                        ),
-                        pendingIntent
-                    )
-                }
+                cancelAndResetAlarmNotifications(context, alarmNotifications)
 
                 notificationRepository.deleteAlarmsBeforeNow()
             }
@@ -53,6 +40,34 @@ internal class RebootReceiver : BroadcastReceiver() {
         } catch (e: Exception) {
             Timber.e(e.toString())
         }
+
+    private fun cancelAndResetAlarmNotifications(
+        context: Context,
+        alarmNotifications: List<AlarmNotification>
+    ) =
+        alarmNotifications.map {
+
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val calendar = Calendar.getInstance()
+
+            val pendingIntentToCancel = getPendingIntent(context, it.alarmNotificationId)
+
+            alarmManager.cancel(pendingIntentToCancel)
+
+            val pendingIntent = createPendingIntent(context, it.alarmNotificationId)
+
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                calendar.getTimeExactForAlarmInMilliseconds(
+                    it.hour,
+                    it.min,
+                    it.weekDays
+                ),
+                pendingIntent
+            )
+
+        }
+
 
     private fun createPendingIntent(context: Context, alarmNotificationId: Int) =
         PendingIntent.getBroadcast(
@@ -65,9 +80,17 @@ internal class RebootReceiver : BroadcastReceiver() {
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
+    private fun getPendingIntent(context: Context, alarmNotificationId: Int) =
+        PendingIntent.getBroadcast(
+            context,
+            alarmNotificationId,
+            Intent(context, AlarmReceiver::class.java),
+            PendingIntent.FLAG_NO_CREATE
+        )
+
     companion object {
         fun build(context: Context): Intent {
-            return Intent(context, RebootReceiver::class.java)
+            return Intent(context, TimeChangeReceiver::class.java)
         }
     }
 
