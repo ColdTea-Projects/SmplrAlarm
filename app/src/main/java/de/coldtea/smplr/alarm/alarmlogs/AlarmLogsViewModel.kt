@@ -10,6 +10,6 @@ class AlarmLogsViewModel(
     private val logs
         get() = repository.alarms?.toMutableList()
 
-    fun getLogsOutput() = logs?.joinToString(separator = "\n") { "Alarm rang at ${it.date} / ${it.time} " }
+    fun getLogsOutput() = logs?.joinToString(separator = "\n") { "Alarm rang at ${it.dateTime} / ${it.errorReport} " }
 
 }

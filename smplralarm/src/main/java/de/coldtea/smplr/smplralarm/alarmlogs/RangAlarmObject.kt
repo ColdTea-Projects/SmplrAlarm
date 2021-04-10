@@ -4,6 +4,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class RangAlarmObject(
-    val date: String,
-    val time: String
+    val dateTime: String,
+    val errorReport: String
 )

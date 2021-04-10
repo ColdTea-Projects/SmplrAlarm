@@ -28,11 +28,14 @@ import java.util.*
 internal class AlarmReceiver : BroadcastReceiver() {
     private var repository: AlarmNotificationRepository? = null
 
+
     override fun onReceive(context: Context, intent: Intent) {
+            val now = Calendar.getInstance().dateTime()
+            val logsRepository = LogsRepository(context.applicationContext)
+
             try {
                 repository = AlarmNotificationRepository(context)
 
-                val logsRepository = LogsRepository(context.applicationContext)
 
                 val requestId = intent.getIntExtra(SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID, -1)
 
@@ -60,26 +63,42 @@ internal class AlarmReceiver : BroadcastReceiver() {
                             resetTheAlarmForTheNextDayOnTheList(context, alarmNotification)
                     } catch (ex: IllegalArgumentException) {
                         Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: The alarm intended to be removed does not exist! ")
+
+                        logsRepository.logAlarm(
+                            RangAlarmObject(
+                                "${now.first} - ${now.second}",
+                                ex.toString()
+                            )
+                        )
                     } catch (ex: Exception) {
                         Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: $ex ")
+                        logsRepository.logAlarm(
+                            RangAlarmObject(
+                                "${now.first} - ${now.second}",
+                                ex.toString()
+                            )
+                        )
                     }
 
                 }
 
                 }
 
-                val now = Calendar.getInstance().dateTime()
-                val alarmInitTime = intent.getStringExtra("AlarmInitTime")
-
                 logsRepository.logAlarm(
                     RangAlarmObject(
-                        now.first,
-                        now.second
+                        "${now.first} - ${now.second}",
+                        ALARM_RECEIVER_SUCCESS
                     )
                 )
 
-            } catch (e: Exception) {
-                Timber.e("SmplrAlarm.AlarmReceiver.onReceive: exception --> $e")
+            } catch (ex: Exception) {
+                Timber.e("SmplrAlarm.AlarmReceiver.onReceive: exception --> $ex")
+                logsRepository.logAlarm(
+                    RangAlarmObject(
+                        "${now.first} - ${now.second}",
+                        ex.toString()
+                    )
+                )
             }
     }
 
@@ -123,6 +142,8 @@ internal class AlarmReceiver : BroadcastReceiver() {
     }
 
     companion object {
+        private const val ALARM_RECEIVER_SUCCESS = "Alarm receiver worked successfully"
+
         fun build(context: Context): Intent {
             return Intent(context, AlarmReceiver::class.java)
         }
