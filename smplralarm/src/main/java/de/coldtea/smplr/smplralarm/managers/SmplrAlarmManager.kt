@@ -38,6 +38,7 @@ class SmplrAlarmManager(val context: Context) {
 
     private var alarmRingEvent: AlarmRingEvent? = null
 
+    private var requestManager: SmplrAlarmListRequestManager? = null
 
     //endregion
 
@@ -94,6 +95,10 @@ class SmplrAlarmManager(val context: Context) {
         this.isActive = isActive()
     }
 
+    fun requestManager(requestManager: () -> SmplrAlarmListRequestManager){
+        this.requestManager = requestManager()
+    }
+
     // endregion
 
     // region functionality
@@ -109,6 +114,7 @@ class SmplrAlarmManager(val context: Context) {
 
         CoroutineScope(Dispatchers.IO).launch {
             saveAlarmNotificationToDatabase(notifiactionBuilderItem)
+            requestManager?.requestAlarmList()
         }
 
         val exactAlarmTime = calendar.getTimeExactForAlarmInMilliseconds(
@@ -165,6 +171,8 @@ class SmplrAlarmManager(val context: Context) {
                     )
                 }
 
+                requestManager?.requestAlarmList()
+
             } catch (ex: IllegalArgumentException) {
                 Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: The alarm intended to be removed does not exist! ")
             } catch (ex: Exception) {
@@ -211,6 +219,8 @@ class SmplrAlarmManager(val context: Context) {
                         pendingIntent
                     )
                 }
+
+                requestManager?.requestAlarmList()
             } catch (ex: IllegalArgumentException) {
                 Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: The alarm intended to be removed does not exist! ")
             } catch (ex: Exception) {
@@ -225,6 +235,7 @@ class SmplrAlarmManager(val context: Context) {
 
         CoroutineScope(Dispatchers.IO).launch {
             deleteAlarmNotificationFromDatabase()
+            requestManager?.requestAlarmList()
         }
     }
 
