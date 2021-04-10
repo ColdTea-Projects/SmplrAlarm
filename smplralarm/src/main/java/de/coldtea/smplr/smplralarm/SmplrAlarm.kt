@@ -1,8 +1,12 @@
 package de.coldtea.smplr.smplralarm
 
 import android.content.Context
+import de.coldtea.smplr.smplralarm.managers.AlarmNotificationManager
+import de.coldtea.smplr.smplralarm.managers.ChannelManager
 import de.coldtea.smplr.smplralarm.managers.SmplrAlarmListRequestManager
 import de.coldtea.smplr.smplralarm.managers.SmplrAlarmManager
+import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
+import de.coldtea.smplr.smplralarm.models.NotificationItem
 
 
 fun smplrAlarmSet(context: Context, lambda: SmplrAlarmManager.() -> Unit): Int =
@@ -21,3 +25,9 @@ fun smplrAlarmChangeOrRequestListener(context: Context, lambda:  ((String) -> Un
     SmplrAlarmListRequestManager(context).apply {
         alarmListChangeOrRequestedListener = lambda
     }
+
+fun channel(lambda: ChannelManager.() -> Unit): NotificationChannelItem =
+    ChannelManager().apply(lambda).build()
+
+fun alarmNotification(lamda: AlarmNotificationManager.() -> Unit): NotificationItem =
+    AlarmNotificationManager().apply(lamda).build()
