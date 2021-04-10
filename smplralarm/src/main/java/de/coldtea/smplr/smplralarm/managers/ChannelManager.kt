@@ -18,19 +18,19 @@ class ChannelManager {
 
     //region setters
 
-    internal fun importance(importance: () -> Int) {
+    fun importance(importance: () -> Int) {
         this.importance = importance()
     }
 
-    internal fun showBadge(showBadge: () -> Boolean) {
+    fun showBadge(showBadge: () -> Boolean) {
         this.showBadge = showBadge()
     }
 
-    internal fun name(name: () -> String) {
+    fun name(name: () -> String) {
         this.name = name()
     }
 
-    internal fun description(description: () -> String) {
+    fun description(description: () -> String) {
         this.description = description()
     }
 
@@ -38,7 +38,7 @@ class ChannelManager {
 
     //region build
 
-    internal fun build(): NotificationChannelItem =
+    fun build(): NotificationChannelItem =
         NotificationChannelItem(
             importance,
             showBadge,

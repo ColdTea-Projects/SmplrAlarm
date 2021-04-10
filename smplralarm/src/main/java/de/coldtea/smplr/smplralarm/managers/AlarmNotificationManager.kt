@@ -20,27 +20,27 @@ class AlarmNotificationManager {
 
     //region setters
 
-    internal fun smallIcon(smallIcon: () -> Int) {
+    fun smallIcon(smallIcon: () -> Int) {
         this.smallIcon = smallIcon()
     }
 
-    internal fun title(title: () -> String) {
+    fun title(title: () -> String) {
         this.title = title()
     }
 
-    internal fun message(message: () -> String) {
+    fun message(message: () -> String) {
         this.message = message()
     }
 
-    internal fun bigText(bigText: () -> String) {
+    fun bigText(bigText: () -> String) {
         this.bigText = bigText()
     }
 
-    internal fun autoCancel(autoCancel: () -> Boolean) {
+    fun autoCancel(autoCancel: () -> Boolean) {
         this.autoCancel = autoCancel()
     }
 
-    internal fun alarmIntent(alarmIntent: () -> Intent) {
+    fun alarmIntent(alarmIntent: () -> Intent) {
         this.alarmIntent = alarmIntent()
     }
 
