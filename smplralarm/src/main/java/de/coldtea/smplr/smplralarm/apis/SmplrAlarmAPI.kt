@@ -19,7 +19,7 @@ import kotlin.math.absoluteValue
 
 typealias AlarmRingEvent = (Int) -> Unit
 
-class SmplrAlarmManager(val context: Context) {
+class SmplrAlarmAPI(val context: Context) {
 
     //region properties
 
