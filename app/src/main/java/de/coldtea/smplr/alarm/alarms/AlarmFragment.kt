@@ -10,7 +10,7 @@ import androidx.lifecycle.LifecycleOwner
 import de.coldtea.smplr.alarm.alarms.models.WeekInfo
 import de.coldtea.smplr.alarm.databinding.FragmentAlarmsBinding
 import de.coldtea.smplr.alarm.extensions.nowPlus
-import de.coldtea.smplr.smplralarm.apis.SmplrAlarmManager
+import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI
 import java.util.*
 
 class AlarmFragment : Fragment() {
