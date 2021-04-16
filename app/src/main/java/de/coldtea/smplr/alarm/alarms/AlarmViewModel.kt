@@ -8,12 +8,12 @@ import androidx.lifecycle.ViewModel
 import de.coldtea.smplr.alarm.alarms.models.WeekInfo
 import de.coldtea.smplr.alarm.lockscreenalarm.ActivityLockScreenAlarm
 import de.coldtea.smplr.smplralarm.*
-import de.coldtea.smplr.smplralarm.managers.SmplrAlarmListRequestManager
+import de.coldtea.smplr.smplralarm.apis.SmplrAlarmListRequestAPI
 import timber.log.Timber
 
 class AlarmViewModel : ViewModel() {
 
-    lateinit var smplrAlarmListRequestManager: SmplrAlarmListRequestManager
+    lateinit var smplrAlarmListRequestAPI: SmplrAlarmListRequestAPI
 
     private val _alarmListAsJson = MutableLiveData<String>()
     val alarmListAsJson: LiveData<String>
@@ -24,7 +24,7 @@ class AlarmViewModel : ViewModel() {
         smplrAlarmChangeOrRequestListener(applicationContext) {
             _alarmListAsJson.postValue(it)
         }.also {
-            smplrAlarmListRequestManager = it
+            smplrAlarmListRequestAPI = it
         }
 
     fun setAlarm(hour: Int, minute: Int, weekInfo: WeekInfo, applicationContext: Context): Int {
@@ -96,7 +96,7 @@ class AlarmViewModel : ViewModel() {
         }
     }
 
-    fun requestAlarmList() = smplrAlarmListRequestManager.requestAlarmList()
+    fun requestAlarmList() = smplrAlarmListRequestAPI.requestAlarmList()
 
     fun cancelAlarm(requestCode: Int, applicationContext: Context) =
         smplrAlarmCancel(applicationContext) {

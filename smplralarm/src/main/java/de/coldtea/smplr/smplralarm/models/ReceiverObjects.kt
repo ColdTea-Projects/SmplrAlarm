@@ -1,11 +1,8 @@
 package de.coldtea.smplr.smplralarm.receivers
 
-import android.app.NotificationChannelGroup
 import android.content.Intent
-import androidx.annotation.DrawableRes
 import de.coldtea.smplr.smplralarm.extensions.activeDaysAsJsonString
-import de.coldtea.smplr.smplralarm.managers.AlarmRingEvent
-import de.coldtea.smplr.smplralarm.models.ActiveWeekDays
+import de.coldtea.smplr.smplralarm.apis.AlarmRingEvent
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 import de.coldtea.smplr.smplralarm.models.WeekDays

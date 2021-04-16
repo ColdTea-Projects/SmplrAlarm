@@ -1,4 +1,4 @@
-package de.coldtea.smplr.smplralarm.managers
+package de.coldtea.smplr.smplralarm.apis
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -14,7 +14,6 @@ import de.coldtea.smplr.smplralarm.repository.AlarmNotificationRepository
 import kotlinx.coroutines.*
 import timber.log.Timber
 import java.lang.IllegalArgumentException
-import java.lang.NullPointerException
 import java.util.Calendar
 import kotlin.math.absoluteValue
 
@@ -38,7 +37,7 @@ class SmplrAlarmManager(val context: Context) {
 
     private var alarmRingEvent: AlarmRingEvent? = null
 
-    private var requestManager: SmplrAlarmListRequestManager? = null
+    private var requestAPI: SmplrAlarmListRequestAPI? = null
 
     //endregion
 
@@ -87,16 +86,16 @@ class SmplrAlarmManager(val context: Context) {
         this.alarmRingEvent = alarmRingEvent
     }
 
-    fun weekdays(lambda: WeekDaysManager.() -> Unit) {
-        weekdays = WeekDaysManager().apply(lambda).getWeekDays()
+    fun weekdays(lambda: WeekDaysAPI.() -> Unit) {
+        weekdays = WeekDaysAPI().apply(lambda).getWeekDays()
     }
 
     fun isActive(isActive: () -> Boolean) {
         this.isActive = isActive()
     }
 
-    fun requestManager(requestManager: () -> SmplrAlarmListRequestManager){
-        this.requestManager = requestManager()
+    fun requestAPI(requestAPI: () -> SmplrAlarmListRequestAPI){
+        this.requestAPI = requestAPI()
     }
 
     // endregion
@@ -114,7 +113,7 @@ class SmplrAlarmManager(val context: Context) {
 
         CoroutineScope(Dispatchers.IO).launch {
             saveAlarmNotificationToDatabase(notifiactionBuilderItem)
-            requestManager?.requestAlarmList()
+            requestAPI?.requestAlarmList()
         }
 
         val exactAlarmTime = calendar.getTimeExactForAlarmInMilliseconds(
@@ -171,7 +170,7 @@ class SmplrAlarmManager(val context: Context) {
                     )
                 }
 
-                requestManager?.requestAlarmList()
+                requestAPI?.requestAlarmList()
 
             } catch (ex: IllegalArgumentException) {
                 Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: The alarm intended to be removed does not exist! ")
@@ -220,7 +219,7 @@ class SmplrAlarmManager(val context: Context) {
                     )
                 }
 
-                requestManager?.requestAlarmList()
+                requestAPI?.requestAlarmList()
             } catch (ex: IllegalArgumentException) {
                 Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: The alarm intended to be removed does not exist! ")
             } catch (ex: Exception) {
@@ -235,7 +234,7 @@ class SmplrAlarmManager(val context: Context) {
 
         CoroutineScope(Dispatchers.IO).launch {
             deleteAlarmNotificationFromDatabase()
-            requestManager?.requestAlarmList()
+            requestAPI?.requestAlarmList()
         }
     }
 
@@ -267,9 +266,9 @@ class SmplrAlarmManager(val context: Context) {
         min,
         weekdays,
         notificationChannel
-            ?: ChannelManager().build(),
+            ?: ChannelManagerAPI().build(),
         notification
-            ?: AlarmNotificationManager().build(),
+            ?: AlarmNotificationAPI().build(),
         intent,
         fullScreenIntent,
         true,

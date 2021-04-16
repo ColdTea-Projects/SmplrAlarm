@@ -1,6 +1,5 @@
 package de.coldtea.smplr.alarm.alarms
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -11,6 +10,7 @@ import androidx.lifecycle.LifecycleOwner
 import de.coldtea.smplr.alarm.alarms.models.WeekInfo
 import de.coldtea.smplr.alarm.databinding.FragmentAlarmsBinding
 import de.coldtea.smplr.alarm.extensions.nowPlus
+import de.coldtea.smplr.smplralarm.apis.SmplrAlarmManager
 import java.util.*
 
 class AlarmFragment : Fragment() {
