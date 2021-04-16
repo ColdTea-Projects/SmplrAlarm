@@ -1,4 +1,4 @@
-package de.coldtea.smplr.smplralarm.managers
+package de.coldtea.smplr.smplralarm.apis
 
 import android.content.Context
 import de.coldtea.smplr.smplralarm.extensions.alarmsAsJsonString
@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SmplrAlarmListRequestManager(val context: Context) {
+class SmplrAlarmListRequestAPI(val context: Context) {
 
     internal var alarmListChangeOrRequestedListener: ((String) -> Unit)? = null
 

@@ -1,8 +1,8 @@
-package de.coldtea.smplr.smplralarm.managers
+package de.coldtea.smplr.smplralarm.apis
 
 import de.coldtea.smplr.smplralarm.models.WeekDays
 
-class WeekDaysManager {
+class WeekDaysAPI {
 
     private var monday = false
     private var tuesday = false

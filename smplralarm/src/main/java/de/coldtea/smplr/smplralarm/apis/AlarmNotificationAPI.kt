@@ -1,10 +1,10 @@
-package de.coldtea.smplr.smplralarm.managers
+package de.coldtea.smplr.smplralarm.apis
 
 import android.content.Intent
 import androidx.annotation.DrawableRes
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 
-class AlarmNotificationManager {
+class AlarmNotificationAPI {
 
     //region properties
 
