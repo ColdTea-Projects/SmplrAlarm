@@ -11,6 +11,7 @@ import de.coldtea.smplr.smplralarm.receivers.AlarmReceiver
 import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiverObjects.Companion.SMPLR_ALARM_RECEIVER_INTENT_ID
 import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiverObjects.Companion.alarmNotification
 import de.coldtea.smplr.smplralarm.repository.AlarmNotificationRepository
+import de.coldtea.smplr.smplralarm.services.AlarmService
 import kotlinx.coroutines.*
 import timber.log.Timber
 import java.lang.IllegalArgumentException
@@ -39,13 +40,11 @@ class SmplrAlarmAPI(val context: Context) {
 
     private var requestAPI: SmplrAlarmListRequestAPI? = null
 
+    private val alarmService by lazy { AlarmService(context) }
+
     //endregion
 
     // region computed properties
-
-    private val alarmManager: AlarmManager by lazy {
-        context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    }
 
     private val alarmNotificationRepository: AlarmNotificationRepository by lazy {
         AlarmNotificationRepository(context)
@@ -104,11 +103,9 @@ class SmplrAlarmAPI(val context: Context) {
 
     internal fun setAlarm(): Int {
 
-        val calendar = Calendar.getInstance()
         requestCode = getUniqueIdBasedNow()
         Timber.v("SmplrAlarm.AlarmManager.setAlarm: $requestCode -- $hour:$min")
 
-        val pendingIntent = createPendingIntent()
         val notifiactionBuilderItem = createAlarmNotification()
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -116,17 +113,7 @@ class SmplrAlarmAPI(val context: Context) {
             requestAPI?.requestAlarmList()
         }
 
-        val exactAlarmTime = calendar.getTimeExactForAlarmInMilliseconds(
-            hour,
-            min,
-            weekdays
-        )
-
-        alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            exactAlarmTime,
-            pendingIntent
-        )
+        alarmService.setAlarm(requestCode, hour, min, weekdays)
 
         return requestCode
     }
@@ -134,8 +121,7 @@ class SmplrAlarmAPI(val context: Context) {
     internal fun updateRepeatingAlarm() {
         if (requestCode == -1) return
 
-        val calendar = Calendar.getInstance()
-        cancelAlarm()
+        alarmService.cancelAlarm(requestCode)
         val updatedActivation = isActive
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -143,35 +129,14 @@ class SmplrAlarmAPI(val context: Context) {
             try {
                 val alarmNotification = notificationRepository.getAlarmNotification(requestCode)
 
-                val pendingIntent = createPendingIntent()
-
                 val updatedHour = if (hour == -1) alarmNotification.hour else hour
                 val updatedMinute = if (min == -1) alarmNotification.min else min
-                val updatedWeekdays =
-                    if (weekdays.isEmpty()) alarmNotification.weekDays else weekdays
+                val updatedWeekdays = if (weekdays.isEmpty()) alarmNotification.weekDays else weekdays
 
-                updateRepeatingAlarmNotification(
-                    requestCode,
-                    updatedHour,
-                    updatedMinute,
-                    updatedWeekdays,
-                    updatedActivation
-                )
-
-                if (updatedActivation) {
-                    alarmManager.setExactAndAllowWhileIdle(
-                        AlarmManager.RTC_WAKEUP,
-                        calendar.getTimeExactForAlarmInMilliseconds(
-                            updatedHour,
-                            updatedMinute,
-                            updatedWeekdays
-                        ),
-                        pendingIntent
-                    )
-                }
+                updateRepeatingAlarmNotification(requestCode, updatedHour, updatedMinute, updatedWeekdays, updatedActivation)
+                if (updatedActivation) alarmService.setAlarm(requestCode, updatedHour, updatedMinute, updatedWeekdays)
 
                 requestAPI?.requestAlarmList()
-
             } catch (ex: IllegalArgumentException) {
                 Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: The alarm intended to be removed does not exist! ")
             } catch (ex: Exception) {
@@ -183,41 +148,18 @@ class SmplrAlarmAPI(val context: Context) {
     internal fun updateSingleAlarm() {
         if (requestCode == -1) return
 
-        val calendar = Calendar.getInstance()
-        cancelAlarm()
+        alarmService.cancelAlarm(requestCode)
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val notificationRepository = AlarmNotificationRepository(context)
                 val alarmNotification = notificationRepository.getAlarmNotification(requestCode)
-
-                val pendingIntent = createPendingIntent()
-
                 val updatedHour = if (hour == -1) alarmNotification.hour else hour
                 val updatedMinute = if (min == -1) alarmNotification.min else min
+                val daysToSkip = if (alarmNotification.hour == updatedHour && alarmNotification.min == updatedMinute) 1 else 0
 
-                val daysToSkip =
-                    if (alarmNotification.hour == updatedHour && alarmNotification.min == updatedMinute) 1 else 0
-
-                updateSingleAlarmNotification(
-                    requestCode,
-                    updatedHour,
-                    updatedMinute,
-                    isActive
-                )
-
-                if (isActive) {
-                    alarmManager.setExactAndAllowWhileIdle(
-                        AlarmManager.RTC_WAKEUP,
-                        calendar.getTimeExactForAlarmInMilliseconds(
-                            updatedHour,
-                            updatedMinute,
-                            listOf(),
-                            daysToSkip
-                        ),
-                        pendingIntent
-                    )
-                }
+                updateSingleAlarmNotification(requestCode, updatedHour, updatedMinute, isActive)
+                if (isActive) alarmService.setAlarm(requestCode, updatedHour, updatedMinute, listOf(), daysToSkip)
 
                 requestAPI?.requestAlarmList()
             } catch (ex: IllegalArgumentException) {
@@ -225,40 +167,17 @@ class SmplrAlarmAPI(val context: Context) {
             } catch (ex: Exception) {
                 Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: $ex ")
             }
-
         }
     }
 
     internal fun removeAlarm() {
-        cancelAlarm()
+        alarmService.cancelAlarm(requestCode)
 
         CoroutineScope(Dispatchers.IO).launch {
             deleteAlarmNotificationFromDatabase()
             requestAPI?.requestAlarmList()
         }
     }
-
-    private fun cancelAlarm() {
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val pendingIntent = getPendingIntent() ?: return
-
-        alarmManager.cancel(pendingIntent)
-        Timber.v("SmplrAlarm.AlarmManager.cancelAlarm: $requestCode -- $hour:$min")
-    }
-
-    private fun createPendingIntent() = PendingIntent.getBroadcast(
-        context,
-        requestCode,
-        AlarmReceiver.build(context).putExtra(SMPLR_ALARM_RECEIVER_INTENT_ID, requestCode),
-        0
-    )
-
-    private fun getPendingIntent() = PendingIntent.getBroadcast(
-        context,
-        requestCode,
-        Intent(context, AlarmReceiver::class.java),
-        PendingIntent.FLAG_NO_CREATE
-    )
 
     private fun createAlarmNotification() = AlarmNotification(
         requestCode,

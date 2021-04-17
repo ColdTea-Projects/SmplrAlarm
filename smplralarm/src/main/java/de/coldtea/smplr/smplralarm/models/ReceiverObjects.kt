@@ -17,7 +17,7 @@ internal class SmplrAlarmReceiverObjects {
     }
 }
 
-internal data class AlarmNotification(
+data class AlarmNotification(
     val alarmNotificationId: Int,
     val hour: Int,
     val min: Int,
