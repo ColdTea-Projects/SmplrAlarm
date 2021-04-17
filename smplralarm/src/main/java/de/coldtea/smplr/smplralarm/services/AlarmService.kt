@@ -87,6 +87,9 @@ class AlarmService(val context: Context) {
 
     }
 
+    fun alarmExist(requestCode: Int): Boolean =
+        getPendingIntent(requestCode, PendingIntent.FLAG_NO_CREATE) != null
+
     fun cancelAlarm(requestCode: Int) {
         val pendingIntent = getPendingIntent(requestCode, PendingIntent.FLAG_NO_CREATE) ?: return
         alarmManager.cancel(pendingIntent)

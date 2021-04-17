@@ -93,7 +93,7 @@ class SmplrAlarmAPI(val context: Context) {
         this.isActive = isActive()
     }
 
-    fun requestAPI(requestAPI: () -> SmplrAlarmListRequestAPI){
+    fun requestAPI(requestAPI: () -> SmplrAlarmListRequestAPI) {
         this.requestAPI = requestAPI()
     }
 
@@ -118,6 +118,21 @@ class SmplrAlarmAPI(val context: Context) {
         return requestCode
     }
 
+    internal fun renewMissingAlarms() = CoroutineScope(Dispatchers.IO).launch {
+        val notificationRepository = AlarmNotificationRepository(context)
+        try {
+            val alarmNotifications = notificationRepository.getAllAlarmNotifications()
+
+            alarmNotifications
+                .filter { it.isActive && !alarmService.alarmExist(it.alarmNotificationId)}
+                .map {
+                    alarmService.renewAlarm(it)
+                }
+        } catch (ex: Exception) {
+            Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: $ex ")
+        }
+    }
+
     internal fun updateRepeatingAlarm() {
         if (requestCode == -1) return
 
@@ -131,10 +146,22 @@ class SmplrAlarmAPI(val context: Context) {
 
                 val updatedHour = if (hour == -1) alarmNotification.hour else hour
                 val updatedMinute = if (min == -1) alarmNotification.min else min
-                val updatedWeekdays = if (weekdays.isEmpty()) alarmNotification.weekDays else weekdays
+                val updatedWeekdays =
+                    if (weekdays.isEmpty()) alarmNotification.weekDays else weekdays
 
-                updateRepeatingAlarmNotification(requestCode, updatedHour, updatedMinute, updatedWeekdays, updatedActivation)
-                if (updatedActivation) alarmService.setAlarm(requestCode, updatedHour, updatedMinute, updatedWeekdays)
+                updateRepeatingAlarmNotification(
+                    requestCode,
+                    updatedHour,
+                    updatedMinute,
+                    updatedWeekdays,
+                    updatedActivation
+                )
+                if (updatedActivation) alarmService.setAlarm(
+                    requestCode,
+                    updatedHour,
+                    updatedMinute,
+                    updatedWeekdays
+                )
 
                 requestAPI?.requestAlarmList()
             } catch (ex: IllegalArgumentException) {
@@ -156,10 +183,17 @@ class SmplrAlarmAPI(val context: Context) {
                 val alarmNotification = notificationRepository.getAlarmNotification(requestCode)
                 val updatedHour = if (hour == -1) alarmNotification.hour else hour
                 val updatedMinute = if (min == -1) alarmNotification.min else min
-                val daysToSkip = if (alarmNotification.hour == updatedHour && alarmNotification.min == updatedMinute) 1 else 0
+                val daysToSkip =
+                    if (alarmNotification.hour == updatedHour && alarmNotification.min == updatedMinute) 1 else 0
 
                 updateSingleAlarmNotification(requestCode, updatedHour, updatedMinute, isActive)
-                if (isActive) alarmService.setAlarm(requestCode, updatedHour, updatedMinute, listOf(), daysToSkip)
+                if (isActive) alarmService.setAlarm(
+                    requestCode,
+                    updatedHour,
+                    updatedMinute,
+                    listOf(),
+                    daysToSkip
+                )
 
                 requestAPI?.requestAlarmList()
             } catch (ex: IllegalArgumentException) {
@@ -255,7 +289,7 @@ class SmplrAlarmAPI(val context: Context) {
 
     // endregion
 
-    companion object{
+    companion object {
 
         fun getAlarmIntent(requestCode: Int, context: Context) = PendingIntent.getBroadcast(
             context,

@@ -15,6 +15,9 @@ fun smplrAlarmSet(context: Context, lambda: SmplrAlarmAPI.() -> Unit): Int =
 fun smplrAlarmCancel(context: Context, lambda: SmplrAlarmAPI.() -> Unit) =
     SmplrAlarmAPI(context).apply(lambda).removeAlarm()
 
+fun smplrAlarmRenewMissingAlarms(context: Context) =
+    SmplrAlarmAPI(context).renewMissingAlarms()
+
 fun smplrAlarmUpdateRepeatingAlarm(context: Context, lambda: SmplrAlarmAPI.() -> Unit) =
     SmplrAlarmAPI(context).apply(lambda).updateRepeatingAlarm()
 
