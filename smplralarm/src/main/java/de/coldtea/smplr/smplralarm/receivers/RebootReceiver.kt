@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import de.coldtea.smplr.smplralarm.extensions.getTimeExactForAlarmInMilliseconds
 import de.coldtea.smplr.smplralarm.repository.AlarmNotificationRepository
+import de.coldtea.smplr.smplralarm.services.AlarmService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,25 +27,14 @@ internal class RebootReceiver : BroadcastReceiver() {
 
     private fun onBootComplete(context: Context) =
         try {
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val calendar = Calendar.getInstance()
+            val alarmService = AlarmService(context)
 
             CoroutineScope(Dispatchers.IO).launch {
                 val notificationRepository = AlarmNotificationRepository(context)
                 val alarmNotifications = notificationRepository.getAllAlarmNotifications()
 
                 alarmNotifications.filter { it.isActive }.map {
-                    val pendingIntent = createPendingIntent(context, it.alarmNotificationId)
-
-                    alarmManager.setExactAndAllowWhileIdle(
-                        AlarmManager.RTC_WAKEUP,
-                        calendar.getTimeExactForAlarmInMilliseconds(
-                            it.hour,
-                            it.min,
-                            it.weekDays
-                        ),
-                        pendingIntent
-                    )
+                    alarmService.setAlarm(it)
                 }
 
                 notificationRepository.deleteAlarmsBeforeNow()
@@ -54,16 +44,6 @@ internal class RebootReceiver : BroadcastReceiver() {
             Timber.e(e.toString())
         }
 
-    private fun createPendingIntent(context: Context, alarmNotificationId: Int) =
-        PendingIntent.getBroadcast(
-            context,
-            alarmNotificationId,
-            AlarmReceiver.build(context).putExtra(
-                SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID,
-                alarmNotificationId
-            ),
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
 
     companion object {
         fun build(context: Context): Intent {

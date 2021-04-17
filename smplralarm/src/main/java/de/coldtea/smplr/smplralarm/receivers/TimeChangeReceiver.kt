@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import de.coldtea.smplr.smplralarm.extensions.getTimeExactForAlarmInMilliseconds
 import de.coldtea.smplr.smplralarm.repository.AlarmNotificationRepository
+import de.coldtea.smplr.smplralarm.services.AlarmService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,10 +32,9 @@ internal class TimeChangeReceiver : BroadcastReceiver() {
             CoroutineScope(Dispatchers.IO).launch {
                 val notificationRepository = AlarmNotificationRepository(context)
                 val alarmNotifications = notificationRepository.getAllAlarmNotifications()
+                val alarmService = AlarmService(context)
 
-                cancelAndResetAlarmNotifications(context, alarmNotifications)
-
-                notificationRepository.deleteAlarmsBeforeNow()
+                cancelAndResetAlarmNotifications(alarmService, alarmNotifications)
             }
 
         } catch (e: Exception) {
@@ -42,51 +42,10 @@ internal class TimeChangeReceiver : BroadcastReceiver() {
         }
 
     private fun cancelAndResetAlarmNotifications(
-        context: Context,
+        alarmService: AlarmService,
         alarmNotifications: List<AlarmNotification>
     ) =
-        alarmNotifications.map {
-
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val calendar = Calendar.getInstance()
-
-            val pendingIntentToCancel = getPendingIntent(context, it.alarmNotificationId)
-
-            alarmManager.cancel(pendingIntentToCancel)
-
-            val pendingIntent = createPendingIntent(context, it.alarmNotificationId)
-
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                calendar.getTimeExactForAlarmInMilliseconds(
-                    it.hour,
-                    it.min,
-                    it.weekDays
-                ),
-                pendingIntent
-            )
-
-        }
-
-
-    private fun createPendingIntent(context: Context, alarmNotificationId: Int) =
-        PendingIntent.getBroadcast(
-            context,
-            alarmNotificationId,
-            AlarmReceiver.build(context).putExtra(
-                SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID,
-                alarmNotificationId
-            ),
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-    private fun getPendingIntent(context: Context, alarmNotificationId: Int) =
-        PendingIntent.getBroadcast(
-            context,
-            alarmNotificationId,
-            Intent(context, AlarmReceiver::class.java),
-            PendingIntent.FLAG_NO_CREATE
-        )
+        alarmNotifications.map { alarmNotification -> alarmService.renewAlarm(alarmNotification) }
 
     companion object {
         fun build(context: Context): Intent {
