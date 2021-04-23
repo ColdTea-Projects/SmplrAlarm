@@ -55,7 +55,7 @@ class AlarmViewModel : ViewModel() {
         }
     }
 
-    fun updateRepeatingAlarm(
+    fun updateAlarm(
         requestCode: Int,
         hour: Int,
         minute: Int,
@@ -63,7 +63,7 @@ class AlarmViewModel : ViewModel() {
         isActive: Boolean,
         applicationContext: Context
     ) {
-        smplrAlarmUpdateRepeatingAlarm(applicationContext) {
+        smplrAlarmUpdate(applicationContext) {
             requestCode { requestCode }
             hour { hour }
             min { minute }
@@ -76,21 +76,6 @@ class AlarmViewModel : ViewModel() {
                 if (weekInfo.saturday) saturday()
                 if (weekInfo.sunday) sunday()
             }
-            isActive { isActive }
-        }
-    }
-
-    fun updateSingleAlarm(
-        requestCode: Int,
-        hour: Int,
-        minute: Int,
-        isActive: Boolean,
-        applicationContext: Context
-    ) {
-        smplrAlarmUpdateSingleAlarm(applicationContext) {
-            requestCode { requestCode }
-            hour { hour }
-            min { minute }
             isActive { isActive }
         }
     }

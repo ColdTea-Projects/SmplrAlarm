@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import de.coldtea.smplr.smplralarm.alarmlogs.LogsRepository
 import de.coldtea.smplr.smplralarm.alarmlogs.RangAlarmObject
-import de.coldtea.smplr.smplralarm.extensions.getTimeExactForAlarmInMilliseconds
 import de.coldtea.smplr.smplralarm.extensions.showNotificationWithIntent
 import de.coldtea.smplr.smplralarm.models.IntentNotificationItem
 import de.coldtea.smplr.smplralarm.repository.AlarmNotificationRepository

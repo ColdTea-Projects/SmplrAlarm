@@ -18,11 +18,8 @@ fun smplrAlarmCancel(context: Context, lambda: SmplrAlarmAPI.() -> Unit) =
 fun smplrAlarmRenewMissingAlarms(context: Context) =
     SmplrAlarmAPI(context).renewMissingAlarms()
 
-fun smplrAlarmUpdateRepeatingAlarm(context: Context, lambda: SmplrAlarmAPI.() -> Unit) =
-    SmplrAlarmAPI(context).apply(lambda).updateRepeatingAlarm()
-
-fun smplrAlarmUpdateSingleAlarm(context: Context, lambda: SmplrAlarmAPI.() -> Unit) =
-    SmplrAlarmAPI(context).apply(lambda).updateSingleAlarm()
+fun smplrAlarmUpdate(context: Context, lambda: SmplrAlarmAPI.() -> Unit) =
+    SmplrAlarmAPI(context).apply(lambda).updateAlarm()
 
 fun smplrAlarmChangeOrRequestListener(context: Context, lambda:  ((String) -> Unit)) =
     SmplrAlarmListRequestAPI(context).apply {
