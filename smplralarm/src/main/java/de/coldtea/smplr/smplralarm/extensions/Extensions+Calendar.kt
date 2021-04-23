@@ -10,17 +10,15 @@ import java.util.Calendar
 internal fun Calendar.getTimeExactForAlarmInMilliseconds(
     hour: Int,
     minute: Int,
-    weekDays: List<WeekDays>,
-    daysToSkip: Int = 0
+    weekDays: List<WeekDays>
 ): Long {
-    return getTimeExactForAlarm(hour, minute, weekDays, daysToSkip).timeInMillis
+    return getTimeExactForAlarm(hour, minute, weekDays).timeInMillis
 }
 
 private fun Calendar.getTimeExactForAlarm(
     hour: Int,
     minute: Int,
-    weekDays: List<WeekDays>,
-    daysToSkip: Int
+    weekDays: List<WeekDays>
 ): Calendar {
     timeInMillis = System.currentTimeMillis()
 
@@ -29,11 +27,11 @@ private fun Calendar.getTimeExactForAlarm(
     set(Calendar.SECOND, 0)
     set(Calendar.MILLISECOND, 0)
 
-    println(weekDays.getClosestDay())
+    val sortedWeekDays = weekDays.sortedBy { it.value }
 
     when{
-        weekDays.isNotEmpty() && !isAlarmForToday(weekDays, hour, minute) -> setTheDay(weekDays.sortedBy { it.value }.getClosestDay())
-        weekDays.isEmpty() -> add(Calendar.DATE, daysToSkip)
+        weekDays.isNotEmpty() && !isAlarmForToday(sortedWeekDays, hour, minute) -> setTheDay(sortedWeekDays.getClosestDay())
+        weekDays.isEmpty() && !isTimeAhead(hour, minute)-> add(Calendar.DATE, 1)
     }
 
     return this
@@ -71,14 +69,16 @@ private fun Calendar.setTheDay(nextWeekDay: Int) {
         val date = get(Calendar.DAY_OF_MONTH)
         val day = get(Calendar.DAY_OF_WEEK)
 
-        set(Calendar.DAY_OF_MONTH, date + (nextWeekDay + 7 - day) % 7)
+        val daysToPostpone = if ((nextWeekDay + 7 - day) % 7 == 0) 7 else (nextWeekDay + 7 - day) % 7
+        set(Calendar.DAY_OF_MONTH, date + daysToPostpone)
     }
 }
 
-private fun Calendar.isTimeAhead(hour: Int, minute: Int) =
-    get(Calendar.HOUR_OF_DAY) < hour
-            || (get(Calendar.HOUR_OF_DAY) == hour &&
-            get(Calendar.MINUTE) < minute)
+private fun isTimeAhead(hour: Int, minute: Int) = Calendar.getInstance().let {
+    it.get(Calendar.HOUR_OF_DAY) < hour
+            || (it.get(Calendar.HOUR_OF_DAY) == hour &&
+            it.get(Calendar.MINUTE) < minute)
+}
 
 private fun List<WeekDays>.getClosestDay(): Int =
     this.map { it.value }
@@ -89,7 +89,7 @@ private fun List<WeekDays>.getClosestDay(): Int =
         ?: this.first().value
 
 private fun isAlarmForToday(weekDays: List<WeekDays>, hour: Int, minute: Int): Boolean = Calendar.getInstance().let {
-    weekDays.map { weekDay -> weekDay.value }.contains(it.get(Calendar.DAY_OF_WEEK)) && it.isTimeAhead(hour, minute)
+    weekDays.map { weekDay -> weekDay.value }.contains(it.get(Calendar.DAY_OF_WEEK)) && isTimeAhead(hour, minute)
 }
 
 

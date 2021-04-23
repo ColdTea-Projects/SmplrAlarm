@@ -9,7 +9,6 @@ import de.coldtea.smplr.smplralarm.models.WeekDays
 import de.coldtea.smplr.smplralarm.receivers.AlarmNotification
 import de.coldtea.smplr.smplralarm.receivers.AlarmReceiver
 import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiverObjects
-import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiverObjects.Companion.alarmNotification
 import timber.log.Timber
 import java.util.*
 
@@ -27,12 +26,11 @@ class AlarmService(val context: Context) {
         hour: Int,
         min: Int,
         weekDays: List<WeekDays>,
-        daysToSkip: Int = 0,
         pendingIntent: PendingIntent? = null
     ) {
         val intent = pendingIntent ?: createPendingIntent(requestCode, 0)
         val exactAlarmTime =
-            calendar.getTimeExactForAlarmInMilliseconds(hour, min, weekDays, daysToSkip)
+            calendar.getTimeExactForAlarmInMilliseconds(hour, min, weekDays)
 
         val alarmClockInfo = AlarmManager.AlarmClockInfo(
             exactAlarmTime,
@@ -67,7 +65,6 @@ class AlarmService(val context: Context) {
             hour= alarmNotification.hour,
             min = alarmNotification.min,
             weekDays = alarmNotification.weekDays,
-            daysToSkip = 1,
             pendingIntent = pendingIntent
         )
     }

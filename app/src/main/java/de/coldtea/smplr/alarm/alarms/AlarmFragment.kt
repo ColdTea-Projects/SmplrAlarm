@@ -99,24 +99,14 @@ class AlarmFragment : Fragment() {
                 binding.sunday.isChecked
             )
 
-            if(weekInfo.isSingleAlarm()){
-                viewModel.updateSingleAlarm(
-                    binding.alarmId.text.toString().toInt(),
-                    binding.hour.text.toString().toInt(),
-                    binding.minute.text.toString().toInt(),
-                    binding.isActive.isChecked,
-                    requireContext().applicationContext
-                )
-            }else{
-                viewModel.updateRepeatingAlarm(
-                    binding.alarmId.text.toString().toInt(),
-                    binding.hour.text.toString().toInt(),
-                    binding.minute.text.toString().toInt(),
-                    weekInfo,
-                    binding.isActive.isChecked,
-                    requireContext().applicationContext
-                )
-            }
+            viewModel.updateAlarm(
+                binding.alarmId.text.toString().toInt(),
+                binding.hour.text.toString().toInt(),
+                binding.minute.text.toString().toInt(),
+                weekInfo,
+                binding.isActive.isChecked,
+                requireContext().applicationContext
+            )
         }
 
         binding.cancelAlarm.setOnClickListener {

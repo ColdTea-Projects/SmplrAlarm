@@ -1,10 +1,8 @@
 package de.coldtea.smplr.smplralarm.apis
 
-import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import de.coldtea.smplr.smplralarm.extensions.getTimeExactForAlarmInMilliseconds
 import de.coldtea.smplr.smplralarm.models.*
 import de.coldtea.smplr.smplralarm.receivers.AlarmNotification
 import de.coldtea.smplr.smplralarm.receivers.AlarmReceiver
@@ -15,7 +13,6 @@ import de.coldtea.smplr.smplralarm.services.AlarmService
 import kotlinx.coroutines.*
 import timber.log.Timber
 import java.lang.IllegalArgumentException
-import java.util.Calendar
 import kotlin.math.absoluteValue
 
 typealias AlarmRingEvent = (Int) -> Unit
@@ -133,7 +130,7 @@ class SmplrAlarmAPI(val context: Context) {
         }
     }
 
-    internal fun updateRepeatingAlarm() {
+    internal fun updateAlarm() {
         if (requestCode == -1) return
 
         alarmService.cancelAlarm(requestCode)
@@ -146,53 +143,19 @@ class SmplrAlarmAPI(val context: Context) {
 
                 val updatedHour = if (hour == -1) alarmNotification.hour else hour
                 val updatedMinute = if (min == -1) alarmNotification.min else min
-                val updatedWeekdays =
-                    if (weekdays.isEmpty()) alarmNotification.weekDays else weekdays
 
-                updateRepeatingAlarmNotification(
+                updateAlarmNotification(
                     requestCode,
                     updatedHour,
                     updatedMinute,
-                    updatedWeekdays,
+                    weekdays,
                     updatedActivation
                 )
                 if (updatedActivation) alarmService.setAlarm(
                     requestCode,
                     updatedHour,
                     updatedMinute,
-                    updatedWeekdays
-                )
-
-                requestAPI?.requestAlarmList()
-            } catch (ex: IllegalArgumentException) {
-                Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: The alarm intended to be removed does not exist! ")
-            } catch (ex: Exception) {
-                Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: $ex ")
-            }
-        }
-    }
-
-    internal fun updateSingleAlarm() {
-        if (requestCode == -1) return
-
-        alarmService.cancelAlarm(requestCode)
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val notificationRepository = AlarmNotificationRepository(context)
-                val alarmNotification = notificationRepository.getAlarmNotification(requestCode)
-                val updatedHour = if (hour == -1) alarmNotification.hour else hour
-                val updatedMinute = if (min == -1) alarmNotification.min else min
-                val daysToSkip =
-                    if (alarmNotification.hour == updatedHour && alarmNotification.min == updatedMinute) 1 else 0
-
-                updateSingleAlarmNotification(requestCode, updatedHour, updatedMinute, isActive)
-                if (isActive) alarmService.setAlarm(
-                    requestCode,
-                    updatedHour,
-                    updatedMinute,
-                    listOf(),
-                    daysToSkip
+                    weekdays
                 )
 
                 requestAPI?.requestAlarmList()
@@ -237,34 +200,16 @@ class SmplrAlarmAPI(val context: Context) {
         }
     }
 
-    private suspend fun updateSingleAlarmNotification(
+    private suspend fun updateAlarmNotification(
         alarmNotificationId: Int,
-        hour: Int?,
-        min: Int?,
-        isActive: Boolean?
-    ) {
-        try {
-            alarmNotificationRepository.updateSingleAlarmNotification(
-                alarmNotificationId,
-                hour,
-                min,
-                isActive
-            )
-        } catch (exception: Exception) {
-            Timber.e("SmplrAlarm.AlarmManager.saveAlarmNotificationToDatabase: Alarm Notification could not be updated to the database --> $exception")
-        }
-    }
-
-    private suspend fun updateRepeatingAlarmNotification(
-        alarmNotificationId: Int,
-        hour: Int?,
-        min: Int?,
+        hour: Int,
+        min: Int,
         weekDays: List<WeekDays>?,
-        isActive: Boolean?
+        isActive: Boolean
     ) {
 
         try {
-            alarmNotificationRepository.updateRepeatingAlarmNotification(
+            alarmNotificationRepository.updateAlarmNotification(
                 alarmNotificationId,
                 hour,
                 min,

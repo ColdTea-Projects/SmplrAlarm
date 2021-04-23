@@ -60,52 +60,21 @@ internal class AlarmNotificationRepository(
 
     }
 
-    suspend fun updateSingleAlarmNotification(
+    suspend fun updateAlarmNotification(
         alarmNotificationId: Int,
-        hour: Int?,
-        min: Int?,
-        isActive: Boolean?
-    ) {
-
-        val alarmNotification = getAlarmNotification(alarmNotificationId)
-
-        val updatedHour = hour ?: alarmNotification.hour
-        val updatedMinute = min ?: alarmNotification.min
-        val updatedActivationState = isActive ?: alarmNotification.isActive
-
-        val newAlarmNotificationEntity = AlarmNotificationEntity(
-            alarmNotificationId,
-            updatedHour,
-            updatedMinute,
-            listOf<WeekDays>().toString(),
-            updatedActivationState
-        )
-
-        alarmNotificationDatabase.daoAlarmNotification.update(newAlarmNotificationEntity)
-
-    }
-
-    suspend fun updateRepeatingAlarmNotification(
-        alarmNotificationId: Int,
-        hour: Int?,
-        min: Int?,
+        hour: Int,
+        min: Int,
         weekDays: List<WeekDays>?,
-        isActive: Boolean?
+        isActive: Boolean
     ) {
-
-        val alarmNotification = getAlarmNotification(alarmNotificationId)
-
-        val updatedHour = hour ?: alarmNotification.hour
-        val updatedMinute = min ?: alarmNotification.min
-        val updatedWeekDays = weekDays ?: alarmNotification.weekDays
-        val updatedActivationState = isActive ?: alarmNotification.isActive
+        val updatedWeekDays = weekDays?: listOf()
 
         val newAlarmNotificationEntity = AlarmNotificationEntity(
             alarmNotificationId,
-            updatedHour,
-            updatedMinute,
+            hour,
+            min,
             updatedWeekDays.activeDaysAsJsonString(),
-            updatedActivationState
+            isActive
         )
 
         alarmNotificationDatabase.daoAlarmNotification.update(newAlarmNotificationEntity)
@@ -175,10 +144,11 @@ internal class AlarmNotificationRepository(
         val alarmNotification =
             alarmNotificationDatabase.daoAlarmNotification.getAlarmNotification(intentId).first()
 
-        updateSingleAlarmNotification(
+        updateAlarmNotification(
             alarmNotification.alarmNotificationEntity.alarmNotificationId,
             alarmNotification.alarmNotificationEntity.hour,
             alarmNotification.alarmNotificationEntity.min,
+            listOf(),
             false
         )
     }
