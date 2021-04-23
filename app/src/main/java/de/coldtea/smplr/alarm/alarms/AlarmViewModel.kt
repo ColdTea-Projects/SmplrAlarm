@@ -19,7 +19,6 @@ class AlarmViewModel : ViewModel() {
     val alarmListAsJson: LiveData<String>
         get() = _alarmListAsJson
 
-
     fun initAlarmListListener(applicationContext: Context) =
         smplrAlarmChangeOrRequestListener(applicationContext) {
             _alarmListAsJson.postValue(it)
