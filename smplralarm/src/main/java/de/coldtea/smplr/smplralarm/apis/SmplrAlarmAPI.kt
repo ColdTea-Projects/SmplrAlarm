@@ -13,6 +13,7 @@ import de.coldtea.smplr.smplralarm.services.AlarmService
 import kotlinx.coroutines.*
 import timber.log.Timber
 import java.lang.IllegalArgumentException
+import kotlin.jvm.Throws
 import kotlin.math.absoluteValue
 
 typealias AlarmRingEvent = (Int) -> Unit
@@ -38,6 +39,12 @@ class SmplrAlarmAPI(val context: Context) {
     private var requestAPI: SmplrAlarmListRequestAPI? = null
 
     private val alarmService by lazy { AlarmService(context) }
+
+    private val isAlarmValid: Boolean
+        get() = hour > -1
+                && hour <= 24
+                && min > -1
+                && min <= 60
 
     //endregion
 
@@ -99,6 +106,10 @@ class SmplrAlarmAPI(val context: Context) {
     // region functionality
 
     internal fun setAlarm(): Int {
+        if (isAlarmValid.not()) {
+            Timber.w("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: Your time setup is not valid, please pick a valid time! ")
+            return -1
+        }
 
         requestCode = getUniqueIdBasedNow()
         Timber.v("SmplrAlarm.AlarmManager.setAlarm: $requestCode -- $hour:$min")
@@ -121,7 +132,7 @@ class SmplrAlarmAPI(val context: Context) {
             val alarmNotifications = notificationRepository.getAllAlarmNotifications()
 
             alarmNotifications
-                .filter { it.isActive && !alarmService.alarmExist(it.alarmNotificationId)}
+                .filter { it.isActive && !alarmService.alarmExist(it.alarmNotificationId) }
                 .map {
                     alarmService.renewAlarm(it)
                 }
@@ -132,6 +143,10 @@ class SmplrAlarmAPI(val context: Context) {
 
     internal fun updateAlarm() {
         if (requestCode == -1) return
+        if (isAlarmValid.not()) {
+            Timber.w("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: Your time setup is not valid, please pick a valid time! ")
+            return
+        }
 
         alarmService.cancelAlarm(requestCode)
         val updatedActivation = isActive
@@ -230,7 +245,5 @@ class SmplrAlarmAPI(val context: Context) {
     }
 
     private fun getUniqueIdBasedNow() = System.currentTimeMillis().toInt().absoluteValue
-
-
     // endregion
 }
