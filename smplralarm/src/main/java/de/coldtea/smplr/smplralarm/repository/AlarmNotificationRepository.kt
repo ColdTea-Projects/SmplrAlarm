@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.Intent.URI_ALLOW_UNSAFE
-import android.content.res.Resources
 import de.coldtea.smplr.smplralarm.extensions.activeDaysAsJsonString
 import de.coldtea.smplr.smplralarm.extensions.activeDaysAsWeekdaysList
 import de.coldtea.smplr.smplralarm.extensions.convertToNotificationItem
@@ -17,8 +16,6 @@ import de.coldtea.smplr.smplralarm.repository.entity.AlarmNotificationEntity
 import de.coldtea.smplr.smplralarm.repository.entity.convertToNotificationChannelItem
 import org.json.JSONException
 import org.json.JSONObject
-import timber.log.Timber
-import java.lang.NullPointerException
 import java.net.URISyntaxException
 import java.util.*
 
@@ -94,7 +91,10 @@ internal class AlarmNotificationRepository(
                 ?: listOf(),
             notificationChannelItem = alarmNotification.notificationChannelEntity.convertToNotificationChannelItem(),
             notificationItem = alarmNotification.notificationEntity.convertToNotificationItem(),
-            intent = null,
+            intent = retrieveIntent(
+                SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_INTENT_PREFIX,
+                intentId
+            ),
             fullScreenIntent = retrieveIntent(
                 SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX,
                 intentId
@@ -114,7 +114,10 @@ internal class AlarmNotificationRepository(
                         ?: listOf(),
                     notificationChannelItem = alarmNotification.notificationChannelEntity.convertToNotificationChannelItem(),
                     notificationItem = alarmNotification.notificationEntity.convertToNotificationItem(),
-                    intent = null,
+                    intent = retrieveIntent(
+                        SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_INTENT_PREFIX,
+                        alarmNotification.alarmNotificationEntity.alarmNotificationId
+                    ),
                     fullScreenIntent = retrieveIntent(
                         SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX,
                         alarmNotification.alarmNotificationEntity.alarmNotificationId

@@ -10,6 +10,7 @@
     <application>
 
         <receiver android:name=".receivers.AlarmReceiver" />
+        <receiver android:name=".receivers.ActivateAppReceiver" />
 
         <receiver android:name=".receivers.RebootReceiver" >
             <intent-filter>

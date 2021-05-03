@@ -3,7 +3,6 @@ package de.coldtea.smplr.smplralarm.repository.dao
 import androidx.room.Dao
 import androidx.room.Query
 import de.coldtea.smplr.smplralarm.repository.entity.NotificationEntity
-import java.sql.Timestamp
 
 @Dao
 internal abstract class DaoNotification : DaoBase<NotificationEntity> {

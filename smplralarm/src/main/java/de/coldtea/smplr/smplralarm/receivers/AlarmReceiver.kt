@@ -18,11 +18,15 @@ internal class AlarmReceiver : BroadcastReceiver() {
     private var repository: AlarmNotificationRepository? = null
 
     override fun onReceive(context: Context, intent: Intent) {
+        val requestId =
+            intent.getIntExtra(SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID, -1)
+
+        onAlarmReceived(context, requestId)
+    }
+    private fun onAlarmReceived(context: Context, requestId: Int){
         try {
             repository = AlarmNotificationRepository(context)
             val alarmService = AlarmService(context)
-            val requestId =
-                intent.getIntExtra(SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID, -1)
 
             Timber.v("SmplrAlarm.AlarmReceiver.onReceive --> $requestId")
 
@@ -51,7 +55,6 @@ internal class AlarmReceiver : BroadcastReceiver() {
                     } catch (ex: Exception) {
                         Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: $ex ")
                     }
-
                 }
 
             }

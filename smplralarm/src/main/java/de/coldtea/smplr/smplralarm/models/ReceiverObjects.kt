@@ -13,6 +13,7 @@ import de.coldtea.smplr.smplralarm.repository.entity.NotificationEntity
 internal class SmplrAlarmReceiverObjects {
     companion object {
         internal const val SMPLR_ALARM_RECEIVER_INTENT_ID = "smplr_alarm_receiver_intent_id"
+
         internal var alarmNotification: MutableList<AlarmNotification> = mutableListOf()
     }
 }

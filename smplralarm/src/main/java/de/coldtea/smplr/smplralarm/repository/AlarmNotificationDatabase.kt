@@ -11,7 +11,6 @@ import de.coldtea.smplr.smplralarm.repository.entity.AlarmNotificationEntity
 import de.coldtea.smplr.smplralarm.repository.entity.NotificationChannelEntity
 import de.coldtea.smplr.smplralarm.repository.entity.NotificationEntity
 
-
 @Database(
     entities = [
         AlarmNotificationEntity::class,
