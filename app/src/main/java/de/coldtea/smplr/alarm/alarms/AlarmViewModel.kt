@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import de.coldtea.smplr.alarm.MainActivity
 import de.coldtea.smplr.alarm.alarms.models.WeekInfo
 import de.coldtea.smplr.alarm.lockscreenalarm.ActivityLockScreenAlarm
 import de.coldtea.smplr.smplralarm.*
@@ -27,19 +28,23 @@ class AlarmViewModel : ViewModel() {
         }
 
     fun setAlarm(hour: Int, minute: Int, weekInfo: WeekInfo, applicationContext: Context): Int {
-        val intent = Intent(
+        val onClickShortcutIntent = Intent(
+            applicationContext,
+            MainActivity::class.java
+        )
+
+        val fullScreenIntent = Intent(
             applicationContext,
             ActivityLockScreenAlarm::class.java
         )
 
-        intent.putExtra("SmplrText", "You did it, you crazy bastard you did it!")
+        fullScreenIntent.putExtra("SmplrText", "You did it, you crazy bastard you did it!")
 
         return smplrAlarmSet(applicationContext) {
             hour { hour }
             min { minute }
-            fullScreenIntent {
-                intent
-            }
+            intent { onClickShortcutIntent }
+            receiverIntent { fullScreenIntent }
             onAlarmRings { alarmId ->
                 Timber.i("SmplrAlarmApp.MainFragment.onAlarmRings: $alarmId")
             }

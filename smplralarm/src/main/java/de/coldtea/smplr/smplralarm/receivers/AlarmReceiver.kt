@@ -20,16 +20,20 @@ import java.util.*
 internal class AlarmReceiver : BroadcastReceiver() {
     private var repository: AlarmNotificationRepository? = null
 
-
     override fun onReceive(context: Context, intent: Intent) {
+        val requestId =
+            intent.getIntExtra(SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID, -1)
+
+        onAlarmReceived(context, requestId)
+    }
+
+    private fun onAlarmReceived(context: Context, requestId: Int){
         val now = Calendar.getInstance().dateTime()
         val logsRepository = LogsRepository(context.applicationContext)
 
         try {
             repository = AlarmNotificationRepository(context)
             val alarmService = AlarmService(context)
-            val requestId =
-                intent.getIntExtra(SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID, -1)
 
             Timber.v("SmplrAlarm.AlarmReceiver.onReceive --> $requestId")
 
@@ -71,7 +75,6 @@ internal class AlarmReceiver : BroadcastReceiver() {
                             )
                         )
                     }
-
                 }
 
             }
@@ -100,6 +103,7 @@ internal class AlarmReceiver : BroadcastReceiver() {
 
         return sdfDate.format(time) to sdfTime.format(time)
     }
+
     companion object {
         private const val ALARM_RECEIVER_SUCCESS = "Alarm receiver worked successfully"
 

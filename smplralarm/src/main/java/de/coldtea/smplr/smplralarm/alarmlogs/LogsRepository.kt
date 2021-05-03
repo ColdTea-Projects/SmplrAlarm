@@ -4,7 +4,6 @@ import android.content.Context
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import java.lang.reflect.Type
 
 class LogsRepository(private val context: Context) {
     private val sharedPreferences

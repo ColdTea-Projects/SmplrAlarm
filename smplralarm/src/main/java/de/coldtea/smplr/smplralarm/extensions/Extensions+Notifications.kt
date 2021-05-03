@@ -73,5 +73,5 @@ internal fun Context.showNotification(
 
 }
 
-private fun Context.getFullScreenIntent(intent: Intent?): PendingIntent =
+fun Context.getFullScreenIntent(intent: Intent?): PendingIntent =
     PendingIntent.getActivity(this, 0, intent, 0)

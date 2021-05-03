@@ -3,12 +3,10 @@ package de.coldtea.smplr.smplralarm
 import android.content.Context
 import de.coldtea.smplr.smplralarm.apis.AlarmNotificationAPI
 import de.coldtea.smplr.smplralarm.apis.ChannelManagerAPI
-import de.coldtea.smplr.smplralarm.apis.SmplrAlarmListRequestAPI
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI
+import de.coldtea.smplr.smplralarm.apis.SmplrAlarmListRequestAPI
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 import de.coldtea.smplr.smplralarm.models.NotificationItem
-import java.lang.IllegalArgumentException
-import kotlin.jvm.Throws
 
 
 fun smplrAlarmSet(context: Context, lambda: SmplrAlarmAPI.() -> Unit): Int =

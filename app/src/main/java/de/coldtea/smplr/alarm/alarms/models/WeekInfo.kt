@@ -8,13 +8,4 @@ data class WeekInfo(
     val friday: Boolean,
     val saturday: Boolean,
     val sunday: Boolean
-) {
-    fun isSingleAlarm() =
-                !monday &&
-                !tuesday &&
-                !wednesday &&
-                !thursday &&
-                !friday &&
-                !saturday &&
-                !sunday
-}
+)

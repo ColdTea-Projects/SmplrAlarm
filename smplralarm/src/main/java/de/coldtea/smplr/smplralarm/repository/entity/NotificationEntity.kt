@@ -3,7 +3,6 @@ package de.coldtea.smplr.smplralarm.repository.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import de.coldtea.smplr.smplralarm.models.NotificationItem
 
 @Entity(tableName = "notification_table")
 internal data class NotificationEntity(

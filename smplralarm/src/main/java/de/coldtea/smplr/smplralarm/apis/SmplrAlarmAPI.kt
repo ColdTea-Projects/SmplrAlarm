@@ -13,7 +13,6 @@ import de.coldtea.smplr.smplralarm.services.AlarmService
 import kotlinx.coroutines.*
 import timber.log.Timber
 import java.lang.IllegalArgumentException
-import kotlin.jvm.Throws
 import kotlin.math.absoluteValue
 
 typealias AlarmRingEvent = (Int) -> Unit
@@ -29,7 +28,7 @@ class SmplrAlarmAPI(val context: Context) {
 
     private var requestCode = -1
     private var intent: Intent? = null
-    private var fullScreenIntent: Intent? = null
+    private var receiverIntent: Intent? = null
 
     private var notificationChannel: NotificationChannelItem? = null
     private var notification: NotificationItem? = null
@@ -73,8 +72,8 @@ class SmplrAlarmAPI(val context: Context) {
         this.intent = intent()
     }
 
-    fun fullScreenIntent(fullScreenIntent: () -> Intent) {
-        this.fullScreenIntent = fullScreenIntent()
+    fun receiverIntent(receiverIntent: () -> Intent) {
+        this.receiverIntent = receiverIntent()
     }
 
     fun notificationChannel(notificationChannel: () -> NotificationChannelItem) {
@@ -114,10 +113,10 @@ class SmplrAlarmAPI(val context: Context) {
         requestCode = getUniqueIdBasedNow()
         Timber.v("SmplrAlarm.AlarmManager.setAlarm: $requestCode -- $hour:$min")
 
-        val notifiactionBuilderItem = createAlarmNotification()
+        val notifictionBuilderItem = createAlarmNotification()
 
         CoroutineScope(Dispatchers.IO).launch {
-            saveAlarmNotificationToDatabase(notifiactionBuilderItem)
+            saveAlarmNotificationToDatabase(notifictionBuilderItem)
             requestAPI?.requestAlarmList()
         }
 
@@ -201,7 +200,7 @@ class SmplrAlarmAPI(val context: Context) {
         notification
             ?: AlarmNotificationAPI().build(),
         intent,
-        fullScreenIntent,
+        receiverIntent,
         true,
         alarmRingEvent
     )

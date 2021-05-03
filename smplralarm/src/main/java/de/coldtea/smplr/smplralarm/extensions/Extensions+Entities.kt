@@ -13,12 +13,3 @@ internal fun NotificationEntity.convertToNotificationItem() =
         bigText,
         autoCancel
     )
-
-internal fun AlarmNotificationEntity.convertToAlarmItem() =
-    AlarmItem(
-        alarmNotificationId,
-        hour,
-        min,
-        activeDaysAsWeekdaysList().orEmpty(),
-        isActive
-    )
