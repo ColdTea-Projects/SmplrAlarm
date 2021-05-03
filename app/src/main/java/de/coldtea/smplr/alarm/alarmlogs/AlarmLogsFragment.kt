@@ -6,11 +6,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import de.coldtea.smplr.alarm.R
-import de.coldtea.smplr.alarm.alarms.AlarmViewModel
 import de.coldtea.smplr.alarm.databinding.FragmentAlarmLogsBinding
-import de.coldtea.smplr.alarm.databinding.FragmentAlarmsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AlarmLogsFragment: Fragment() {
