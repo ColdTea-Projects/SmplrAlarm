@@ -197,11 +197,12 @@ internal class AlarmNotificationRepository(
         sharedPreferencesEditor.apply()
     }
 
-    private fun retrieveIntent(prefix: String, requestId: Int): Intent? =
+    private fun retrieveIntent(prefix: String, requestId: Int): Intent? {
         try {
+            val uri = sharedPreferences.getString(prefix.plus(requestId), null) ?: return null
 
             val intent = Intent.parseUri(
-                sharedPreferences.getString(prefix.plus(requestId), null),
+                uri,
                 URI_ALLOW_UNSAFE
             )
             val extrasKeySet = sharedPreferences.getStringSet(
@@ -219,11 +220,12 @@ internal class AlarmNotificationRepository(
                 intent.putExtra(it, jsonObject.get(it).toString())
             }
 
-            intent
-
+            return intent
         } catch (ex: URISyntaxException) {
-            null
+            return null
         }
+
+    }
 
 
     companion object {

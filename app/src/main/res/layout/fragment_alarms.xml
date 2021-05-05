@@ -96,13 +96,24 @@
             android:text="S"/>
 
         <Button
-            android:id="@+id/set_repeating_alarm"
-            android:layout_width="wrap_content"
+            android:id="@+id/set_intnent_alarm"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Set Repeating Alarm"
             android:layout_margin="5dp"
+            android:text="Set Alarm Full Screen Intent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/monday"/>
+            app:layout_constraintTop_toBottomOf="@id/monday" />
+
+        <Button
+            android:id="@+id/set_notification_alarm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="Set Alarm Notification"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/set_intnent_alarm" />
 
         <Button
             android:id="@+id/update_list"
@@ -111,15 +122,15 @@
             android:text="Update List"
             android:layout_margin="5dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/set_repeating_alarm"
-            app:layout_constraintTop_toBottomOf="@id/monday" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/set_notification_alarm" />
 
         <TextView
             android:id="@+id/update_cancel_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Update/Cancel alarm"
-            app:layout_constraintTop_toBottomOf="@+id/set_repeating_alarm"/>
+            app:layout_constraintTop_toBottomOf="@+id/update_list"/>
 
         <EditText
             android:id="@+id/alarm_id"

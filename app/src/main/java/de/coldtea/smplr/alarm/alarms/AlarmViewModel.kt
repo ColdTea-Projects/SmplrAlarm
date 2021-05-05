@@ -27,7 +27,12 @@ class AlarmViewModel : ViewModel() {
             smplrAlarmListRequestAPI = it
         }
 
-    fun setAlarm(hour: Int, minute: Int, weekInfo: WeekInfo, applicationContext: Context): Int {
+    fun setFullScreenIntentAlarm(
+        hour: Int,
+        minute: Int,
+        weekInfo: WeekInfo,
+        applicationContext: Context
+    ): Int {
         val onClickShortcutIntent = Intent(
             applicationContext,
             MainActivity::class.java
@@ -59,6 +64,30 @@ class AlarmViewModel : ViewModel() {
             }
         }
     }
+
+    fun setNotificationAlarm(
+        hour: Int,
+        minute: Int,
+        weekInfo: WeekInfo,
+        applicationContext: Context
+    ): Int =
+        smplrAlarmSet(applicationContext) {
+            hour { hour }
+            min { minute }
+            onAlarmRings { alarmId ->
+                Timber.i("SmplrAlarmApp.MainFragment.onAlarmRings: $alarmId")
+            }
+            weekdays {
+                if (weekInfo.monday) monday()
+                if (weekInfo.tuesday) tuesday()
+                if (weekInfo.wednesday) wednesday()
+                if (weekInfo.thursday) thursday()
+                if (weekInfo.friday) friday()
+                if (weekInfo.saturday) saturday()
+                if (weekInfo.sunday) sunday()
+            }
+        }
+
 
     fun updateAlarm(
         requestCode: Int,
