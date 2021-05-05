@@ -60,12 +60,12 @@ internal fun Context.showNotification(
     val notification = NotificationCompat.Builder(this, channelId).apply {
         priority = NotificationCompat.PRIORITY_HIGH
         with(notificationItem) {
-            setSmallIcon(smallIcon)//R.drawable.ic_baseline_child_care_24) // 3
-            setContentTitle(title) // 4
-            setContentText(message) // 5
-            setStyle(NotificationCompat.BigTextStyle().bigText(bigText)) // 6
-            priority = NotificationCompat.PRIORITY_DEFAULT // 7
-            setAutoCancel(autoCancel) // 8
+            setSmallIcon(smallIcon)
+            setContentTitle(title)
+            setContentText(message)
+            setStyle(NotificationCompat.BigTextStyle().bigText(bigText))
+            priority = NotificationCompat.PRIORITY_DEFAULT
+            setAutoCancel(autoCancel)
         }
     }.build()
 

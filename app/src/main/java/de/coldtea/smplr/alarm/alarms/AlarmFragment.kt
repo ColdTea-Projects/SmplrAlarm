@@ -35,7 +35,7 @@ class AlarmFragment : Fragment() {
         binding = FragmentAlarmsBinding.inflate(inflater, container, false)
 
         viewModel.initAlarmListListener(requireContext().applicationContext)
-        viewModel.alarmListAsJson.observe(viewLifecycleOwner){
+        viewModel.alarmListAsJson.observe(viewLifecycleOwner) {
             binding.alarmListJson.text = it
         }
 
@@ -52,52 +52,51 @@ class AlarmFragment : Fragment() {
         binding.minute.setText(defaultTime.second.toString())
         binding.sunday.isChecked = true
 
-        binding.setRepeatingAlarm.setOnClickListener {
+        binding.setIntnentAlarm.setOnClickListener {
 
-            val weekInfo = WeekInfo(
-                binding.monday.isChecked,
-                binding.tuesday.isChecked,
-                binding.wednesday.isChecked,
-                binding.thursday.isChecked,
-                binding.friday.isChecked,
-                binding.saturday.isChecked,
-                binding.sunday.isChecked
-            )
+            val weekInfo = binding.getWeekInfo()
 
-            val alarmId = viewModel.setAlarm(
+            val alarmId = viewModel.setFullScreenIntentAlarm(
                 binding.hour.text.toString().toInt(),
                 binding.minute.text.toString().toInt(),
                 weekInfo,
                 requireContext().applicationContext
             )
 
-            var toastText = "${binding.hour.text}:${binding.minute.text}"
-            if (binding.monday.isChecked) toastText = toastText.plus(" Monday")
-            if (binding.tuesday.isChecked) toastText = toastText.plus(" Tuesday")
-            if (binding.wednesday.isChecked) toastText = toastText.plus(" Wednesday")
-            if (binding.thursday.isChecked) toastText = toastText.plus(" Thursday")
-            if (binding.friday.isChecked) toastText = toastText.plus(" Friday")
-            if (binding.saturday.isChecked) toastText = toastText.plus(" Saturday")
-            if (binding.sunday.isChecked) toastText = toastText.plus(" Sunday")
-
-            Toast.makeText(requireContext(), toastText, LENGTH_SHORT).show()
-
+            binding.toastAlarm()
             binding.alarmId.setText(alarmId.toString())
         }
+
+        binding.setNotificationAlarm.setOnClickListener {
+
+            val weekInfo = binding.getWeekInfo()
+
+            val alarmId = viewModel.setNotificationAlarm(
+                binding.hour.text.toString().toInt(),
+                binding.minute.text.toString().toInt(),
+                weekInfo,
+                requireContext().applicationContext
+            )
+
+            binding.toastAlarm()
+            binding.alarmId.setText(alarmId.toString())
+        }
+
 
         binding.updateList.setOnClickListener {
             viewModel.requestAlarmList()
         }
 
         binding.updateAlarms.setOnClickListener {
-            val weekInfo = WeekInfo(
-                binding.monday.isChecked,
-                binding.tuesday.isChecked,
-                binding.wednesday.isChecked,
-                binding.thursday.isChecked,
-                binding.friday.isChecked,
-                binding.saturday.isChecked,
-                binding.sunday.isChecked
+            val weekInfo = binding.getWeekInfo()
+
+            viewModel.updateAlarm(
+                binding.alarmId.text.toString().toInt(),
+                binding.hour.text.toString().toInt(),
+                binding.minute.text.toString().toInt(),
+                weekInfo,
+                binding.isActive.isChecked,
+                requireContext().applicationContext
             )
 
             viewModel.updateAlarm(
@@ -128,6 +127,32 @@ class AlarmFragment : Fragment() {
 
         smplrAlarmRenewMissingAlarms(requireContext())
     }
+
+    private fun FragmentAlarmsBinding.getWeekInfo(): WeekInfo =
+        WeekInfo(
+            monday.isChecked,
+            tuesday.isChecked,
+            wednesday.isChecked,
+            thursday.isChecked,
+            friday.isChecked,
+            saturday.isChecked,
+            sunday.isChecked
+        )
+
+    private fun FragmentAlarmsBinding.toastAlarm() {
+        var toastText = "${hour.text}:${minute.text}"
+        if (monday.isChecked) toastText = toastText.plus(" Monday")
+        if (tuesday.isChecked) toastText = toastText.plus(" Tuesday")
+        if (wednesday.isChecked) toastText = toastText.plus(" Wednesday")
+        if (thursday.isChecked) toastText = toastText.plus(" Thursday")
+        if (friday.isChecked) toastText = toastText.plus(" Friday")
+        if (saturday.isChecked) toastText = toastText.plus(" Saturday")
+        if (sunday.isChecked) toastText = toastText.plus(" Sunday")
+
+        Toast.makeText(requireContext(), toastText, LENGTH_SHORT).show()
+
+    }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
