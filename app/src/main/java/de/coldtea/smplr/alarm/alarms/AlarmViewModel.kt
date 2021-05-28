@@ -6,10 +6,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.coldtea.smplr.alarm.MainActivity
+import de.coldtea.smplr.alarm.R
 import de.coldtea.smplr.alarm.alarms.models.WeekInfo
 import de.coldtea.smplr.alarm.lockscreenalarm.ActivityLockScreenAlarm
-import de.coldtea.smplr.smplralarm.*
+import de.coldtea.smplr.alarm.receiver.ActionReceiver
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmListRequestAPI
+import de.coldtea.smplr.smplralarm.models.NotificationItem
+import de.coldtea.smplr.smplralarm.smplrAlarmCancel
+import de.coldtea.smplr.smplralarm.smplrAlarmChangeOrRequestListener
+import de.coldtea.smplr.smplralarm.smplrAlarmSet
+import de.coldtea.smplr.smplralarm.smplrAlarmUpdate
 import timber.log.Timber
 
 class AlarmViewModel : ViewModel() {
@@ -43,6 +49,14 @@ class AlarmViewModel : ViewModel() {
             ActivityLockScreenAlarm::class.java
         )
 
+        val snoozeIntent = Intent(applicationContext, ActionReceiver::class.java).apply {
+            action = ACTION_SNOOZE
+        }
+
+        val dismissIntent = Intent(applicationContext, ActionReceiver::class.java).apply {
+            action = ACTION_DISMISS
+        }
+
         fullScreenIntent.putExtra("SmplrText", "You did it, you crazy bastard you did it!")
 
         return smplrAlarmSet(applicationContext) {
@@ -61,6 +75,19 @@ class AlarmViewModel : ViewModel() {
                 if (weekInfo.friday) friday()
                 if (weekInfo.saturday) saturday()
                 if (weekInfo.sunday) sunday()
+            }
+            notification {
+                NotificationItem(
+                    smallIcon = R.drawable.ic_baseline_alarm_on_24,
+                    title = "Simple alarm is ringing",
+                    message = "Simple alarm is ringing",
+                    bigText = "Simple alarm is ringing",
+                    autoCancel = true,
+                    firstButtonText = "Snooze",
+                    secondButtonText = "Dismiss",
+                    firstButtonIntent = snoozeIntent,
+                    secondButtonIntent = dismissIntent
+                )
             }
         }
     }
@@ -121,4 +148,8 @@ class AlarmViewModel : ViewModel() {
             requestCode { requestCode }
         }
 
+    companion object{
+        internal const val ACTION_SNOOZE = "action_snooze"
+        internal const val ACTION_DISMISS = "action_dismiss"
+    }
 }

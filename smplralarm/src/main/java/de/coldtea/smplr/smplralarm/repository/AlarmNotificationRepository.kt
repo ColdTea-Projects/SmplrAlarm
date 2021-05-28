@@ -146,7 +146,22 @@ internal class AlarmNotificationRepository(
                     weekDays = alarmNotification.alarmNotificationEntity.activeDaysAsWeekdaysList()
                         ?: listOf(),
                     notificationChannelItem = alarmNotification.notificationChannelEntity.convertToNotificationChannelItem(),
-                    notificationItem = alarmNotification.notificationEntity.convertToNotificationItem(),
+                    notificationItem = alarmNotification.notificationEntity.convertToNotificationItem()
+                        .apply {
+                            if (firstButtonText != null){
+                                firstButtonIntent = retrieveIntent(
+                                    SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FIRST_BUTTON_INTENT_PREFIX,
+                                    alarmNotification.alarmNotificationEntity.alarmNotificationId
+                                )
+                            }
+                            if (secondButtonText != null){
+                                secondButtonIntent = retrieveIntent(
+                                    SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_SECOND_BUTTON_INTENT_PREFIX,
+                                    alarmNotification.alarmNotificationEntity.alarmNotificationId
+                                )
+                            }
+
+                        },
                     intent = retrieveIntent(
                         SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_INTENT_PREFIX,
                         alarmNotification.alarmNotificationEntity.alarmNotificationId
