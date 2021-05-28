@@ -1,8 +1,8 @@
 package de.coldtea.smplr.smplralarm.receivers
 
 import android.content.Intent
-import de.coldtea.smplr.smplralarm.extensions.activeDaysAsJsonString
 import de.coldtea.smplr.smplralarm.apis.AlarmRingEvent
+import de.coldtea.smplr.smplralarm.extensions.activeDaysAsJsonString
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 import de.coldtea.smplr.smplralarm.models.WeekDays
@@ -48,7 +48,9 @@ internal fun AlarmNotification.extractNotificationEntity(fkAlarmNotificationId: 
         notificationItem.title,
         notificationItem.message,
         notificationItem.bigText,
-        notificationItem.autoCancel
+        notificationItem.autoCancel,
+        notificationItem.firstButtonText.orEmpty(),
+        notificationItem.secondButtonText.orEmpty()
     )
 
 internal fun AlarmNotification.extractNotificationChannelEntity(fkAlarmNotificationId: Int): NotificationChannelEntity =

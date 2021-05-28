@@ -43,6 +43,22 @@ internal class AlarmNotificationRepository(
             alarmNotification.fullScreenIntent
         )
 
+        if (alarmNotification.notificationItem.firstButtonText != null && alarmNotification.notificationItem.firstButtonIntent != null) {
+            saveIntent(
+                SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FIRST_BUTTON_INTENT_PREFIX,
+                alarmNotification.alarmNotificationId,
+                alarmNotification.notificationItem.firstButtonIntent
+            )
+        }
+
+        if (alarmNotification.notificationItem.secondButtonText != null && alarmNotification.notificationItem.secondButtonIntent != null) {
+            saveIntent(
+                SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_SECOND_BUTTON_INTENT_PREFIX,
+                alarmNotification.alarmNotificationId,
+                alarmNotification.notificationItem.secondButtonIntent
+            )
+        }
+
         alarmNotificationDatabase.daoAlarmNotification.insert(alarmNotification.extractAlarmNotificationEntity())
         alarmNotificationDatabase.daoNotificationChannel.insert(
             alarmNotification.extractNotificationChannelEntity(
@@ -64,7 +80,7 @@ internal class AlarmNotificationRepository(
         weekDays: List<WeekDays>?,
         isActive: Boolean
     ) {
-        val updatedWeekDays = weekDays?: listOf()
+        val updatedWeekDays = weekDays ?: listOf()
 
         val newAlarmNotificationEntity = AlarmNotificationEntity(
             alarmNotificationId,
@@ -77,10 +93,12 @@ internal class AlarmNotificationRepository(
         alarmNotificationDatabase.daoAlarmNotification.update(newAlarmNotificationEntity)
 
     }
+
     @Throws(IllegalArgumentException::class)
     suspend fun getAlarmNotification(intentId: Int): AlarmNotification {
         val alarmNotification =
-            alarmNotificationDatabase.daoAlarmNotification.getAlarmNotification(intentId).firstOrNull()
+            alarmNotificationDatabase.daoAlarmNotification.getAlarmNotification(intentId)
+                .firstOrNull()
                 ?: throw IllegalArgumentException()
 
         return AlarmNotification(
@@ -90,7 +108,22 @@ internal class AlarmNotificationRepository(
             weekDays = alarmNotification.alarmNotificationEntity.activeDaysAsWeekdaysList()
                 ?: listOf(),
             notificationChannelItem = alarmNotification.notificationChannelEntity.convertToNotificationChannelItem(),
-            notificationItem = alarmNotification.notificationEntity.convertToNotificationItem(),
+            notificationItem = alarmNotification.notificationEntity.convertToNotificationItem()
+                .apply {
+                    if (firstButtonText != null){
+                        firstButtonIntent = retrieveIntent(
+                            SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FIRST_BUTTON_INTENT_PREFIX,
+                            intentId
+                        )
+                    }
+                    if (secondButtonText != null){
+                        secondButtonIntent = retrieveIntent(
+                            SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_SECOND_BUTTON_INTENT_PREFIX,
+                            intentId
+                        )
+                    }
+
+                },
             intent = retrieveIntent(
                 SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_INTENT_PREFIX,
                 intentId
@@ -234,7 +267,14 @@ internal class AlarmNotificationRepository(
         private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_INTENT_PREFIX = "INTENT_"
         private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX =
             "FULLSCREEN_INTENT_"
+
         private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_BUNDLE_PREFIX = "BUNDLE_"
         private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_KEYSET_PREFIX = "KEYSET_"
+
+
+        private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FIRST_BUTTON_INTENT_PREFIX =
+            "FIRST_BUTTON_INTENT_"
+        private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_SECOND_BUTTON_INTENT_PREFIX =
+            "SECOND_BUTTON_INTENT_"
     }
 }

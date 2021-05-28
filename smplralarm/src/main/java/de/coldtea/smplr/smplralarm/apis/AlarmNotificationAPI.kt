@@ -15,6 +15,8 @@ class AlarmNotificationAPI {
     internal var bigText: String = SMPLR_ALARM_CHANNEL_DEFAULT_BIG_TEXT
     internal var autoCancel: Boolean = true
     internal var alarmIntent: Intent? = null
+    internal var firstButton: String? = null
+    internal var secondButton: String? = null
 
     //endregion
 
@@ -44,6 +46,15 @@ class AlarmNotificationAPI {
         this.alarmIntent = alarmIntent()
     }
 
+
+    fun firstButton(firstButton: () -> String) {
+        this.firstButton = firstButton()
+    }
+
+    fun secondButton(secondButton: () -> String) {
+        this.secondButton = secondButton()
+    }
+
     //endregion
 
     //region build
@@ -54,7 +65,9 @@ class AlarmNotificationAPI {
             title,
             message,
             bigText,
-            autoCancel
+            autoCancel,
+            firstButton,
+            secondButton
         )
 
     //endregion

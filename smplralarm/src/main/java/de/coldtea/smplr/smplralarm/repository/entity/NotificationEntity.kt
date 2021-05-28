@@ -20,5 +20,9 @@ internal data class NotificationEntity(
     @ColumnInfo(name = "big_text")
     val bigText: String,
     @ColumnInfo(name = "auto_cancel")
-    val autoCancel: Boolean
+    val autoCancel: Boolean,
+    @ColumnInfo(name = "first_button")
+    val firstButton: String,
+    @ColumnInfo(name = "second_button")
+    val secondButton: String
 )

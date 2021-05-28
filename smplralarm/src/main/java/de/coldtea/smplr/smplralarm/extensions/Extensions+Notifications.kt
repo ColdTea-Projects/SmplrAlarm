@@ -44,6 +44,30 @@ internal fun Context.showNotificationWithIntent(
         setContentTitle(intentNotificationItem.notificationItem.title)
         setContentText(intentNotificationItem.notificationItem.message)
         setFullScreenIntent(pendingIntent, true)
+
+        val notificationItem = intentNotificationItem.notificationItem
+
+        if (notificationItem.firstButtonText != null) addAction(
+            0,
+            notificationItem.firstButtonText,
+            PendingIntent.getBroadcast(
+                this@showNotificationWithIntent,
+                0,
+                notificationItem.firstButtonIntent,
+                0
+            )
+        )
+
+        if (notificationItem.secondButtonText != null) addAction(
+            0,
+            notificationItem.secondButtonText,
+            PendingIntent.getBroadcast(
+                this@showNotificationWithIntent,
+                0,
+                notificationItem.secondButtonIntent,
+                0
+            )
+        )
     }.build()
 
     notificationManager.notify(0, notification)
@@ -66,6 +90,7 @@ internal fun Context.showNotification(
             setStyle(NotificationCompat.BigTextStyle().bigText(bigText))
             priority = NotificationCompat.PRIORITY_DEFAULT
             setAutoCancel(autoCancel)
+
         }
     }.build()
 
@@ -73,5 +98,5 @@ internal fun Context.showNotification(
 
 }
 
-fun Context.getFullScreenIntent(intent: Intent?): PendingIntent =
+internal fun Context.getFullScreenIntent(intent: Intent?): PendingIntent =
     PendingIntent.getActivity(this, 0, intent, 0)

@@ -16,7 +16,11 @@ data class NotificationItem(
     val title: String,
     val message: String,
     val bigText: String,
-    val autoCancel: Boolean
+    val autoCancel: Boolean,
+    val firstButtonText: String?,
+    val secondButtonText: String?,
+    var firstButtonIntent: Intent?,
+    var secondButtonIntent: Intent?
 )
 
 data class IntentNotificationItem(

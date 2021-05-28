@@ -1,8 +1,6 @@
 package de.coldtea.smplr.smplralarm.extensions
 
-import de.coldtea.smplr.smplralarm.models.AlarmItem
 import de.coldtea.smplr.smplralarm.models.NotificationItem
-import de.coldtea.smplr.smplralarm.repository.entity.AlarmNotificationEntity
 import de.coldtea.smplr.smplralarm.repository.entity.NotificationEntity
 
 internal fun NotificationEntity.convertToNotificationItem() =
@@ -11,5 +9,9 @@ internal fun NotificationEntity.convertToNotificationItem() =
         title,
         message,
         bigText,
-        autoCancel
+        autoCancel,
+        if(firstButton.isNotEmpty()) firstButton else null,
+        if(secondButton.isNotEmpty()) secondButton else null,
+        null,
+        null
     )
