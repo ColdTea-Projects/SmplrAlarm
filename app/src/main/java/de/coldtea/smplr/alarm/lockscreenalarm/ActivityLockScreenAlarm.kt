@@ -12,6 +12,8 @@ class ActivityLockScreenAlarm : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         binding = ActivityLockScreenAlarmBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val a = intent.getStringExtra("SmplrText")

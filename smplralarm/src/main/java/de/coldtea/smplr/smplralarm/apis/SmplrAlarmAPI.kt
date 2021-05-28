@@ -245,4 +245,15 @@ class SmplrAlarmAPI(val context: Context) {
 
     private fun getUniqueIdBasedNow() = System.currentTimeMillis().toInt().absoluteValue
     // endregion
+
+    companion object {
+
+        fun getAlarmIntent(requestCode: Int, context: Context) = PendingIntent.getBroadcast(
+            context,
+            requestCode,
+            AlarmReceiver.build(context).putExtra(SMPLR_ALARM_RECEIVER_INTENT_ID, requestCode),
+            PendingIntent.FLAG_NO_CREATE
+        )
+
+    }
 }

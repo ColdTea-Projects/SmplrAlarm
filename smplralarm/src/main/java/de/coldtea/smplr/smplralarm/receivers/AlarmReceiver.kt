@@ -3,6 +3,8 @@ package de.coldtea.smplr.smplralarm.receivers
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import de.coldtea.smplr.smplralarm.alarmlogs.LogsRepository
+import de.coldtea.smplr.smplralarm.alarmlogs.RangAlarmObject
 import de.coldtea.smplr.smplralarm.extensions.showNotification
 import de.coldtea.smplr.smplralarm.extensions.showNotificationWithIntent
 import de.coldtea.smplr.smplralarm.models.IntentNotificationItem
@@ -12,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.text.SimpleDateFormat
 import java.lang.IllegalArgumentException
 import java.util.*
 
@@ -24,7 +27,11 @@ internal class AlarmReceiver : BroadcastReceiver() {
 
         onAlarmReceived(context, requestId)
     }
+
     private fun onAlarmReceived(context: Context, requestId: Int){
+        val now = Calendar.getInstance().dateTime()
+        val logsRepository = LogsRepository(context.applicationContext)
+
         try {
             repository = AlarmNotificationRepository(context)
             val alarmService = AlarmService(context)
@@ -61,18 +68,54 @@ internal class AlarmReceiver : BroadcastReceiver() {
                             alarmService.resetAlarmTomorrow(alarmNotification)
                     } catch (ex: IllegalArgumentException) {
                         Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: The alarm intended to be removed does not exist! ")
+
+                        logsRepository.logAlarm(
+                            RangAlarmObject(
+                                "${now.first} - ${now.second}",
+                                ex.toString()
+                            )
+                        )
                     } catch (ex: Exception) {
                         Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: $ex ")
+                        logsRepository.logAlarm(
+                            RangAlarmObject(
+                                "${now.first} - ${now.second}",
+                                ex.toString()
+                            )
+                        )
                     }
                 }
 
             }
-        } catch (e: Exception) {
-            Timber.e("SmplrAlarm.AlarmReceiver.onReceive: exception --> $e")
+
+            logsRepository.logAlarm(
+                RangAlarmObject(
+                    "${now.first} - ${now.second}",
+                    ALARM_RECEIVER_SUCCESS
+                )
+            )
+
+        } catch (ex: Exception) {
+            Timber.e("SmplrAlarm.AlarmReceiver.onReceive: exception --> $ex")
+            logsRepository.logAlarm(
+                RangAlarmObject(
+                    "${now.first} - ${now.second}",
+                    ex.toString()
+                )
+            )
         }
     }
 
+    private fun Calendar.dateTime(): Pair<String, String> {
+        val sdfDate = SimpleDateFormat("dd/M/yyyy", Locale.getDefault())
+        val sdfTime = SimpleDateFormat("hh:mm:ss", Locale.getDefault())
+
+        return sdfDate.format(time) to sdfTime.format(time)
+    }
+
     companion object {
+        private const val ALARM_RECEIVER_SUCCESS = "Alarm receiver worked successfully"
+
         fun build(context: Context): Intent {
             return Intent(context, AlarmReceiver::class.java)
         }

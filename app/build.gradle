@@ -52,4 +52,14 @@ dependencies {
 
     // timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    // Koin
+    implementation "org.koin:koin-android:$koin_version"
+    implementation "org.koin:koin-androidx-scope:$koin_version"
+    implementation "org.koin:koin-androidx-viewmodel:$koin_version"
+    implementation "org.koin:koin-androidx-fragment:$koin_version"
+    implementation "org.koin:koin-androidx-ext:$koin_version"
+
+    //adapter-delegates
+    implementation 'com.hannesdorfmann:adapterdelegates4-kotlin-dsl:4.3.0'
 }

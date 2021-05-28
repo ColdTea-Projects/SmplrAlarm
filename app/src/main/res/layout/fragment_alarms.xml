@@ -170,6 +170,16 @@
             app:layout_constraintStart_toEndOf="@+id/update_alarms"
             app:layout_constraintTop_toBottomOf="@+id/alarm_id" />
 
+        <Button
+            android:id="@+id/check_alarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="Check"
+            app:layout_constraintBottom_toBottomOf="@+id/cancel_alarm"
+            app:layout_constraintStart_toEndOf="@+id/cancel_alarm"
+            app:layout_constraintTop_toTopOf="@+id/cancel_alarm" />
+
         <TextView
             android:id="@+id/alarmListJson"
             android:layout_width="0dp"

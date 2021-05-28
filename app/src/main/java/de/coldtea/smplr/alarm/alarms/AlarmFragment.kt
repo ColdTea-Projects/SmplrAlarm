@@ -6,9 +6,13 @@ import androidx.fragment.app.Fragment
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.fragment.app.viewModels
+import de.coldtea.smplr.alarm.R
+import de.coldtea.smplr.alarm.alarmlogs.AlarmLogsFragment
 import de.coldtea.smplr.alarm.alarms.models.WeekInfo
 import de.coldtea.smplr.alarm.databinding.FragmentAlarmsBinding
 import de.coldtea.smplr.alarm.extensions.nowPlus
+import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI
+import de.coldtea.smplr.smplralarm.smplrAlarmRenewMissingAlarms
 import java.util.*
 
 class AlarmFragment : Fragment() {
@@ -94,6 +98,15 @@ class AlarmFragment : Fragment() {
                 binding.isActive.isChecked,
                 requireContext().applicationContext
             )
+
+            viewModel.updateAlarm(
+                binding.alarmId.text.toString().toInt(),
+                binding.hour.text.toString().toInt(),
+                binding.minute.text.toString().toInt(),
+                weekInfo,
+                binding.isActive.isChecked,
+                requireContext().applicationContext
+            )
         }
 
         binding.cancelAlarm.setOnClickListener {
@@ -102,6 +115,17 @@ class AlarmFragment : Fragment() {
                 requireContext().applicationContext
             )
         }
+
+        binding.checkAlarm.setOnClickListener {
+            val intent = SmplrAlarmAPI.getAlarmIntent(
+                binding.alarmId.text.toString().toInt(),
+                requireContext().applicationContext
+            )
+
+            Toast.makeText(requireContext(), intent?.toString().orEmpty(), Toast.LENGTH_LONG).show()
+        }
+
+        smplrAlarmRenewMissingAlarms(requireContext())
     }
 
     private fun FragmentAlarmsBinding.getWeekInfo(): WeekInfo =
@@ -129,4 +153,18 @@ class AlarmFragment : Fragment() {
 
     }
 
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.actions_log -> {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.nav_host_fragment, AlarmLogsFragment())
+                    .addToBackStack(null)
+                    .commit()
+
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 }
