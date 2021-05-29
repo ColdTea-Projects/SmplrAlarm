@@ -1,7 +1,6 @@
 package de.coldtea.smplr.smplralarm.receivers
 
 import android.content.Intent
-import de.coldtea.smplr.smplralarm.apis.AlarmRingEvent
 import de.coldtea.smplr.smplralarm.extensions.activeDaysAsJsonString
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 import de.coldtea.smplr.smplralarm.models.NotificationItem
@@ -27,8 +26,7 @@ data class AlarmNotification(
     val notificationItem: NotificationItem,
     val intent: Intent?,
     val fullScreenIntent: Intent?,
-    val isActive: Boolean,
-    val alarmRingEvent: AlarmRingEvent?
+    val isActive: Boolean
 )
 
 internal fun AlarmNotification.extractAlarmNotificationEntity(): AlarmNotificationEntity =

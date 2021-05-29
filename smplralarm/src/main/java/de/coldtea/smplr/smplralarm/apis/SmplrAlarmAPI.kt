@@ -36,17 +36,15 @@ class SmplrAlarmAPI(val context: Context) {
     private var notificationChannel: NotificationChannelItem? = null
     private var notification: NotificationItem? = null
 
-    private var alarmRingEvent: AlarmRingEvent? = null
-
     private var requestAPI: SmplrAlarmListRequestAPI? = null
 
     private val alarmService by lazy { AlarmService(context) }
 
     private val isAlarmValid: Boolean
         get() = hour > -1
-                && hour <= 24
+                && hour < 24
                 && min > -1
-                && min <= 60
+                && min < 60
 
     //endregion
 
@@ -87,10 +85,6 @@ class SmplrAlarmAPI(val context: Context) {
         this.notification = notification()
     }
 
-    fun onAlarmRings(alarmRingEvent: AlarmRingEvent) {
-        this.alarmRingEvent = alarmRingEvent
-    }
-
     fun weekdays(lambda: WeekDaysAPI.() -> Unit) {
         weekdays = WeekDaysAPI().apply(lambda).getWeekDays()
     }
@@ -113,7 +107,7 @@ class SmplrAlarmAPI(val context: Context) {
             return -1
         }
 
-        requestCode = getUniqueIdBasedNow()
+        requestCode = getTimeBaseUniqueId()
         Timber.v("SmplrAlarm.AlarmManager.setAlarm: $requestCode -- $hour:$min")
 
         val notifictionBuilderItem = createAlarmNotification()
@@ -204,8 +198,7 @@ class SmplrAlarmAPI(val context: Context) {
             ?: AlarmNotificationAPI().build(),
         intent,
         receiverIntent,
-        true,
-        alarmRingEvent
+        true
     )
 
     private suspend fun saveAlarmNotificationToDatabase(notificationBuilderItem: AlarmNotification) {
@@ -246,7 +239,7 @@ class SmplrAlarmAPI(val context: Context) {
         }
     }
 
-    private fun getUniqueIdBasedNow() = System.currentTimeMillis().toInt().absoluteValue
+    private fun getTimeBaseUniqueId() = System.currentTimeMillis().toInt().absoluteValue
     // endregion
 
     companion object {

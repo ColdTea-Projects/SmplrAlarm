@@ -23,7 +23,7 @@ data class NotificationItem(
     var secondButtonIntent: Intent?
 )
 
-data class IntentNotificationItem(
+internal data class IntentNotificationItem(
     val intent: Intent?,
     val notificationItem: NotificationItem
 )

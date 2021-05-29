@@ -133,7 +133,7 @@ internal class AlarmNotificationRepository(
                 intentId
             ),
             isActive = alarmNotification.alarmNotificationEntity.isActive
-        ) {}//TODO: implement intents
+        )
     }
 
     suspend fun getAllAlarmNotifications(): List<AlarmNotification> =
@@ -171,7 +171,7 @@ internal class AlarmNotificationRepository(
                         alarmNotification.alarmNotificationEntity.alarmNotificationId
                     ),
                     isActive = alarmNotification.alarmNotificationEntity.isActive
-                ) {}
+                )
             }
 
     suspend fun deleteAlarmNotification(intentId: Int) {

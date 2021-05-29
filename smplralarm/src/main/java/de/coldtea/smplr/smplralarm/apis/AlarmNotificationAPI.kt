@@ -10,9 +10,9 @@ class AlarmNotificationAPI {
 
     @DrawableRes
     internal var smallIcon: Int = android.R.drawable.ic_lock_idle_alarm
-    internal var title: String = SMPLR_ALARM_CHANNEL_DEFAULT_TITLE
-    internal var message: String = SMPLR_ALARM_CHANNEL_DEFAULT_MESSAGE
-    internal var bigText: String = SMPLR_ALARM_CHANNEL_DEFAULT_BIG_TEXT
+    internal var title: String = SMPLR_ALARM_DEFAULT_TITLE
+    internal var message: String = SMPLR_ALARM_DEFAULT_MESSAGE
+    internal var bigText: String = SMPLR_ALARM_DEFAULT_BIG_TEXT
     internal var autoCancel: Boolean = true
     internal var alarmIntent: Intent? = null
     internal var firstButtonText: String? = null
@@ -49,11 +49,11 @@ class AlarmNotificationAPI {
     }
 
 
-    fun firstButton(firstButtonText: () -> String) {
+    fun firstButtonText(firstButtonText: () -> String) {
         this.firstButtonText = firstButtonText()
     }
 
-    fun secondButton(secondButtonText: () -> String) {
+    fun secondButtonText(secondButtonText: () -> String) {
         this.secondButtonText = secondButtonText()
     }
 
@@ -87,9 +87,9 @@ class AlarmNotificationAPI {
     //region companion
 
     companion object{
-        internal const val SMPLR_ALARM_CHANNEL_DEFAULT_TITLE = "de.coldtea.smplr.alarm.channel"
-        internal const val SMPLR_ALARM_CHANNEL_DEFAULT_MESSAGE = "Smplr Alarm"
-        internal const val SMPLR_ALARM_CHANNEL_DEFAULT_BIG_TEXT = "Smplr Alarm is ringing!"
+        internal const val SMPLR_ALARM_DEFAULT_TITLE = "de.coldtea.smplr.alarm.channel"
+        internal const val SMPLR_ALARM_DEFAULT_MESSAGE = "Smplr Alarm"
+        internal const val SMPLR_ALARM_DEFAULT_BIG_TEXT = "Smplr Alarm is ringing!"
     }
 
     //endregion

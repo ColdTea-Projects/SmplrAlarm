@@ -10,13 +10,8 @@ import de.coldtea.smplr.alarm.R
 import de.coldtea.smplr.alarm.alarms.models.WeekInfo
 import de.coldtea.smplr.alarm.lockscreenalarm.ActivityLockScreenAlarm
 import de.coldtea.smplr.alarm.receiver.ActionReceiver
+import de.coldtea.smplr.smplralarm.*
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmListRequestAPI
-import de.coldtea.smplr.smplralarm.models.NotificationItem
-import de.coldtea.smplr.smplralarm.smplrAlarmCancel
-import de.coldtea.smplr.smplralarm.smplrAlarmChangeOrRequestListener
-import de.coldtea.smplr.smplralarm.smplrAlarmSet
-import de.coldtea.smplr.smplralarm.smplrAlarmUpdate
-import timber.log.Timber
 
 class AlarmViewModel : ViewModel() {
 
@@ -66,9 +61,6 @@ class AlarmViewModel : ViewModel() {
             min { minute }
             intent { onClickShortcutIntent }
             receiverIntent { fullScreenIntent }
-            onAlarmRings { alarmId ->
-                Timber.i("SmplrAlarmApp.MainFragment.onAlarmRings: $alarmId")
-            }
             weekdays {
                 if (weekInfo.monday) monday()
                 if (weekInfo.tuesday) tuesday()
@@ -79,17 +71,17 @@ class AlarmViewModel : ViewModel() {
                 if (weekInfo.sunday) sunday()
             }
             notification {
-                NotificationItem(
-                    smallIcon = R.drawable.ic_baseline_alarm_on_24,
-                    title = "Simple alarm is ringing",
-                    message = "Simple alarm is ringing",
-                    bigText = "Simple alarm is ringing",
-                    autoCancel = true,
-                    firstButtonText = "Snooze",
-                    secondButtonText = "Dismiss",
-                    firstButtonIntent = snoozeIntent,
-                    secondButtonIntent = dismissIntent
-                )
+                alarmNotification {
+                    smallIcon { R.drawable.ic_baseline_alarm_on_24 }
+                    title { "Simple alarm is ringing" }
+                    message { "Simple alarm is ringing"}
+                    bigText { "Simple alarm is ringing"}
+                    autoCancel { true }
+                    firstButtonText { "Snooze" }
+                    secondButtonText { "Dismiss" }
+                    firstButtonIntent { snoozeIntent }
+                    secondButtonIntent { dismissIntent }
+                }
             }
         }
     }
@@ -103,9 +95,6 @@ class AlarmViewModel : ViewModel() {
         smplrAlarmSet(applicationContext) {
             hour { hour }
             min { minute }
-            onAlarmRings { alarmId ->
-                Timber.i("SmplrAlarmApp.MainFragment.onAlarmRings: $alarmId")
-            }
             weekdays {
                 if (weekInfo.monday) monday()
                 if (weekInfo.tuesday) tuesday()
