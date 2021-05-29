@@ -62,7 +62,6 @@ internal class AlarmReceiver : BroadcastReceiver() {
                             )
                         }
 
-
                         if (alarmNotification.weekDays.isNullOrEmpty())
                             it.deactivateSingleAlarmNotification(requestId)
                         else
