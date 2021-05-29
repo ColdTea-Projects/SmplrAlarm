@@ -17,6 +17,10 @@ import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ */
+
 internal class AlarmReceiver : BroadcastReceiver() {
     private var repository: AlarmNotificationRepository? = null
 

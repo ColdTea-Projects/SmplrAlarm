@@ -10,6 +10,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+/**
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ */
+
 internal class RebootReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {

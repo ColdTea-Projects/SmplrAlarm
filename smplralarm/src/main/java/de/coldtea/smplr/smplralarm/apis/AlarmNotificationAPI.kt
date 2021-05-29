@@ -4,6 +4,9 @@ import android.content.Intent
 import androidx.annotation.DrawableRes
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 
+/**
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ */
 class AlarmNotificationAPI {
 
     //region properties

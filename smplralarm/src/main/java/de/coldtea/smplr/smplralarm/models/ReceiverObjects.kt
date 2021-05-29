@@ -9,6 +9,10 @@ import de.coldtea.smplr.smplralarm.repository.entity.AlarmNotificationEntity
 import de.coldtea.smplr.smplralarm.repository.entity.NotificationChannelEntity
 import de.coldtea.smplr.smplralarm.repository.entity.NotificationEntity
 
+/**
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ */
+
 internal class SmplrAlarmReceiverObjects {
     companion object {
         internal const val SMPLR_ALARM_RECEIVER_INTENT_ID = "smplr_alarm_receiver_intent_id"

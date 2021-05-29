@@ -5,6 +5,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 
+/**
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ */
 @Entity(tableName = "notification_channel_table")
 internal data class NotificationChannelEntity(
     @PrimaryKey(autoGenerate = true)

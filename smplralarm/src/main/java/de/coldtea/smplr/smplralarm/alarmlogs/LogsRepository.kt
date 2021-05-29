@@ -5,6 +5,10 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 
+
+/**
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ */
 class LogsRepository(private val context: Context) {
     private val sharedPreferences
         by lazy { context.getSharedPreferences(KEY_SMPLR_ALARM, Context.MODE_PRIVATE) }

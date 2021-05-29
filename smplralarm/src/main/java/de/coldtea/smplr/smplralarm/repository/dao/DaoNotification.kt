@@ -4,6 +4,9 @@ import androidx.room.Dao
 import androidx.room.Query
 import de.coldtea.smplr.smplralarm.repository.entity.NotificationEntity
 
+/**
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ */
 @Dao
 internal abstract class DaoNotification : DaoBase<NotificationEntity> {
 

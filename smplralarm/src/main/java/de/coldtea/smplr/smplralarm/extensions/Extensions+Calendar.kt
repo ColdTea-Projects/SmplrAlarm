@@ -5,7 +5,11 @@ import timber.log.Timber
 import java.time.DayOfWeek
 import java.time.ZoneId
 import java.time.temporal.TemporalAdjusters
-import java.util.Calendar
+import java.util.*
+
+/**
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ */
 
 internal fun Calendar.getTimeExactForAlarmInMilliseconds(
     hour: Int,

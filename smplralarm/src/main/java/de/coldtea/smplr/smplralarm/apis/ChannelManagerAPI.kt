@@ -3,6 +3,9 @@ package de.coldtea.smplr.smplralarm.apis
 import android.app.NotificationManager
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 
+/**
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ */
 class ChannelManagerAPI {
 
     //region properties

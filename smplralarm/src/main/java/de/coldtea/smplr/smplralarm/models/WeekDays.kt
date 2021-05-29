@@ -1,5 +1,8 @@
 package de.coldtea.smplr.smplralarm.models
 
+/**
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ */
 enum class WeekDays(val value: Int) {
     SUNDAY(1),
     MONDAY(2),

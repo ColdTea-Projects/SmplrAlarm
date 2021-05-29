@@ -3,6 +3,9 @@ package de.coldtea.smplr.smplralarm.models
 import android.content.Intent
 import androidx.annotation.DrawableRes
 
+/**
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ */
 data class NotificationChannelItem(
     val importance: Int,
     val showBadge: Boolean,

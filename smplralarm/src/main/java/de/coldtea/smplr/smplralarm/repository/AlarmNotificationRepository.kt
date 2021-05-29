@@ -19,6 +19,9 @@ import org.json.JSONObject
 import java.net.URISyntaxException
 import java.util.*
 
+/**
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ */
 internal class AlarmNotificationRepository(
     private val context: Context
 ) {

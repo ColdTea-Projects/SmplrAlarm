@@ -6,6 +6,10 @@ import de.coldtea.smplr.smplralarm.models.ActiveWeekDays
 import de.coldtea.smplr.smplralarm.models.WeekDays
 import de.coldtea.smplr.smplralarm.repository.entity.AlarmNotificationEntity
 
+/**
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ */
+
 internal fun List<WeekDays>.activeDaysAsJsonString(): String =
     Moshi
         .Builder()

@@ -9,6 +9,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ */
 class SmplrAlarmListRequestAPI(val context: Context) {
 
     internal var alarmListChangeOrRequestedListener: ((String) -> Unit)? = null

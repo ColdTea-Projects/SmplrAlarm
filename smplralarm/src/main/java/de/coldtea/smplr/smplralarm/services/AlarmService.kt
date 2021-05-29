@@ -12,6 +12,9 @@ import de.coldtea.smplr.smplralarm.receivers.AlarmReceiver
 import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiverObjects
 import java.util.*
 
+/**
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ */
 class AlarmService(val context: Context) {
 
     private val alarmManager: AlarmManager by lazy {

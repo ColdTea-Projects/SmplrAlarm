@@ -2,6 +2,9 @@ package de.coldtea.smplr.smplralarm.apis
 
 import de.coldtea.smplr.smplralarm.models.WeekDays
 
+/**
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ */
 class WeekDaysAPI {
 
     private var monday = false

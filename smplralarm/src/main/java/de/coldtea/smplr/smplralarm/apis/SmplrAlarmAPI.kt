@@ -18,8 +18,9 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import kotlin.math.absoluteValue
 
-typealias AlarmRingEvent = (Int) -> Unit
-
+/**
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ */
 class SmplrAlarmAPI(val context: Context) {
 
     //region properties

@@ -2,6 +2,9 @@ package de.coldtea.smplr.smplralarm.repository.dao
 
 import androidx.room.*
 
+/**
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ */
 internal interface DaoBase<T> {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

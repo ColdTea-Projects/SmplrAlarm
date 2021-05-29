@@ -4,6 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+/**
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ */
 @Entity(tableName = "notification_table")
 internal data class NotificationEntity(
     @PrimaryKey(autoGenerate = true)

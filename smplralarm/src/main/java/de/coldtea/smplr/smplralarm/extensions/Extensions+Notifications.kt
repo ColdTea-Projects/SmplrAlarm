@@ -14,6 +14,10 @@ import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 import timber.log.Timber
 
+/**
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ */
+
 private fun Context.initChannelAndReturnName(notificationChannelItem: NotificationChannelItem): String =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val channelId = packageName
