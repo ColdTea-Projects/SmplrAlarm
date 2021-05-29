@@ -11,7 +11,7 @@ import de.coldtea.smplr.smplralarm.models.NotificationItem
 /**
  * SmplrAlarm Library, created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
  *
- * SmplrAlarm is a convenience library to create alarms.
+ * SmplrAlarm is a convenience library to create alarms way simpler than default way.
  * Main goal of this library is providing a clean, simple and convenient API to manage alarms.
  *
  * MIT License
