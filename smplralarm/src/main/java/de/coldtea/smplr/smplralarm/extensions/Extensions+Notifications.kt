@@ -91,6 +91,27 @@ internal fun Context.showNotification(
             priority = NotificationCompat.PRIORITY_DEFAULT
             setAutoCancel(autoCancel)
 
+            if (notificationItem.firstButtonText != null) addAction(
+                0,
+                notificationItem.firstButtonText,
+                PendingIntent.getBroadcast(
+                    this@showNotification,
+                    0,
+                    notificationItem.firstButtonIntent,
+                    0
+                )
+            )
+
+            if (notificationItem.secondButtonText != null) addAction(
+                0,
+                notificationItem.secondButtonText,
+                PendingIntent.getBroadcast(
+                    this@showNotification,
+                    0,
+                    notificationItem.secondButtonIntent,
+                    0
+                )
+            )
         }
     }.build()
 
