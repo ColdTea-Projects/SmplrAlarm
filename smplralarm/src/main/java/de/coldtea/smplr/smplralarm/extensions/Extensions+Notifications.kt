@@ -32,51 +32,19 @@ internal fun Context.showNotificationWithIntent(
     notificationChannelItem: NotificationChannelItem,
     intentNotificationItem: IntentNotificationItem
 ) {
-
-    val channelId = initChannelAndReturnName(notificationChannelItem)
-    val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     val pendingIntent = getFullScreenIntent(intentNotificationItem.intent)
 
-    val notification = NotificationCompat.Builder(this, channelId).apply {
-        priority = NotificationCompat.PRIORITY_HIGH
-
-        setSmallIcon(intentNotificationItem.notificationItem.smallIcon)
-        setContentTitle(intentNotificationItem.notificationItem.title)
-        setContentText(intentNotificationItem.notificationItem.message)
-        setFullScreenIntent(pendingIntent, true)
-
-        val notificationItem = intentNotificationItem.notificationItem
-
-        if (notificationItem.firstButtonText != null) addAction(
-            0,
-            notificationItem.firstButtonText,
-            PendingIntent.getBroadcast(
-                this@showNotificationWithIntent,
-                0,
-                notificationItem.firstButtonIntent,
-                0
-            )
-        )
-
-        if (notificationItem.secondButtonText != null) addAction(
-            0,
-            notificationItem.secondButtonText,
-            PendingIntent.getBroadcast(
-                this@showNotificationWithIntent,
-                0,
-                notificationItem.secondButtonIntent,
-                0
-            )
-        )
-    }.build()
-
-    notificationManager.notify(0, notification)
-
+    this.showNotification(
+        notificationChannelItem,
+        intentNotificationItem.notificationItem,
+        pendingIntent
+    )
 }
 
 internal fun Context.showNotification(
     notificationChannelItem: NotificationChannelItem,
-    notificationItem: NotificationItem
+    notificationItem: NotificationItem,
+    pendingIntent: PendingIntent? = null
 ) {
     val channelId = initChannelAndReturnName(notificationChannelItem)
     val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -90,6 +58,8 @@ internal fun Context.showNotification(
             setStyle(NotificationCompat.BigTextStyle().bigText(bigText))
             priority = NotificationCompat.PRIORITY_DEFAULT
             setAutoCancel(autoCancel)
+
+            if(pendingIntent != null) setFullScreenIntent(pendingIntent, true)
 
             if (notificationItem.firstButtonText != null) addAction(
                 0,
