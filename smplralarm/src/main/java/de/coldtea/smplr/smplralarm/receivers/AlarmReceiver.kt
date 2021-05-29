@@ -15,7 +15,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.text.SimpleDateFormat
-import java.lang.IllegalArgumentException
 import java.util.*
 
 internal class AlarmReceiver : BroadcastReceiver() {
@@ -48,11 +47,13 @@ internal class AlarmReceiver : BroadcastReceiver() {
 
                         if(alarmNotification.fullScreenIntent == null){
                             context.showNotification(
+                                requestId,
                                 alarmNotification.notificationChannelItem,
                                 alarmNotification.notificationItem
                             )
                         }else{
                             context.showNotificationWithIntent(
+                                requestId,
                                 alarmNotification.notificationChannelItem,
                                 IntentNotificationItem(
                                     alarmNotification.fullScreenIntent,

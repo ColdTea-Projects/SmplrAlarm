@@ -51,6 +51,8 @@ class AlarmViewModel : ViewModel() {
 
         val snoozeIntent = Intent(applicationContext, ActionReceiver::class.java).apply {
             action = ACTION_SNOOZE
+            putExtra(HOUR, hour)
+            putExtra(MINUTE, minute)
         }
 
         val dismissIntent = Intent(applicationContext, ActionReceiver::class.java).apply {
@@ -151,5 +153,7 @@ class AlarmViewModel : ViewModel() {
     companion object{
         internal const val ACTION_SNOOZE = "action_snooze"
         internal const val ACTION_DISMISS = "action_dismiss"
+        internal const val HOUR = "hour"
+        internal const val MINUTE = "minute"
     }
 }

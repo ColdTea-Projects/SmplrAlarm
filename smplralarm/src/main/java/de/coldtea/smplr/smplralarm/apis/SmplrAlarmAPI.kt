@@ -3,16 +3,19 @@ package de.coldtea.smplr.smplralarm.apis
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import de.coldtea.smplr.smplralarm.models.*
+import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
+import de.coldtea.smplr.smplralarm.models.NotificationItem
+import de.coldtea.smplr.smplralarm.models.WeekDays
 import de.coldtea.smplr.smplralarm.receivers.AlarmNotification
 import de.coldtea.smplr.smplralarm.receivers.AlarmReceiver
 import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiverObjects.Companion.SMPLR_ALARM_RECEIVER_INTENT_ID
 import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiverObjects.Companion.alarmNotification
 import de.coldtea.smplr.smplralarm.repository.AlarmNotificationRepository
 import de.coldtea.smplr.smplralarm.services.AlarmService
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.lang.IllegalArgumentException
 import kotlin.math.absoluteValue
 
 typealias AlarmRingEvent = (Int) -> Unit
@@ -247,6 +250,8 @@ class SmplrAlarmAPI(val context: Context) {
     // endregion
 
     companion object {
+
+        const val SMPLR_ALARM_NOTIFICATION_ID = "smplr_alarm_notification_id"
 
         fun getAlarmIntent(requestCode: Int, context: Context) = PendingIntent.getBroadcast(
             context,

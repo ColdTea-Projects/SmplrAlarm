@@ -7,9 +7,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI.Companion.SMPLR_ALARM_NOTIFICATION_ID
 import de.coldtea.smplr.smplralarm.models.IntentNotificationItem
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 import de.coldtea.smplr.smplralarm.models.NotificationItem
+import de.coldtea.smplr.smplralarm.receivers.AlarmReceiver
 
 private fun Context.initChannelAndReturnName(notificationChannelItem: NotificationChannelItem): String =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -29,12 +31,14 @@ private fun Context.initChannelAndReturnName(notificationChannelItem: Notificati
     } else packageName
 
 internal fun Context.showNotificationWithIntent(
+    requestId: Int,
     notificationChannelItem: NotificationChannelItem,
     intentNotificationItem: IntentNotificationItem
 ) {
     val pendingIntent = getFullScreenIntent(intentNotificationItem.intent)
 
     this.showNotification(
+        requestId,
         notificationChannelItem,
         intentNotificationItem.notificationItem,
         pendingIntent
@@ -42,6 +46,7 @@ internal fun Context.showNotificationWithIntent(
 }
 
 internal fun Context.showNotification(
+    requestId: Int,
     notificationChannelItem: NotificationChannelItem,
     notificationItem: NotificationItem,
     pendingIntent: PendingIntent? = null
@@ -60,6 +65,8 @@ internal fun Context.showNotification(
             setAutoCancel(autoCancel)
 
             if(pendingIntent != null) setFullScreenIntent(pendingIntent, true)
+
+            setContentIntent(getContentIntent(requestId = requestId))
 
             if (notificationItem.firstButtonText != null) addAction(
                 0,
@@ -85,9 +92,21 @@ internal fun Context.showNotification(
         }
     }.build()
 
-    notificationManager.notify(0, notification)
+    notificationManager.notify(requestId, notification)
 
 }
 
 internal fun Context.getFullScreenIntent(intent: Intent?): PendingIntent =
     PendingIntent.getActivity(this, 0, intent, 0)
+
+private fun Context.getContentIntent(requestId: Int): PendingIntent{
+    val contentIntent = Intent(this, AlarmReceiver::class.java)
+    contentIntent.putExtra(SMPLR_ALARM_NOTIFICATION_ID, requestId)
+
+    return PendingIntent.getBroadcast(
+        this,
+        0,
+        contentIntent,
+        0
+    )
+}
