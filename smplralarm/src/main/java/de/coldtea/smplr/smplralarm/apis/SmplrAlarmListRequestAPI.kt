@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
- * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects).
  */
 class SmplrAlarmListRequestAPI(val context: Context) {
 

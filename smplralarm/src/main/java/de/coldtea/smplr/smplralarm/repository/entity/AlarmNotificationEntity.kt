@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 /**
- * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects).
  */
 @Entity(tableName = "alarm_notification_table")
 internal data class AlarmNotificationEntity(

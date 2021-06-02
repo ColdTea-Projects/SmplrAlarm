@@ -7,7 +7,7 @@ import de.coldtea.smplr.smplralarm.repository.entity.AlarmNotificationEntity
 import de.coldtea.smplr.smplralarm.repository.relations.AlarmNotifications
 
 /**
- * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects).
  */
 @Dao
 internal abstract class DaoAlarmNotification : DaoBase<AlarmNotificationEntity> {

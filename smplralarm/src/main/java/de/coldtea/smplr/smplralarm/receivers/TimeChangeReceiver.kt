@@ -11,18 +11,18 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 /**
- * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects).
  */
 
 internal class TimeChangeReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        Timber.i("SmplrAlarm.TimeChangeReceiver.onRecieve --> ${intent.action}")
+        Timber.i("onRecieve --> ${intent.action}")
         when (intent.action) {
             Intent.ACTION_TIME_CHANGED,
             Intent.ACTION_DATE_CHANGED,
             Intent.ACTION_TIMEZONE_CHANGED -> onBootComplete(context)
-            else -> Timber.w("SmplrAlarm --> Recieved illegal broadcast!")
+            else -> Timber.w("onRecieve --> Recieved illegal broadcast!")
         }
     }
 
@@ -37,8 +37,8 @@ internal class TimeChangeReceiver : BroadcastReceiver() {
                 cancelAndResetAlarmNotifications(alarmService, alarmNotifications)
             }
 
-        } catch (e: Exception) {
-            Timber.e(e.toString())
+        } catch (ex: Exception) {
+            Timber.e("onBootComplete: $ex")
         }
 
     private fun cancelAndResetAlarmNotifications(

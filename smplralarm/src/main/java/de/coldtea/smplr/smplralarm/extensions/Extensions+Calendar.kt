@@ -8,7 +8,7 @@ import java.time.temporal.TemporalAdjusters
 import java.util.*
 
 /**
- * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects).
  */
 
 internal fun Calendar.getTimeExactForAlarmInMilliseconds(

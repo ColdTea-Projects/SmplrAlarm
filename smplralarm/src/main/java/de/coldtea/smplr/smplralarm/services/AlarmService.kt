@@ -13,7 +13,7 @@ import de.coldtea.smplr.smplralarm.receivers.SmplrAlarmReceiverObjects
 import java.util.*
 
 /**
- * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects).
  */
 class AlarmService(val context: Context) {
 

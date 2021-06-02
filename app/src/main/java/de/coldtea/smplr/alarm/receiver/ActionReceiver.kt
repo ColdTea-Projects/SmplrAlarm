@@ -10,13 +10,10 @@ import de.coldtea.smplr.alarm.alarms.AlarmViewModel.Companion.HOUR
 import de.coldtea.smplr.alarm.alarms.AlarmViewModel.Companion.MINUTE
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI.Companion.SMPLR_ALARM_NOTIFICATION_ID
 import de.coldtea.smplr.smplralarm.smplrAlarmSet
-import timber.log.Timber
 import java.util.*
 
 class ActionReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        Timber.i(intent.action.toString())
-
         val notificationId = intent.getIntExtra(SMPLR_ALARM_NOTIFICATION_ID, -1)
         val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val now = getHourAndMinute()

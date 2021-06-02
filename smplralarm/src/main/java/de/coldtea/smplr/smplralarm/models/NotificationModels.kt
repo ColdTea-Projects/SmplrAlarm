@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.annotation.DrawableRes
 
 /**
- * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects).
  */
 data class NotificationChannelItem(
     val importance: Int,

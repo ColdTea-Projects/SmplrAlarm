@@ -7,7 +7,7 @@ import com.squareup.moshi.Types
 
 
 /**
- * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects).
  */
 class LogsRepository(private val context: Context) {
     private val sharedPreferences

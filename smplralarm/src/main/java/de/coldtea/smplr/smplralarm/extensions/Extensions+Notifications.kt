@@ -9,13 +9,11 @@ import android.os.Build
 import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI.Companion.SMPLR_ALARM_NOTIFICATION_ID
-import de.coldtea.smplr.smplralarm.models.IntentNotificationItem
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 import de.coldtea.smplr.smplralarm.models.NotificationItem
-import timber.log.Timber
 
 /**
- * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects).
  */
 
 private fun Context.initChannelAndReturnName(notificationChannelItem: NotificationChannelItem): String =
@@ -35,26 +33,11 @@ private fun Context.initChannelAndReturnName(notificationChannelItem: Notificati
         channelId
     } else packageName
 
-internal fun Context.showNotificationWithIntent(
-    requestId: Int,
-    notificationChannelItem: NotificationChannelItem,
-    intentNotificationItem: IntentNotificationItem
-) {
-    val pendingIntent = getFullScreenIntent(intentNotificationItem.intent)
-
-    this.showNotification(
-        requestId,
-        notificationChannelItem,
-        intentNotificationItem.notificationItem,
-        pendingIntent
-    )
-}
-
 internal fun Context.showNotification(
     requestId: Int,
     notificationChannelItem: NotificationChannelItem,
     notificationItem: NotificationItem,
-    pendingIntent: PendingIntent? = null
+    fullScreenIntent: Intent? = null
 ) {
     val channelId = initChannelAndReturnName(notificationChannelItem)
     val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -63,8 +46,6 @@ internal fun Context.showNotification(
         context = this@showNotification,
         requestId = requestId
     )
-
-    Timber.i("Problem -> $bundle")
 
     val notification = NotificationCompat.Builder(this, channelId).apply {
         priority = NotificationCompat.PRIORITY_HIGH
@@ -77,7 +58,10 @@ internal fun Context.showNotification(
             setAutoCancel(autoCancel)
             setAllowSystemGeneratedContextualActions(false)
 
-            if (pendingIntent != null) setFullScreenIntent(pendingIntent, true)
+            if(fullScreenIntent != null){
+                val  pendingFullScreenIntent = getFullScreenIntent(fullScreenIntent)
+                setFullScreenIntent(pendingFullScreenIntent, true)
+            }
 
             if (notificationItem.firstButtonText != null) addAction(
                 0,
@@ -111,7 +95,7 @@ internal fun Context.showNotification(
 
 }
 
-internal fun Context.getFullScreenIntent(intent: Intent?): PendingIntent =
+internal fun Context.getFullScreenIntent(intent: Intent): PendingIntent =
     PendingIntent.getActivity(this, 0, intent, 0)
 
 private fun createExtrasBundle(context: Context, requestId: Int): Bundle =

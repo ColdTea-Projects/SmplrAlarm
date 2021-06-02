@@ -19,7 +19,7 @@ import timber.log.Timber
 import kotlin.math.absoluteValue
 
 /**
- * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects).
  */
 class SmplrAlarmAPI(val context: Context) {
 
@@ -104,12 +104,12 @@ class SmplrAlarmAPI(val context: Context) {
 
     internal fun setAlarm(): Int {
         if (isAlarmValid.not()) {
-            Timber.w("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: Your time setup is not valid, please pick a valid time! ")
+            Timber.w("updateRepeatingAlarm: Your time setup is not valid, please pick a valid time! ")
             return -1
         }
 
         requestCode = getTimeBaseUniqueId()
-        Timber.v("SmplrAlarm.AlarmManager.setAlarm: $requestCode -- $hour:$min")
+        Timber.v("setAlarm: $requestCode -- $hour:$min")
 
         val notifictionBuilderItem = createAlarmNotification()
 
@@ -134,14 +134,14 @@ class SmplrAlarmAPI(val context: Context) {
                     alarmService.renewAlarm(it)
                 }
         } catch (ex: Exception) {
-            Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: $ex ")
+            Timber.e("updateRepeatingAlarm: $ex ")
         }
     }
 
     internal fun updateAlarm() {
         if (requestCode == -1) return
         if (isAlarmValid.not()) {
-            Timber.w("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: Your time setup is not valid, please pick a valid time! ")
+            Timber.w("updateRepeatingAlarm: Your time setup is not valid, please pick a valid time! ")
             return
         }
 
@@ -172,9 +172,9 @@ class SmplrAlarmAPI(val context: Context) {
 
                 requestAPI?.requestAlarmList()
             } catch (ex: IllegalArgumentException) {
-                Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: The alarm intended to be removed does not exist! ")
+                Timber.e("updateRepeatingAlarm: The alarm intended to be removed does not exist! ")
             } catch (ex: Exception) {
-                Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: $ex ")
+                Timber.e("updateRepeatingAlarm: $ex ")
             }
         }
     }
@@ -207,7 +207,7 @@ class SmplrAlarmAPI(val context: Context) {
             alarmNotificationRepository.insertAlarmNotification(notificationBuilderItem)
             alarmNotification.add(notificationBuilderItem)
         } catch (exception: Exception) {
-            Timber.e("SmplrAlarm.AlarmManager.saveAlarmNotificationToDatabase: Alarm Notification could not be saved to the database --> $exception")
+            Timber.e("saveAlarmNotificationToDatabase: Alarm Notification could not be saved to the database --> $exception")
         }
     }
 
@@ -228,7 +228,7 @@ class SmplrAlarmAPI(val context: Context) {
                 isActive
             )
         } catch (exception: Exception) {
-            Timber.e("SmplrAlarm.AlarmManager.saveAlarmNotificationToDatabase: Alarm Notification could not be updated to the database --> $exception")
+            Timber.e("saveAlarmNotificationToDatabase: Alarm Notification could not be updated to the database --> $exception")
         }
     }
 
@@ -236,7 +236,7 @@ class SmplrAlarmAPI(val context: Context) {
         try {
             alarmNotificationRepository.deleteAlarmNotification(requestCode)
         } catch (exception: Exception) {
-            Timber.e("SmplrAlarm.AlarmManager.saveAlarmNotificationToDatabase: Alarm Notification with id $requestCode could not be removed from the database --> $exception")
+            Timber.e("saveAlarmNotificationToDatabase: Alarm Notification with id $requestCode could not be removed from the database --> $exception")
         }
     }
 

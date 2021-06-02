@@ -12,7 +12,7 @@ import de.coldtea.smplr.smplralarm.repository.entity.NotificationChannelEntity
 import de.coldtea.smplr.smplralarm.repository.entity.NotificationEntity
 
 /**
- * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects).
  */
 @Database(
     entities = [

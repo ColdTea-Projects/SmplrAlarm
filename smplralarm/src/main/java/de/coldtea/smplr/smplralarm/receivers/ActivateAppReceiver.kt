@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
- * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects).
  */
 
 internal class ActivateAppReceiver : BroadcastReceiver() {
@@ -28,6 +28,7 @@ internal class ActivateAppReceiver : BroadcastReceiver() {
         repository = AlarmNotificationRepository(context)
         repository?.let {
             val alarmNotification = it.getAlarmNotification(requestId)
+            if(alarmNotification.intent == null) return@let
             context.getFullScreenIntent(alarmNotification.intent)
         }
     }

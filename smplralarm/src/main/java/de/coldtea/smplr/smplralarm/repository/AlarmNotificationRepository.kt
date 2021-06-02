@@ -20,7 +20,7 @@ import java.net.URISyntaxException
 import java.util.*
 
 /**
- * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects).
  */
 internal class AlarmNotificationRepository(
     private val context: Context

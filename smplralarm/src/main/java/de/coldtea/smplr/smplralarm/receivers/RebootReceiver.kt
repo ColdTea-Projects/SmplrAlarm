@@ -11,17 +11,17 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 /**
- * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects).
  */
 
 internal class RebootReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        Timber.i("SmplrAlarm.RebootReceiver.onRecieve --> ${intent.action}")
+        Timber.i("onRecieve --> ${intent.action}")
         when (intent.action) {
             Intent.ACTION_BOOT_COMPLETED,
             Intent.ACTION_LOCKED_BOOT_COMPLETED -> onBootComplete(context)
-            else -> Timber.w("SmplrAlarm --> Recieved illegal broadcast!")
+            else -> Timber.w("onRecieve --> Recieved illegal broadcast!")
         }
     }
 
@@ -40,8 +40,8 @@ internal class RebootReceiver : BroadcastReceiver() {
                 notificationRepository.deleteAlarmsBeforeNow()
             }
 
-        } catch (e: Exception) {
-            Timber.e(e.toString())
+        } catch (ex: Exception) {
+            Timber.e("onBootComplete: $ex")
         }
 
 

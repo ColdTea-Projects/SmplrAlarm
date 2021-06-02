@@ -6,8 +6,6 @@ import android.content.Intent
 import de.coldtea.smplr.smplralarm.alarmlogs.LogsRepository
 import de.coldtea.smplr.smplralarm.alarmlogs.RangAlarmObject
 import de.coldtea.smplr.smplralarm.extensions.showNotification
-import de.coldtea.smplr.smplralarm.extensions.showNotificationWithIntent
-import de.coldtea.smplr.smplralarm.models.IntentNotificationItem
 import de.coldtea.smplr.smplralarm.repository.AlarmNotificationRepository
 import de.coldtea.smplr.smplralarm.services.AlarmService
 import kotlinx.coroutines.CoroutineScope
@@ -18,7 +16,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects).
  */
 
 internal class AlarmReceiver : BroadcastReceiver() {
@@ -39,7 +37,7 @@ internal class AlarmReceiver : BroadcastReceiver() {
             repository = AlarmNotificationRepository(context)
             val alarmService = AlarmService(context)
 
-            Timber.v("SmplrAlarm.AlarmReceiver.onReceive --> $requestId")
+            Timber.v("onReceive --> $requestId")
 
             if (requestId == -1) return
 
@@ -56,13 +54,11 @@ internal class AlarmReceiver : BroadcastReceiver() {
                                 alarmNotification.notificationItem
                             )
                         }else{
-                            context.showNotificationWithIntent(
+                            context.showNotification(
                                 requestId,
                                 alarmNotification.notificationChannelItem,
-                                IntentNotificationItem(
-                                    alarmNotification.fullScreenIntent,
-                                    alarmNotification.notificationItem
-                                )
+                                alarmNotification.notificationItem,
+                                alarmNotification.fullScreenIntent
                             )
                         }
 
@@ -71,7 +67,7 @@ internal class AlarmReceiver : BroadcastReceiver() {
                         else
                             alarmService.resetAlarmTomorrow(alarmNotification)
                     } catch (ex: IllegalArgumentException) {
-                        Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: The alarm intended to be removed does not exist! ")
+                        Timber.e("updateRepeatingAlarm: The alarm intended to be removed does not exist! ")
 
                         logsRepository.logAlarm(
                             RangAlarmObject(
@@ -80,7 +76,7 @@ internal class AlarmReceiver : BroadcastReceiver() {
                             )
                         )
                     } catch (ex: Exception) {
-                        Timber.e("SmplrAlarmApp.SmplrAlarmManager.updateRepeatingAlarm: $ex ")
+                        Timber.e("updateRepeatingAlarm: $ex ")
                         logsRepository.logAlarm(
                             RangAlarmObject(
                                 "${now.first} - ${now.second}",
@@ -100,7 +96,7 @@ internal class AlarmReceiver : BroadcastReceiver() {
             )
 
         } catch (ex: Exception) {
-            Timber.e("SmplrAlarm.AlarmReceiver.onReceive: exception --> $ex")
+            Timber.e("onReceive: exception --> $ex")
             logsRepository.logAlarm(
                 RangAlarmObject(
                     "${now.first} - ${now.second}",

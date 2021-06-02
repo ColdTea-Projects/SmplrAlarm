@@ -5,7 +5,7 @@ import androidx.annotation.DrawableRes
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 
 /**
- * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects?tab=following).
+ * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects).
  */
 class AlarmNotificationAPI {
 
