@@ -2,4 +2,31 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.coldtea.smplr.smplralarm">
 
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application>
+
+        <receiver android:name=".receivers.AlarmReceiver" />
+        <receiver android:name=".receivers.ActivateAppReceiver" />
+
+        <receiver android:name=".receivers.RebootReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".receivers.TimeChangeReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.DATE_CHANGED" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+            </intent-filter>
+        </receiver>
+    </application>
+
 </manifest>
