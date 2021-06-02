@@ -1,13 +1,13 @@
 package de.coldtea.smplr.alarm.alarms
 
 import android.os.Bundle
-import android.view.*
-import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import de.coldtea.smplr.alarm.R
-import de.coldtea.smplr.alarm.alarmlogs.AlarmLogsFragment
 import de.coldtea.smplr.alarm.alarms.models.WeekInfo
 import de.coldtea.smplr.alarm.databinding.FragmentAlarmsBinding
 import de.coldtea.smplr.alarm.extensions.nowPlus
@@ -20,11 +20,6 @@ class AlarmFragment : Fragment() {
     lateinit var binding: FragmentAlarmsBinding
 
     private val viewModel by viewModels<AlarmViewModel>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -151,20 +146,5 @@ class AlarmFragment : Fragment() {
 
         Toast.makeText(requireContext(), toastText, LENGTH_SHORT).show()
 
-    }
-
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.actions_log -> {
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.nav_host_fragment, AlarmLogsFragment())
-                    .addToBackStack(null)
-                    .commit()
-
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 }

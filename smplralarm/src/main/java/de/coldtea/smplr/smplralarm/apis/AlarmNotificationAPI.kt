@@ -17,7 +17,6 @@ class AlarmNotificationAPI {
     internal var message: String = SMPLR_ALARM_DEFAULT_MESSAGE
     internal var bigText: String = SMPLR_ALARM_DEFAULT_BIG_TEXT
     internal var autoCancel: Boolean = true
-    internal var alarmIntent: Intent? = null
     internal var firstButtonText: String? = null
     internal var secondButtonText: String? = null
     internal var firstButtonIntent: Intent? = null
@@ -46,11 +45,6 @@ class AlarmNotificationAPI {
     fun autoCancel(autoCancel: () -> Boolean) {
         this.autoCancel = autoCancel()
     }
-
-    fun alarmIntent(alarmIntent: () -> Intent) {
-        this.alarmIntent = alarmIntent()
-    }
-
 
     fun firstButtonText(firstButtonText: () -> String) {
         this.firstButtonText = firstButtonText()

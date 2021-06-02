@@ -3,8 +3,6 @@ package de.coldtea.smplr.smplralarm.receivers
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import de.coldtea.smplr.smplralarm.alarmlogs.LogsRepository
-import de.coldtea.smplr.smplralarm.alarmlogs.RangAlarmObject
 import de.coldtea.smplr.smplralarm.extensions.showNotification
 import de.coldtea.smplr.smplralarm.repository.AlarmNotificationRepository
 import de.coldtea.smplr.smplralarm.services.AlarmService
@@ -31,7 +29,6 @@ internal class AlarmReceiver : BroadcastReceiver() {
 
     private fun onAlarmReceived(context: Context, requestId: Int){
         val now = Calendar.getInstance().dateTime()
-        val logsRepository = LogsRepository(context.applicationContext)
 
         try {
             repository = AlarmNotificationRepository(context)
@@ -68,41 +65,15 @@ internal class AlarmReceiver : BroadcastReceiver() {
                             alarmService.resetAlarmTomorrow(alarmNotification)
                     } catch (ex: IllegalArgumentException) {
                         Timber.e("updateRepeatingAlarm: The alarm intended to be removed does not exist! ")
-
-                        logsRepository.logAlarm(
-                            RangAlarmObject(
-                                "${now.first} - ${now.second}",
-                                ex.toString()
-                            )
-                        )
                     } catch (ex: Exception) {
                         Timber.e("updateRepeatingAlarm: $ex ")
-                        logsRepository.logAlarm(
-                            RangAlarmObject(
-                                "${now.first} - ${now.second}",
-                                ex.toString()
-                            )
-                        )
                     }
                 }
 
             }
 
-            logsRepository.logAlarm(
-                RangAlarmObject(
-                    "${now.first} - ${now.second}",
-                    ALARM_RECEIVER_SUCCESS
-                )
-            )
-
         } catch (ex: Exception) {
             Timber.e("onReceive: exception --> $ex")
-            logsRepository.logAlarm(
-                RangAlarmObject(
-                    "${now.first} - ${now.second}",
-                    ex.toString()
-                )
-            )
         }
     }
 
