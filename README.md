@@ -16,7 +16,7 @@ SmplrAlarm manages all that necessery modules to set a proper alarm by using nat
         }
 
 
-## How to install: 
+## How to install
 
 Gradle 
 
@@ -47,9 +47,9 @@ Maven
 	    <version>Tag</version>
 	</dependency>
   
-## How to use:
+## How to use
 
-### Setting an alarm:
+### Setting an alarm
 
 All that SmplrAlarm requires to set an alarm is an integer reperesenting the hour and another integer representing the minute:
 
@@ -61,7 +61,7 @@ All that SmplrAlarm requires to set an alarm is an integer reperesenting the hou
 Just like that, you set a one-time alarm with a dummy notification to see how simple to set an alarm with SmplrAlarm. Now, let's make
 it more useful.
 
-### Repeating alarm:
+### Repeating alarm
 
 The repeating alarm can be set by initiating the weekdays you want your alarm to ring on:
 
@@ -75,7 +75,7 @@ The repeating alarm can be set by initiating the weekdays you want your alarm to
             }
         }
 
-### Adding a notification and Notification channel:
+### Adding a notification and Notification channel
 
 	smplrAlarmSet(applicationContext) {
             hour { hour }
@@ -107,7 +107,7 @@ The repeating alarm can be set by initiating the weekdays you want your alarm to
 	
 Notifications also can be created with up to two buttons just by sending the button text and click intent. Let's add the classic alarm notification buttons snooze and dismiss by following the steps below:
 
-Step-1: Create the intents:
+Step-1: Create the intents
 
         val snoozeIntent = Intent(applicationContext, ActionReceiver::class.java).apply {
             action = ACTION_SNOOZE
@@ -130,7 +130,7 @@ Step-2: Implement them in the scope: alarmNotification{}
 	}
 
 	
-### Adding intents:
+### Adding intents
 
 SmplrAlarm offers to set Intents in motion for two events:
 
@@ -159,11 +159,11 @@ let's create and add the intents as in the following snippet:
 	
 Receiver intent is designed to be shown in the lock screen. It can be used for other purposes too but if you intend to use it as the alarm screen on the lock screen please check the sample activity (ActivityLockScreenAlarm) in the demo app.
 
-### Alarm id:
+### Alarm id
 
 SmplrAlarm library produces and returns a unique id based on time, everytime the smplrAlarmSet() is called. This id represents the alarms kept in database as well as the id of the notification thorwn. Please observe the ActionReceiver class of the demo app, how the same id used to cancel the notification.
 
-### Update an alarm:
+### Update an alarm
 
 Update function supports only changing hour, minute, weekdays and whether the alarm is active. For adding more changes, alarm needs to be cancelled and reset. 
 
@@ -177,13 +177,13 @@ Update function supports only changing hour, minute, weekdays and whether the al
             isActive { isActive }
         }
 
-### Cancel an alarm:
+### Cancel an alarm
 
         smplrAlarmCancel(applicationContext) {
             requestCode { requestCode }
         }
 	
-### Listening the database:
+### Listening the database
 
 Last but not the least, we provide you the information of all the alarms set by SmplrAlarm. Since the database operations require an async process, one has to wait until the query response arrives. SmplrAlarm takes care of everything in that regard and only asks for a listener to return alarm info in JSON format.
 
