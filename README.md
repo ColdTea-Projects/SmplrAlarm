@@ -6,7 +6,7 @@ An Android convenience library to make setting an alarm way **simpler**.
 ## What and Why?
 Android framework has a considerably extensive library with many different alarm types for setting an alarm....but maybe too extensive. It is perfectly reasonable for the Android framework to have an Alarm Manager which supports different types of alarm and is flexible in a way to work with other parts of the framework. But this puts the developers in a position that they need to consume so much time and manage with so many different parts of the framework (database, broadcast receivers, Calendar etc.) to make, maybe the one of the simplest type of mobile app: An alarm clock.
 
-For so many cases, applications which needs to set a consistent alarm (for a simple alarm clock or for other usages such as an app reminds you to drink water, take your pills etc.) do not require anything different than each other, however as it is mentioned above, it takes some time and requires some knowledge about different android libraries.
+For so many cases, applications which needs to set a consistent alarm (for a simple alarm clock or for other usages such as an app reminds you to drink water, take your pills etc.) do not require anything different than each other, however as it is mentioned above, it takes some time and requires some knowledge about different android libraries and the developer needs to deal with various situations (restart the device, change date/time settings) to make sure that the alarms are consistent.
 
 SmplrAlarm manages all that necessery modules to set a proper alarm by using native android libraries, provides an API interface powered by Kotlin DSL and at the end of the day makes setting an alarm as simple as:
 
@@ -105,7 +105,7 @@ The repeating alarm can be set by adding the weekdays you want:
 	    
         }
 	
-Notifications also can be created with up to two buttons just by sending the button text and click intent by following steps.
+Notifications also can be created with up to two buttons just by sending the button text and click intent. Let's add classic alarm notification buttons snooze and dismiss by following the steps below:
 
 Step-1: Create intents:
 
@@ -128,14 +128,89 @@ Step-2: Implement them in the scope: alarmNotification{}
 	    firstButtonIntent { snoozeIntent }
 	    secondButtonIntent { dismissIntent }
 	}
+
 	
 ### Adding intents:
 
+SmplrAlarm offers to set Intents in motion in two events:
+1- When the alarm notification is clicked, it opens the Activity stated in the intent.
+2- When the alarm rings, it starts the activity stated in the receiverIntent.
 
+let's create and add the intents as in the following snippet:
 
+        val onClickShortcutIntent = Intent(
+            applicationContext,
+            MainActivity::class.java
+        )
 
-
-
+        val fullScreenIntent = Intent(
+            applicationContext,
+            ActivityLockScreenAlarm::class.java
+        )
 	
+	smplrAlarmSet(applicationContext) {
+            ...
+            intent { onClickShortcutIntent }
+            receiverIntent { fullScreenIntent }
+	    ...
+    	}
+	
+Receiver intent is designed to be shown in the lock screen. It can be used for other purposes too but if you intend to use as Alarm Screen on lock screen please check the sample activity(ActivityLockScreenAlarm) in the demo app.
+
+### Alarm id:
+
+SmplrAlarm library produces and returns a unique id based on time, everytime the smplrAlarmSet() is called. This id represents the alarms kept in database as well as the id of the notification thorwn. Please observe the ActionReceiver class of the demo app, how the same id used to cancel the notification.
+
+### Update an alarm:
+
+Update function supports only changing hour, minute, weekdays and whether the alarm is active. For adding more changes, alarm needs to be cancelled and reset. 
+
+	smplrAlarmUpdate(applicationContext) {
+            requestCode { requestCode }
+            hour { hour }
+            min { minute }
+            weekdays {
+                monday()
+                tuesday()
+                wednesday()
+                thursday()
+                friday()
+                saturday()
+                sunday()
+            }
+            isActive { isActive }
+        }
+
+### Cancel an alarm:
+
+        smplrAlarmCancel(applicationContext) {
+            requestCode { requestCode }
+        }
+	
+### Listening the database:
+
+Last but not the least, we provide you the information of all the alarms set by SmplrAlarm. Since the database which is in an IO operation, requires async process, one has to wait until the query response arrives. SmplrAlarm takes care of everything in that regard and only requires a listener to return alarm info in JSON format.
+
+To do it so firstly we need to implement an instance of the API which allows us to request the list of alarms with the listener
+
+	var smplrAlarmListRequestAPI: SmplrAlarmListRequestAPI = smplrAlarmChangeOrRequestListener(applicationContext) { jsonString ->
+            ...
+	    whatever you want to do with the alarm list in json format
+	    ...
+        }
+	
+Just like that it is set, now we can make our request:
 
 
+	smplrAlarmListRequestAPI.requestAlarmList()
+	
+And when the query is done, you get the list in following format:
+
+	{
+	"alarmItems":[
+			{"requestId":745503894, "hour":22, "minute": 29, "weekdays": ["SUNDAY", "THURSDAY"], "isActive": true},
+			{"requestId":745503894, "hour":0, "minute": 9, "weekdays": ["SUNDAY", "WEDNESDAY"], "isActive": true}
+		     ]
+	}
+	
+Simple as that!
