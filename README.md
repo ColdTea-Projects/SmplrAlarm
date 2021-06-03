@@ -119,9 +119,9 @@ Step-1: Create intents:
             action = ACTION_DISMISS
         }
 	
-Step-2: Implement them in the scope: channel{}
+Step-2: Implement them in the scope: alarmNotification{}
 
-	channel {
+	alarmNotification {
 	    ...
 	    firstButtonText { "Snooze" }
 	    secondButtonText { "Dismiss" }
