@@ -47,7 +47,7 @@ Maven
 	    <version>Tag</version>
 	</dependency>
 	
-**Warning** Library requires minimum SDK version 24
+**Warning:** Library requires minimum SDK version 24
   
 ## How to use
 
