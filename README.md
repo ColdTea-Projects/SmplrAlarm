@@ -4,11 +4,11 @@ An Android convenience library to make setting an alarm way **simpler**.
 [![](https://jitpack.io/v/ColdTea-Projects/SmplrAlarm.svg)](https://jitpack.io/#ColdTea-Projects/SmplrAlarm)
 
 ## What and Why?
-Android framework has a considerably extensive library with many different alarm types for setting an alarm....but maybe too extensive. It is perfectly reasonable for the Android framework to have an Alarm Manager which supports different types of alarm and is flexible in a way to work with other parts of the framework. But this puts the developers in a position that they need to consume so much time and manage with so many different parts of the framework (database, broadcast receivers, Calendar etc.) to make, maybe the one of the simplest type of mobile app: An alarm clock.
+Android framework has a considerably extensive library with many different alarm types for setting an alarm....but maybe too extensive. It is perfectly reasonable for the Android framework to have an Alarm Manager that supports different types of alarm and is flexible to work with other parts of the framework. But this puts the developers in a position that they need to consume so much time and manage with so many different parts of the framework (database, broadcast receivers, Calendar etc.) to make, maybe one of the simplest type of mobile app: An alarm clock.
 
-For so many cases, applications which needs to set a consistent alarm (for a simple alarm clock or for other usages such as an app reminds you to drink water, take your pills etc.) do not require anything different than each other, however as it is mentioned above, it takes some time and requires some knowledge about different android libraries and the developer needs to deal with various situations (restart the device, change date/time settings) to make sure that the alarms are consistent.
+For so many cases, applications that need to set a consistent alarm (for a simple alarm clock or for other usages such as an app that reminds you to drink water, take your pills etc.) do not require anything different from each other, however as it is mentioned above, it takes some time and requires some knowledge about different android libraries and the developer needs to deal with various situations (restart the device, change the date/time settings) to make sure that the alarms are consistent.
 
-SmplrAlarm manages all that necessery modules to set a proper alarm by using native android libraries, provides an API interface powered by Kotlin DSL and at the end of the day makes setting an alarm as simple as:
+SmplrAlarm manages all the necessary modules to set a proper alarm by using native android libraries, provides an API interface powered by Kotlin DSL and at the end of the day makes setting an alarm as simple as:
 
 	smplrAlarmSet(applicationContext) {
             hour { hour }
