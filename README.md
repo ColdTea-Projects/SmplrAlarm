@@ -1,5 +1,5 @@
 # SmplrAlarm
-An Android convenience library to make setting an alarm way **simpler**.
+An Android convenience library to make setting an alarm way **simpler** than it is.
 
 [![](https://jitpack.io/v/ColdTea-Projects/SmplrAlarm.svg)](https://jitpack.io/#ColdTea-Projects/SmplrAlarm)
 
