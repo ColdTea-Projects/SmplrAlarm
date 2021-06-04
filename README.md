@@ -46,6 +46,8 @@ Maven
 	    <artifactId>SmplrAlarm</artifactId>
 	    <version>Tag</version>
 	</dependency>
+	
+**Warning** Library requires minimum SDK version 24
   
 ## How to use
 
@@ -96,9 +98,9 @@ The repeating alarm can be set by initiating the weekdays you want your alarm to
             }
             notificationChannel {
                 channel {
-                    importance { NotificationManager.IMPORTANCE_HIGH },
-                    showBadge { false },
-                    name { "de.coldtea.smplr.alarm.channel" },
+                    importance { NotificationManager.IMPORTANCE_HIGH }
+                    showBadge { false }
+                    name { "de.coldtea.smplr.alarm.channel" }
                     description { "this notification channel is created by SmplrAlar" }
                 }
             }
@@ -129,6 +131,9 @@ Step-2: Implement them in the scope: alarmNotification{}
 	    secondButtonIntent { dismissIntent }
 	}
 
+Intents here that we require conveys a broadcast receiver. Please consult the following document to learn more about Broadcast Receivers:
+
+https://developer.android.com/guide/components/broadcasts
 	
 ### Adding intents
 
