@@ -18,8 +18,6 @@ class SmplrAlarmListRequestAPI(val context: Context) {
 
     private var alarmListJson: String = ""
         set(value) {
-
-            if (value == field) return
             field = value
 
             alarmListChangeOrRequestedListener?.invoke(value)
