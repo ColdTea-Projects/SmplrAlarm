@@ -214,4 +214,12 @@ And when the query is done, you get the list in following format:
 		     ]
 	}
 	
+If you just created the listener, you can ask for the updates, however if you do that only manually, you can ask for th updates before updates happen. Every data manupilation process in SmplrAlarm (create, update, delete) contains a call to the listener, all you need to do is sending your listener inside:
+
+	smplrAlarmSet(applicationContext) {
+		    ...
+		    requestAPI { smplrAlarmListRequestAPI }
+		    ...
+		}
+
 Simple as that!
