@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI.Companion.SMPLR_ALARM_NOTIFICATION_ID
+import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI.Companion.SMPLR_ALARM_REQUEST_ID
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 
@@ -53,6 +54,7 @@ internal fun Context.showNotification(
             setAllowSystemGeneratedContextualActions(false)
 
             if(fullScreenIntent != null){
+                fullScreenIntent.putExtra(SMPLR_ALARM_REQUEST_ID, requestId)
                 val  pendingFullScreenIntent = getFullScreenIntent(fullScreenIntent)
 
                 setFullScreenIntent(pendingFullScreenIntent, true)

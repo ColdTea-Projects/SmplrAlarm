@@ -246,6 +246,7 @@ class SmplrAlarmAPI(val context: Context) {
     companion object {
 
         const val SMPLR_ALARM_NOTIFICATION_ID = "smplr_alarm_notification_id"
+        const val SMPLR_ALARM_REQUEST_ID = "smplr_alarm_request_id"
 
         fun getAlarmIntent(requestCode: Int, context: Context) = PendingIntent.getBroadcast(
             context,
