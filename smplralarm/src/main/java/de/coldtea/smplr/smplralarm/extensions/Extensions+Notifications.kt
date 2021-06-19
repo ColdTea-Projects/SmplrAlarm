@@ -6,7 +6,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI.Companion.SMPLR_ALARM_NOTIFICATION_ID
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
@@ -42,11 +41,6 @@ internal fun Context.showNotification(
     val channelId = initChannelAndReturnName(notificationChannelItem)
     val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    val bundle = createExtrasBundle(
-        context = this@showNotification,
-        requestId = requestId
-    )
-
     val notification = NotificationCompat.Builder(this, channelId).apply {
         priority = NotificationCompat.PRIORITY_HIGH
         with(notificationItem) {
@@ -60,6 +54,7 @@ internal fun Context.showNotification(
 
             if(fullScreenIntent != null){
                 val  pendingFullScreenIntent = getFullScreenIntent(fullScreenIntent)
+
                 setFullScreenIntent(pendingFullScreenIntent, true)
             }
 
@@ -97,11 +92,3 @@ internal fun Context.showNotification(
 
 internal fun Context.getFullScreenIntent(intent: Intent): PendingIntent =
     PendingIntent.getActivity(this, 0, intent, 0)
-
-private fun createExtrasBundle(context: Context, requestId: Int): Bundle =
-    Bundle().apply {
-        putInt(
-            SMPLR_ALARM_NOTIFICATION_ID,
-            requestId
-        )
-    }
