@@ -28,8 +28,6 @@ internal class AlarmReceiver : BroadcastReceiver() {
     }
 
     private fun onAlarmReceived(context: Context, requestId: Int){
-        val now = Calendar.getInstance().dateTime()
-
         try {
             repository = AlarmNotificationRepository(context)
             val alarmService = AlarmService(context)
