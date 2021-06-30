@@ -151,6 +151,7 @@ class SmplrAlarmAPI(val context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             val notificationRepository = AlarmNotificationRepository(context)
             try {
+
                 val alarmNotification = notificationRepository.getAlarmNotification(requestCode)
 
                 val updatedHour = if (hour == -1) alarmNotification.hour else hour

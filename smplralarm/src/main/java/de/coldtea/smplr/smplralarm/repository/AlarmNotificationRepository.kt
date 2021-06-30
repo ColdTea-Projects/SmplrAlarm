@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.Intent.URI_ALLOW_UNSAFE
+import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI
 import de.coldtea.smplr.smplralarm.extensions.activeDaysAsJsonString
 import de.coldtea.smplr.smplralarm.extensions.activeDaysAsWeekdaysList
 import de.coldtea.smplr.smplralarm.extensions.convertToNotificationItem
@@ -16,6 +17,7 @@ import de.coldtea.smplr.smplralarm.repository.entity.AlarmNotificationEntity
 import de.coldtea.smplr.smplralarm.repository.entity.convertToNotificationChannelItem
 import org.json.JSONException
 import org.json.JSONObject
+import timber.log.Timber
 import java.net.URISyntaxException
 import java.util.*
 
@@ -43,7 +45,10 @@ internal class AlarmNotificationRepository(
         saveIntent(
             SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX,
             alarmNotification.alarmNotificationId,
-            alarmNotification.fullScreenIntent
+            alarmNotification.fullScreenIntent?.putExtra(
+                SmplrAlarmAPI.SMPLR_ALARM_REQUEST_ID,
+                alarmNotification.alarmNotificationId
+            )
         )
 
         if (alarmNotification.notificationItem.firstButtonText != null && alarmNotification.notificationItem.firstButtonIntent != null) {
@@ -103,38 +108,29 @@ internal class AlarmNotificationRepository(
             alarmNotificationDatabase.daoAlarmNotification.getAlarmNotification(intentId)
                 .firstOrNull()
                 ?: throw IllegalArgumentException()
+        val fullScreenIntent = retrieveIntent(
+            SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX,
+            intentId
+        )
+        val intent = retrieveIntent(
+            SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_INTENT_PREFIX,
+            intentId
+        )
+
+        val notificationItemWithButtons =
+            alarmNotification.notificationEntity.convertToNotificationItem()
+
+
 
         return AlarmNotification(
             alarmNotificationId = intentId,
             hour = alarmNotification.alarmNotificationEntity.hour,
             min = alarmNotification.alarmNotificationEntity.min,
-            weekDays = alarmNotification.alarmNotificationEntity.activeDaysAsWeekdaysList()
-                ?: listOf(),
+            weekDays = alarmNotification.alarmNotificationEntity.activeDaysAsWeekdaysList()?: listOf(),
             notificationChannelItem = alarmNotification.notificationChannelEntity.convertToNotificationChannelItem(),
-            notificationItem = alarmNotification.notificationEntity.convertToNotificationItem()
-                .apply {
-                    if (firstButtonText != null){
-                        firstButtonIntent = retrieveIntent(
-                            SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FIRST_BUTTON_INTENT_PREFIX,
-                            intentId
-                        )
-                    }
-                    if (secondButtonText != null){
-                        secondButtonIntent = retrieveIntent(
-                            SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_SECOND_BUTTON_INTENT_PREFIX,
-                            intentId
-                        )
-                    }
-
-                },
-            intent = retrieveIntent(
-                SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_INTENT_PREFIX,
-                intentId
-            ),
-            fullScreenIntent = retrieveIntent(
-                SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX,
-                intentId
-            ),
+            notificationItem = notificationItemWithButtons,
+            intent = intent,
+            fullScreenIntent = fullScreenIntent,
             isActive = alarmNotification.alarmNotificationEntity.isActive
         )
     }
@@ -142,37 +138,43 @@ internal class AlarmNotificationRepository(
     suspend fun getAllAlarmNotifications(): List<AlarmNotification> =
         alarmNotificationDatabase.daoAlarmNotification.getAllAlarmNotification()
             .map { alarmNotification ->
-                AlarmNotification(
-                    alarmNotificationId = alarmNotification.alarmNotificationEntity.alarmNotificationId,
-                    hour = alarmNotification.alarmNotificationEntity.hour,
-                    min = alarmNotification.alarmNotificationEntity.min,
-                    weekDays = alarmNotification.alarmNotificationEntity.activeDaysAsWeekdaysList()
-                        ?: listOf(),
-                    notificationChannelItem = alarmNotification.notificationChannelEntity.convertToNotificationChannelItem(),
-                    notificationItem = alarmNotification.notificationEntity.convertToNotificationItem()
+
+                val fullScreenIntent = retrieveIntent(
+                    SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX,
+                    alarmNotification.alarmNotificationEntity.alarmNotificationId
+                )
+                val intent = retrieveIntent(
+                    SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_INTENT_PREFIX,
+                    alarmNotification.alarmNotificationEntity.alarmNotificationId
+                )
+
+                val notificationItemWithButtons =
+                    alarmNotification.notificationEntity.convertToNotificationItem()
                         .apply {
-                            if (firstButtonText != null){
+                            if (firstButtonText != null) {
                                 firstButtonIntent = retrieveIntent(
                                     SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FIRST_BUTTON_INTENT_PREFIX,
                                     alarmNotification.alarmNotificationEntity.alarmNotificationId
                                 )
                             }
-                            if (secondButtonText != null){
+                            if (secondButtonText != null) {
                                 secondButtonIntent = retrieveIntent(
                                     SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_SECOND_BUTTON_INTENT_PREFIX,
                                     alarmNotification.alarmNotificationEntity.alarmNotificationId
                                 )
                             }
 
-                        },
-                    intent = retrieveIntent(
-                        SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_INTENT_PREFIX,
-                        alarmNotification.alarmNotificationEntity.alarmNotificationId
-                    ),
-                    fullScreenIntent = retrieveIntent(
-                        SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX,
-                        alarmNotification.alarmNotificationEntity.alarmNotificationId
-                    ),
+                        }
+
+                AlarmNotification(
+                    alarmNotificationId = alarmNotification.alarmNotificationEntity.alarmNotificationId,
+                    hour = alarmNotification.alarmNotificationEntity.hour,
+                    min = alarmNotification.alarmNotificationEntity.min,
+                    weekDays = alarmNotification.alarmNotificationEntity.activeDaysAsWeekdaysList()?: listOf(),
+                    notificationChannelItem = alarmNotification.notificationChannelEntity.convertToNotificationChannelItem(),
+                    notificationItem = notificationItemWithButtons,
+                    intent = intent,
+                    fullScreenIntent = fullScreenIntent,
                     isActive = alarmNotification.alarmNotificationEntity.isActive
                 )
             }
@@ -256,6 +258,8 @@ internal class AlarmNotificationRepository(
                 uri,
                 URI_ALLOW_UNSAFE
             )
+
+
             val extrasKeySet = sharedPreferences.getStringSet(
                 prefix.plus(SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_KEYSET_PREFIX).plus(requestId),
                 null
@@ -268,7 +272,7 @@ internal class AlarmNotificationRepository(
             )
 
             extrasKeySet?.map {
-                intent.putExtra(it, jsonObject.get(it).toString())
+                intent.putExtra(it, jsonObject.getInt(it))
             }
 
             return intent

@@ -8,6 +8,7 @@ import de.coldtea.smplr.smplralarm.repository.AlarmNotificationRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /**
  * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects).
@@ -27,9 +28,10 @@ internal class ActivateAppReceiver : BroadcastReceiver() {
     private fun onAlarmIndicatorTapped(context: Context, requestId: Int) = CoroutineScope(Dispatchers.IO).launch {
         repository = AlarmNotificationRepository(context)
         repository?.let {
+
             val alarmNotification = it.getAlarmNotification(requestId)
             if(alarmNotification.intent == null) return@let
-            context.getFullScreenIntent(alarmNotification.intent)
+            context.getFullScreenIntent(requestId, alarmNotification.intent)
         }
     }
 
