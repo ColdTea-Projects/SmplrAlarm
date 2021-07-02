@@ -1,5 +1,6 @@
 package de.coldtea.smplr.smplralarm.repository
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
@@ -10,17 +11,19 @@ import de.coldtea.smplr.smplralarm.repository.dao.DaoNotificationChannel
 import de.coldtea.smplr.smplralarm.repository.entity.AlarmNotificationEntity
 import de.coldtea.smplr.smplralarm.repository.entity.NotificationChannelEntity
 import de.coldtea.smplr.smplralarm.repository.entity.NotificationEntity
+import de.coldtea.smplr.smplralarm.repository.migrations.MIGRATION_1_2
 
 /**
  * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects).
  */
+@SuppressLint("RestrictedApi")
 @Database(
     entities = [
         AlarmNotificationEntity::class,
         NotificationChannelEntity::class,
         NotificationEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 internal abstract class AlarmNotificationDatabase : RoomDatabase() {
@@ -42,7 +45,7 @@ internal abstract class AlarmNotificationDatabase : RoomDatabase() {
                         AlarmNotificationDatabase::class.java,
                         "db_smplr_alarm"
                     )
-                        .fallbackToDestructiveMigration()
+                        .addMigrations(MIGRATION_1_2)
                         .build()
                     INSTANCE = instance
                 }

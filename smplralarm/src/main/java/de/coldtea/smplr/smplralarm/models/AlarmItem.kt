@@ -11,5 +11,6 @@ internal data class AlarmItem(
     val hour: Int,
     val minute: Int,
     val weekDays: List<WeekDays>,
-    val isActive: Boolean
+    val isActive: Boolean,
+    val infoPairs: String
 )

@@ -34,3 +34,8 @@ internal fun ActiveAlarmList.alarmsAsJsonString(): String? =
         .build()
         .adapter(ActiveAlarmList::class.java)
         .toJson(this)
+
+internal fun List<Pair<String, String>>?.convertToJson(): String =
+    this?.joinToString(separator = ",") { "\"${it.first}\" : \"${it.second}\"" }.orEmpty()
+
+

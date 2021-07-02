@@ -83,6 +83,13 @@ class AlarmViewModel : ViewModel() {
                     secondButtonIntent { dismissIntent }
                 }
             }
+            infoPairs {
+                listOf(
+                    "a" to "b",
+                    "b" to "c",
+                    "c" to "d"
+                )
+            }
         }
     }
 

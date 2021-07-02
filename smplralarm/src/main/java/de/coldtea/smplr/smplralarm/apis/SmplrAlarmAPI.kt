@@ -3,6 +3,7 @@ package de.coldtea.smplr.smplralarm.apis
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import de.coldtea.smplr.smplralarm.extensions.convertToJson
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 import de.coldtea.smplr.smplralarm.models.WeekDays
@@ -40,6 +41,8 @@ class SmplrAlarmAPI(val context: Context) {
     private var requestAPI: SmplrAlarmListRequestAPI? = null
 
     private val alarmService by lazy { AlarmService(context) }
+
+    private var infoPairs: List<Pair<String, String>>? = null
 
     private val isAlarmValid: Boolean
         get() = hour > -1
@@ -96,6 +99,10 @@ class SmplrAlarmAPI(val context: Context) {
 
     fun requestAPI(requestAPI: () -> SmplrAlarmListRequestAPI) {
         this.requestAPI = requestAPI()
+    }
+
+    fun infoPairs( infoPairs: () -> List<Pair<String, String>> ){
+        this.infoPairs = infoPairs()
     }
 
     // endregion
@@ -162,7 +169,8 @@ class SmplrAlarmAPI(val context: Context) {
                     updatedHour,
                     updatedMinute,
                     weekdays,
-                    updatedActivation
+                    updatedActivation,
+                    infoPairs.convertToJson()
                 )
                 if (updatedActivation) alarmService.setAlarm(
                     requestCode,
@@ -200,7 +208,8 @@ class SmplrAlarmAPI(val context: Context) {
             ?: AlarmNotificationAPI().build(),
         intent,
         receiverIntent,
-        true
+        true,
+        infoPairs.convertToJson()
     )
 
     private suspend fun saveAlarmNotificationToDatabase(notificationBuilderItem: AlarmNotification) {
@@ -217,7 +226,8 @@ class SmplrAlarmAPI(val context: Context) {
         hour: Int,
         min: Int,
         weekDays: List<WeekDays>?,
-        isActive: Boolean
+        isActive: Boolean,
+        infoPairs: String
     ) {
 
         try {
@@ -226,7 +236,8 @@ class SmplrAlarmAPI(val context: Context) {
                 hour,
                 min,
                 weekDays,
-                isActive
+                isActive,
+                infoPairs
             )
         } catch (exception: Exception) {
             Timber.e("saveAlarmNotificationToDatabase: Alarm Notification could not be updated to the database --> $exception")

@@ -17,7 +17,6 @@ import de.coldtea.smplr.smplralarm.repository.entity.AlarmNotificationEntity
 import de.coldtea.smplr.smplralarm.repository.entity.convertToNotificationChannelItem
 import org.json.JSONException
 import org.json.JSONObject
-import timber.log.Timber
 import java.net.URISyntaxException
 import java.util.*
 
@@ -86,7 +85,8 @@ internal class AlarmNotificationRepository(
         hour: Int,
         min: Int,
         weekDays: List<WeekDays>?,
-        isActive: Boolean
+        isActive: Boolean,
+        infoPairs: String
     ) {
         val updatedWeekDays = weekDays ?: listOf()
 
@@ -95,7 +95,8 @@ internal class AlarmNotificationRepository(
             hour,
             min,
             updatedWeekDays.activeDaysAsJsonString(),
-            isActive
+            isActive,
+            infoPairs
         )
 
         alarmNotificationDatabase.daoAlarmNotification.update(newAlarmNotificationEntity)
@@ -131,7 +132,8 @@ internal class AlarmNotificationRepository(
             notificationItem = notificationItemWithButtons,
             intent = intent,
             fullScreenIntent = fullScreenIntent,
-            isActive = alarmNotification.alarmNotificationEntity.isActive
+            isActive = alarmNotification.alarmNotificationEntity.isActive,
+            infoPairs = alarmNotification.alarmNotificationEntity.infoPairs
         )
     }
 
@@ -175,7 +177,8 @@ internal class AlarmNotificationRepository(
                     notificationItem = notificationItemWithButtons,
                     intent = intent,
                     fullScreenIntent = fullScreenIntent,
-                    isActive = alarmNotification.alarmNotificationEntity.isActive
+                    isActive = alarmNotification.alarmNotificationEntity.isActive,
+                    infoPairs = alarmNotification.alarmNotificationEntity.infoPairs
                 )
             }
 
@@ -205,7 +208,8 @@ internal class AlarmNotificationRepository(
             alarmNotification.alarmNotificationEntity.hour,
             alarmNotification.alarmNotificationEntity.min,
             listOf(),
-            false
+            false,
+            alarmNotification.alarmNotificationEntity.infoPairs
         )
     }
 

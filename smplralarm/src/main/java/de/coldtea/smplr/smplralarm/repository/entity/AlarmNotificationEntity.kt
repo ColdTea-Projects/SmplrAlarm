@@ -19,5 +19,7 @@ internal data class AlarmNotificationEntity(
     @ColumnInfo(name = "week_days")
     val weekDays: String,
     @ColumnInfo(name = "isActive")
-    val isActive: Boolean
+    val isActive: Boolean,
+    @ColumnInfo(name = "info_pairs")
+    val infoPairs: String
 )
