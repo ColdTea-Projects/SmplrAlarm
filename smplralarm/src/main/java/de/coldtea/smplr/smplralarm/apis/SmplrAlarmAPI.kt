@@ -163,6 +163,7 @@ class SmplrAlarmAPI(val context: Context) {
 
                 val updatedHour = if (hour == -1) alarmNotification.hour else hour
                 val updatedMinute = if (min == -1) alarmNotification.min else min
+                val updatedPairs = if (infoPairs == null) alarmNotification.infoPairs else infoPairs.convertToJson()
 
                 updateAlarmNotification(
                     requestCode,
@@ -170,7 +171,7 @@ class SmplrAlarmAPI(val context: Context) {
                     updatedMinute,
                     weekdays,
                     updatedActivation,
-                    infoPairs.convertToJson()
+                    updatedPairs
                 )
                 if (updatedActivation) alarmService.setAlarm(
                     requestCode,
