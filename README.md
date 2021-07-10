@@ -48,7 +48,23 @@ Maven
 	</dependency>
 	
 **Warning:** Library requires minimum SDK version 24
-  
+
+## ChangeLog
+
+### [v1.0.0] 02.06.2021
+
+- Set, Update, Delete alarm
+- Listen and get saved alarms
+- An alarm can consist of : hour, minute, weekdays, notification, notification channel, notification buttons and intents (max.29, intent, full screen intent, activity state.
+
+
+
+### [v1.1.0] 10.07.2021
+### Added
+
+- infoPairs: New field in the alarm object which is used to pass information
+- Full screen intents also returns request id
+ 
 ## How to use
 
 ### Setting an alarm
@@ -109,7 +125,7 @@ The repeating alarm can be set by initiating the weekdays you want your alarm to
 	
 Notifications also can be created with up to two buttons just by sending the button text and click intent. Let's add the classic alarm notification buttons snooze and dismiss by following the steps below:
 
-Step-1: Create the intents
+Step-1: Create the intents (the class ActionReceiver in the snippet needs to be created as a sub-class of BroadcastReceiver)
 
         val snoozeIntent = Intent(applicationContext, ActionReceiver::class.java).apply {
             action = ACTION_SNOOZE
@@ -221,5 +237,35 @@ If you just created the listener, you can ask for the updates, however if you do
 		    requestAPI { smplrAlarmListRequestAPI }
 		    ...
 		}
+		
+### Getting notifications
+
+When the alarm rings, if it is set, system fires a notification which has the same id with the alarm in the database. SmplrAlarm provides this id in the intent that you recieve on your Broadcast receiver that you set with button intents. All you need to do is :
+
+requestId = intent.getIntExtra(SmplrAlarmAPI.SMPLR_ALARM_NOTIFICATION_ID, -1)
+		
+## (New) v1.1.0 and above:
+
+### Getting alarms on full screen intent
+
+When the alarm rings and opens a full screen activity, SmplrAlarm provides the alarm id in the intent that you recieve on your full screen activity. All you need to do is :
+
+requestId = intent.getIntExtra(SmplrAlarmAPI.SMPLR_ALARM_REQUEST_ID, -1)
+
+### infoPairs
+
+No matter how many more fields we add to the smplrAlarm we can not cover everything and only violate our principle of keeping it simple. However this does not change the fact that at some point users may need to keep information in the database. For this reason we added infoPairs. infoPairs is a new field that we can send pairs of string in List format:
+
+	val extraInformation = listOf("snoozeTime" to "19:15", 
+				      "note" to "take your pills")
+				
+	
+	smplrAlarmSet(applicationContext) {
+		    ...
+		    infoPairs { extraInformation }
+		}
+		
+When the alarm rings, intents as well as notifications provides the requestId. Using this request id you can easily get the alarm from the database (see section *Listening the database*) and use the infoPairs that you saved.
+
 
 Simple as that!
