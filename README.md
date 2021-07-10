@@ -242,7 +242,7 @@ If you just created the listener, you can ask for the updates, however if you do
 
 When the alarm rings, if it is set, system fires a notification which has the same id with the alarm in the database. SmplrAlarm provides this id in the intent that you recieve on your Broadcast receiver that you set with button intents. All you need to do is :
 
-requestId = intent.getIntExtra(SmplrAlarmAPI.SMPLR_ALARM_NOTIFICATION_ID, -1)
+	requestId = intent.getIntExtra(SmplrAlarmAPI.SMPLR_ALARM_NOTIFICATION_ID, -1)
 		
 ## (New) v1.1.0 and above:
 
@@ -250,7 +250,7 @@ requestId = intent.getIntExtra(SmplrAlarmAPI.SMPLR_ALARM_NOTIFICATION_ID, -1)
 
 When the alarm rings and opens a full screen activity, SmplrAlarm provides the alarm id in the intent that you recieve on your full screen activity. All you need to do is :
 
-requestId = intent.getIntExtra(SmplrAlarmAPI.SMPLR_ALARM_REQUEST_ID, -1)
+	requestId = intent.getIntExtra(SmplrAlarmAPI.SMPLR_ALARM_REQUEST_ID, -1)
 
 ### infoPairs
 
