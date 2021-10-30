@@ -119,7 +119,20 @@ internal class AlarmNotificationRepository(
         )
 
         val notificationItemWithButtons =
-            alarmNotification.notificationEntity.convertToNotificationItem()
+            alarmNotification.notificationEntity.convertToNotificationItem().apply {
+                if (firstButtonText != null) {
+                    firstButtonIntent = retrieveIntent(
+                        SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FIRST_BUTTON_INTENT_PREFIX,
+                        alarmNotification.alarmNotificationEntity.alarmNotificationId
+                    )
+                }
+                if (secondButtonText != null) {
+                    secondButtonIntent = retrieveIntent(
+                        SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_SECOND_BUTTON_INTENT_PREFIX,
+                        alarmNotification.alarmNotificationEntity.alarmNotificationId
+                    )
+                }
+            }
 
 
 
