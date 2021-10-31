@@ -269,3 +269,31 @@ When the alarm rings, intents as well as notifications provides the requestId. U
 
 
 Simple as that!
+
+## (New) v1.2.0 and above:
+
+### Catching alarms when they start ringing
+
+When the alarm rings on LockScreen SmplrAlarm fires the Activity which was assinged to the full screen intent and otherwise just a notification. Alongside this two visual action, SmplrAlarm also sends a broadcast with the BroadcastReceiver intent which has been assigned to _alarmReceivedIntent_ 
+
+
+	val alarmReceivedIntent = Intent(
+	    applicationContext,
+	    AlarmBroadcastReceiver::class.java // this class must be inherited from BroadcastReceiver
+	)
+	
+	smplrAlarmSet(applicationContext) {
+	    ...
+	    intent { onClickShortcutIntent }
+	    alarmReceivedIntent { alarmReceivedIntent }
+	    ...
+	}
+	
+Later when the alarm is fired, onReceive method of AlarmBroadcastReceiver will be called. In this class you can get alarmId as follows:
+
+	override fun onReceive(context: Context?, intent: Intent?) {
+	        requestId = intent?.getIntExtra(SmplrAlarmAPI.SMPLR_ALARM_REQUEST_ID, -1)?:return
+	        ...
+	    }
+    
+With this broadccast receiver, you can react when the alarm stars ringing, simple as that!
