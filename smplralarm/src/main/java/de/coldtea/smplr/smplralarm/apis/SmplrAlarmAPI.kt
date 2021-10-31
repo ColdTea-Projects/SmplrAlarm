@@ -34,6 +34,7 @@ class SmplrAlarmAPI(val context: Context) {
     private var requestCode = -1
     private var intent: Intent? = null
     private var receiverIntent: Intent? = null
+    private var notificationReceivedIntent: Intent? = null
 
     private var notificationChannel: NotificationChannelItem? = null
     private var notification: NotificationItem? = null
@@ -79,6 +80,10 @@ class SmplrAlarmAPI(val context: Context) {
 
     fun receiverIntent(receiverIntent: () -> Intent) {
         this.receiverIntent = receiverIntent()
+    }
+
+    fun notificationReceivedIntent(notificationReceivedIntent: () -> Intent) {
+        this.notificationReceivedIntent = notificationReceivedIntent()
     }
 
     fun notificationChannel(notificationChannel: () -> NotificationChannelItem) {
@@ -199,18 +204,19 @@ class SmplrAlarmAPI(val context: Context) {
     }
 
     private fun createAlarmNotification() = AlarmNotification(
-        requestCode,
-        hour,
-        min,
-        weekdays,
-        notificationChannel
+        alarmNotificationId = requestCode,
+        hour = hour,
+        min = min,
+        weekDays = weekdays,
+        notificationChannelItem = notificationChannel
             ?: ChannelManagerAPI().build(),
-        notification
+        notificationItem = notification
             ?: AlarmNotificationAPI().build(),
-        intent,
-        receiverIntent,
-        true,
-        infoPairs.convertToJson()
+        intent = intent,
+        fullScreenIntent = receiverIntent,
+        notificationReceivedIntent = notificationReceivedIntent,
+        isActive = true,
+        infoPairs = infoPairs.convertToJson()
     )
 
     private suspend fun saveAlarmNotificationToDatabase(notificationBuilderItem: AlarmNotification) {

@@ -10,6 +10,7 @@ import de.coldtea.smplr.alarm.R
 import de.coldtea.smplr.alarm.alarms.models.WeekInfo
 import de.coldtea.smplr.alarm.lockscreenalarm.ActivityLockScreenAlarm
 import de.coldtea.smplr.alarm.receiver.ActionReceiver
+import de.coldtea.smplr.alarm.receiver.NotificationBroadcastReceiver
 import de.coldtea.smplr.smplralarm.*
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmListRequestAPI
 
@@ -44,6 +45,11 @@ class AlarmViewModel : ViewModel() {
             ActivityLockScreenAlarm::class.java
         )
 
+        val notificationReceivedIntent = Intent(
+            applicationContext,
+            NotificationBroadcastReceiver::class.java
+        )
+
         val snoozeIntent = Intent(applicationContext, ActionReceiver::class.java).apply {
             action = ACTION_SNOOZE
             putExtra(HOUR, hour)
@@ -61,6 +67,7 @@ class AlarmViewModel : ViewModel() {
             min { minute }
             intent { onClickShortcutIntent }
             receiverIntent { fullScreenIntent }
+            notificationReceivedIntent { notificationReceivedIntent }
             weekdays {
                 if (weekInfo.monday) monday()
                 if (weekInfo.tuesday) tuesday()
@@ -98,8 +105,12 @@ class AlarmViewModel : ViewModel() {
         minute: Int,
         weekInfo: WeekInfo,
         applicationContext: Context
-    ): Int =
-        smplrAlarmSet(applicationContext) {
+    ): Int {
+        val notificationReceivedIntent = Intent(
+            applicationContext,
+            NotificationBroadcastReceiver::class.java
+        )
+        return smplrAlarmSet(applicationContext) {
             hour { hour }
             min { minute }
             weekdays {
@@ -111,8 +122,9 @@ class AlarmViewModel : ViewModel() {
                 if (weekInfo.saturday) saturday()
                 if (weekInfo.sunday) sunday()
             }
+            notificationReceivedIntent { notificationReceivedIntent }
         }
-
+    }
 
     fun updateAlarm(
         requestCode: Int,

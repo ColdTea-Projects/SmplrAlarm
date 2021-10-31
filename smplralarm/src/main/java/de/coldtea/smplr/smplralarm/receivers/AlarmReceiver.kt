@@ -3,7 +3,6 @@ package de.coldtea.smplr.smplralarm.receivers
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI
 import de.coldtea.smplr.smplralarm.extensions.showNotification
 import de.coldtea.smplr.smplralarm.repository.AlarmNotificationRepository
 import de.coldtea.smplr.smplralarm.services.AlarmService
@@ -44,20 +43,13 @@ internal class AlarmReceiver : BroadcastReceiver() {
 
                         val alarmNotification = it.getAlarmNotification(requestId)
 
-                        if(alarmNotification.fullScreenIntent == null){
-                            context.showNotification(
-                                requestId,
-                                alarmNotification.notificationChannelItem,
-                                alarmNotification.notificationItem
-                            )
-                        }else{
-                            context.showNotification(
-                                requestId,
-                                alarmNotification.notificationChannelItem,
-                                alarmNotification.notificationItem,
-                                alarmNotification.fullScreenIntent
-                            )
-                        }
+                        context.showNotification(
+                            requestId = requestId,
+                            notificationChannelItem = alarmNotification.notificationChannelItem,
+                            notificationItem = alarmNotification.notificationItem,
+                            notificationReceivedIntent = alarmNotification.notificationReceivedIntent,
+                            fullScreenIntent = alarmNotification.fullScreenIntent
+                        )
 
                         if (alarmNotification.weekDays.isNullOrEmpty())
                             it.deactivateSingleAlarmNotification(requestId)

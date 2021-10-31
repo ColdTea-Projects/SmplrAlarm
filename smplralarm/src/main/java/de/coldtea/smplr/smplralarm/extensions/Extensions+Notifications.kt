@@ -7,9 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI.Companion.SMPLR_ALARM_NOTIFICATION_ID
-import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI.Companion.SMPLR_ALARM_REQUEST_ID
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 
@@ -38,6 +36,7 @@ internal fun Context.showNotification(
     requestId: Int,
     notificationChannelItem: NotificationChannelItem,
     notificationItem: NotificationItem,
+    notificationReceivedIntent: Intent? = null,
     fullScreenIntent: Intent? = null
 ) {
     val channelId = initChannelAndReturnName(notificationChannelItem)
@@ -54,8 +53,8 @@ internal fun Context.showNotification(
             setAutoCancel(autoCancel)
             setAllowSystemGeneratedContextualActions(false)
 
-            if(fullScreenIntent != null){
-                val  pendingFullScreenIntent = getFullScreenIntent(requestId, fullScreenIntent)
+            if (fullScreenIntent != null) {
+                val pendingFullScreenIntent = getFullScreenIntent(requestId, fullScreenIntent)
 
                 setFullScreenIntent(pendingFullScreenIntent, true)
             }
@@ -63,19 +62,29 @@ internal fun Context.showNotification(
             if (notificationItem.firstButtonText != null) addAction(
                 0,
                 notificationItem.firstButtonText,
-                this@showNotification.getBroadcast(requestId, notificationItem.firstButtonIntent)
+                this@showNotification.getBroadcast(
+                    requestId,
+                    notificationItem.firstButtonIntent
+                )
             )
 
             if (notificationItem.secondButtonText != null) addAction(
                 0,
                 notificationItem.secondButtonText,
-                this@showNotification.getBroadcast(requestId, notificationItem.secondButtonIntent)
+                this@showNotification.getBroadcast(
+                    requestId,
+                    notificationItem.secondButtonIntent
+                )
             )
         }
     }.build()
 
     notificationManager.notify(requestId, notification)
 
+    if(notificationReceivedIntent != null){
+        notificationReceivedIntent.putExtra(SMPLR_ALARM_NOTIFICATION_ID, requestId)
+        sendBroadcast(notificationReceivedIntent)
+    }
 }
 
 internal fun Context.getFullScreenIntent(requestId: Int, intent: Intent): PendingIntent =
