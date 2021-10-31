@@ -10,7 +10,7 @@ import de.coldtea.smplr.alarm.R
 import de.coldtea.smplr.alarm.alarms.models.WeekInfo
 import de.coldtea.smplr.alarm.lockscreenalarm.ActivityLockScreenAlarm
 import de.coldtea.smplr.alarm.receiver.ActionReceiver
-import de.coldtea.smplr.alarm.receiver.NotificationBroadcastReceiver
+import de.coldtea.smplr.alarm.receiver.AlarmBroadcastReceiver
 import de.coldtea.smplr.smplralarm.*
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmListRequestAPI
 
@@ -45,9 +45,9 @@ class AlarmViewModel : ViewModel() {
             ActivityLockScreenAlarm::class.java
         )
 
-        val notificationReceivedIntent = Intent(
+        val alarmReceivedIntent = Intent(
             applicationContext,
-            NotificationBroadcastReceiver::class.java
+            AlarmBroadcastReceiver::class.java
         )
 
         val snoozeIntent = Intent(applicationContext, ActionReceiver::class.java).apply {
@@ -67,7 +67,7 @@ class AlarmViewModel : ViewModel() {
             min { minute }
             intent { onClickShortcutIntent }
             receiverIntent { fullScreenIntent }
-            notificationReceivedIntent { notificationReceivedIntent }
+            alarmReceivedIntent { alarmReceivedIntent }
             weekdays {
                 if (weekInfo.monday) monday()
                 if (weekInfo.tuesday) tuesday()
@@ -106,9 +106,9 @@ class AlarmViewModel : ViewModel() {
         weekInfo: WeekInfo,
         applicationContext: Context
     ): Int {
-        val notificationReceivedIntent = Intent(
+        val alarmReceivedIntent = Intent(
             applicationContext,
-            NotificationBroadcastReceiver::class.java
+            AlarmBroadcastReceiver::class.java
         )
         return smplrAlarmSet(applicationContext) {
             hour { hour }
@@ -122,7 +122,7 @@ class AlarmViewModel : ViewModel() {
                 if (weekInfo.saturday) saturday()
                 if (weekInfo.sunday) sunday()
             }
-            notificationReceivedIntent { notificationReceivedIntent }
+            alarmReceivedIntent { alarmReceivedIntent }
         }
     }
 

@@ -14,7 +14,7 @@
         android:theme="@style/Theme.SmplrAlarm">
 
         <receiver android:name=".receiver.ActionReceiver" />
-        <receiver android:name=".receiver.NotificationBroadcastReceiver" />
+        <receiver android:name=".receiver.AlarmBroadcastReceiver" />
 
         <activity android:name=".lockscreenalarm.ActivityLockScreenAlarm" />
 

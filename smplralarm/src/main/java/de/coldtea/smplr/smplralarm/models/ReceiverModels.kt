@@ -30,7 +30,7 @@ data class AlarmNotification(
     val notificationItem: NotificationItem,
     val intent: Intent?,
     val fullScreenIntent: Intent?,
-    val notificationReceivedIntent: Intent?,
+    val alarmReceivedIntent: Intent?,
     val isActive: Boolean,
     val infoPairs: String
 )

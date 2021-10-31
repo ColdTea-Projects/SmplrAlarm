@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI.Companion.SMPLR_ALARM_NOTIFICATION_ID
+import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI.Companion.SMPLR_ALARM_REQUEST_ID
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 
@@ -36,7 +37,7 @@ internal fun Context.showNotification(
     requestId: Int,
     notificationChannelItem: NotificationChannelItem,
     notificationItem: NotificationItem,
-    notificationReceivedIntent: Intent? = null,
+    alarmReceivedIntent: Intent? = null,
     fullScreenIntent: Intent? = null
 ) {
     val channelId = initChannelAndReturnName(notificationChannelItem)
@@ -81,9 +82,9 @@ internal fun Context.showNotification(
 
     notificationManager.notify(requestId, notification)
 
-    if(notificationReceivedIntent != null){
-        notificationReceivedIntent.putExtra(SMPLR_ALARM_NOTIFICATION_ID, requestId)
-        sendBroadcast(notificationReceivedIntent)
+    if(alarmReceivedIntent != null){
+        alarmReceivedIntent.putExtra(SMPLR_ALARM_REQUEST_ID, requestId)
+        sendBroadcast(alarmReceivedIntent)
     }
 }
 
