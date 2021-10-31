@@ -289,7 +289,13 @@ internal class AlarmNotificationRepository(
             )
 
             extrasKeySet?.map {
-                intent.putExtra(it, jsonObject.getInt(it))
+                when(jsonObject.get(it)){
+                    is String -> intent.putExtra(it, jsonObject.getString(it))
+                    is Int -> intent.putExtra(it, jsonObject.getInt(it))
+                    is Long -> intent.putExtra(it, jsonObject.getLong(it))
+                    is Double -> intent.putExtra(it, jsonObject.getDouble(it))
+                    else -> {}
+                }
             }
 
             return intent
