@@ -50,6 +50,16 @@ Maven
 **Warning:** Library requires minimum SDK version 24
 
 ## ChangeLog
+### [v1.2.0] 31.10.2021
+### Added
+- notificationReceivedIntent: Intent to receive the broadcast which is send when the alarm is fired.
+### Fixed
+- JSON conversion error on converting extrasKeySet of full screen intent. It is possible now to sen extras in format of String, Int, Long and Double
+### [v1.1.0] 10.07.2021
+### Added
+
+- infoPairs: New field in the alarm object which is used to pass information
+- Full screen intents also returns request id
 
 ### [v1.0.0] 02.06.2021
 
@@ -58,12 +68,6 @@ Maven
 - An alarm can consist of : hour, minute, weekdays, notification, notification channel, notification buttons and intents (max.29, intent, full screen intent, activity state.
 
 
-
-### [v1.1.0] 10.07.2021
-### Added
-
-- infoPairs: New field in the alarm object which is used to pass information
-- Full screen intents also returns request id
  
 ## How to use
 
