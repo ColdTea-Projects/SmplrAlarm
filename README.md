@@ -301,3 +301,24 @@ Later when the alarm is fired, onReceive method of AlarmBroadcastReceiver will b
 	    }
     
 With this broadccast receiver, you can react when the alarm stars ringing, simple as that!
+
+## (New) v1.3.0 and above:
+
+### Listen notification dismissal
+
+Notification dismissal can be listened by implementing following steps:
+
+Step-1: Create the intent (the class ActionReceiver in the snippet needs to be created as a sub-class of BroadcastReceiver)
+
+        val notificationDismissIntent = Intent(applicationContext, ActionReceiver::class.java).apply {
+            action = ACTION_NOTIFICATION_DISMISS
+        }
+	
+Step-2: Implement them in the scope: alarmNotification{}
+
+	alarmNotification {
+	    ...
+	    notificationDismissedIntent { notificationDismissIntent }
+	}
+
+After these steps are implemented, your ActionReceiver class will receive an action with key ACTION_NOTIFICATION_DISMISS when the user dismisses the notification, simple as that!
