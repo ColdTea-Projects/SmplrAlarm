@@ -64,7 +64,9 @@ import de.coldtea.smplr.smplralarm.models.NotificationItem
  * - weekdays: the days of the week on which the alarm is active. An alarm without this argument set rings only once, other alarms however, repeats until they are canceled. To set this parameter the enum class WeekDays must be used.
  * - isActive: state of the alarm which indicates whether alarm is active or not
  * - intent: The intent which is executed when the notification is tapped.
- * - receiverIntent: The intent which is executed when the alarm goes off.
+ * - receiverIntent: The full screen intent which is executed when the alarm goes off.
+ * - alarmReceivedIntent : The action intent which is executed when the alarm goes off, this can be listened from the app.
+ * - info pairs : pairs of strings to pass extra information
  */
 fun smplrAlarmSet(context: Context, lambda: SmplrAlarmAPI.() -> Unit): Int =
     SmplrAlarmAPI(context).apply(lambda).setAlarm()

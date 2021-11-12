@@ -73,6 +73,13 @@ internal class AlarmNotificationRepository(
                 alarmNotification.notificationItem.secondButtonIntent
             )
         }
+        if (alarmNotification.notificationItem.notificationDismissedIntent != null) {
+            saveIntent(
+                SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_DISMISS_NOTIFICATION_INTENT_PREFIX,
+                alarmNotification.alarmNotificationId,
+                alarmNotification.notificationItem.notificationDismissedIntent
+            )
+        }
 
         alarmNotificationDatabase.daoAlarmNotification.insert(alarmNotification.extractAlarmNotificationEntity())
         alarmNotificationDatabase.daoNotificationChannel.insert(
@@ -144,6 +151,11 @@ internal class AlarmNotificationRepository(
                         alarmNotification.alarmNotificationEntity.alarmNotificationId
                     )
                 }
+
+                notificationDismissedIntent = retrieveIntent(
+                    SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_DISMISS_NOTIFICATION_INTENT_PREFIX,
+                    alarmNotification.alarmNotificationEntity.alarmNotificationId
+                )
             }
 
 
@@ -196,6 +208,10 @@ internal class AlarmNotificationRepository(
                                 )
                             }
 
+                            notificationDismissedIntent = retrieveIntent(
+                                SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_DISMISS_NOTIFICATION_INTENT_PREFIX,
+                                alarmNotification.alarmNotificationEntity.alarmNotificationId
+                            )
                         }
 
                 AlarmNotification(
@@ -341,5 +357,7 @@ internal class AlarmNotificationRepository(
             "FIRST_BUTTON_INTENT_"
         private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_SECOND_BUTTON_INTENT_PREFIX =
             "SECOND_BUTTON_INTENT_"
+        private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_DISMISS_NOTIFICATION_INTENT_PREFIX =
+            "DISMISS_NOTIFICATION_INTENT_"
     }
 }

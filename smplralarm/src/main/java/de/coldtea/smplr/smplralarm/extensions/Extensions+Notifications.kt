@@ -54,6 +54,15 @@ internal fun Context.showNotification(
             setAutoCancel(autoCancel)
             setAllowSystemGeneratedContextualActions(false)
 
+            if (notificationItem.notificationDismissedIntent != null){
+                setDeleteIntent(
+                    this@showNotification.getBroadcast(
+                        requestId,
+                        notificationItem.notificationDismissedIntent
+                    )
+                )
+            }
+
             if (fullScreenIntent != null) {
                 val pendingFullScreenIntent = getFullScreenIntent(requestId, fullScreenIntent)
 
@@ -82,7 +91,7 @@ internal fun Context.showNotification(
 
     notificationManager.notify(requestId, notification)
 
-    if(alarmReceivedIntent != null){
+    if (alarmReceivedIntent != null) {
         alarmReceivedIntent.putExtra(SMPLR_ALARM_REQUEST_ID, requestId)
         sendBroadcast(alarmReceivedIntent)
     }

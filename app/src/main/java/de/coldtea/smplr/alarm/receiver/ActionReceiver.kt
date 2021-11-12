@@ -5,11 +5,13 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import de.coldtea.smplr.alarm.alarms.AlarmViewModel.Companion.ACTION_DISMISS
+import de.coldtea.smplr.alarm.alarms.AlarmViewModel.Companion.ACTION_NOTIFICATION_DISMISS
 import de.coldtea.smplr.alarm.alarms.AlarmViewModel.Companion.ACTION_SNOOZE
 import de.coldtea.smplr.alarm.alarms.AlarmViewModel.Companion.HOUR
 import de.coldtea.smplr.alarm.alarms.AlarmViewModel.Companion.MINUTE
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI.Companion.SMPLR_ALARM_NOTIFICATION_ID
 import de.coldtea.smplr.smplralarm.smplrAlarmSet
+import timber.log.Timber
 import java.util.*
 
 class ActionReceiver: BroadcastReceiver() {
@@ -30,6 +32,9 @@ class ActionReceiver: BroadcastReceiver() {
         }
         if (intent.action == ACTION_DISMISS){
             notificationManager.cancel(notificationId)
+        }
+        if (intent.action == ACTION_NOTIFICATION_DISMISS){
+            Timber.i(" Moin --> Dismissed notification: $notificationId")
         }
     }
 

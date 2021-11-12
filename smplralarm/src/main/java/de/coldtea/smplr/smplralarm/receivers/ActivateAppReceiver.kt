@@ -8,7 +8,6 @@ import de.coldtea.smplr.smplralarm.repository.AlarmNotificationRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 /**
  * Created by [Yasar Naci Gündüz](https://github.com/ColdTea-Projects).
@@ -20,7 +19,6 @@ internal class ActivateAppReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val requestId =
             intent.getIntExtra(SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID, -1)
-
 
         onAlarmIndicatorTapped(context, requestId)
     }

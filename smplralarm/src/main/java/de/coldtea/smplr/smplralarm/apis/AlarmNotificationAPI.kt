@@ -21,6 +21,7 @@ class AlarmNotificationAPI {
     internal var secondButtonText: String? = null
     internal var firstButtonIntent: Intent? = null
     internal var secondButtonIntent: Intent? = null
+    internal var notificationDismissedIntent: Intent? = null
 
     //endregion
 
@@ -62,6 +63,10 @@ class AlarmNotificationAPI {
         this.secondButtonIntent = secondButtonIntent()
     }
 
+    fun notificationDismissedIntent(notificationDismissedIntent: () -> Intent) {
+        this.notificationDismissedIntent = notificationDismissedIntent()
+    }
+
     //endregion
 
     //region build
@@ -76,7 +81,8 @@ class AlarmNotificationAPI {
             firstButtonText,
             secondButtonText,
             firstButtonIntent,
-            secondButtonIntent
+            secondButtonIntent,
+            notificationDismissedIntent
         )
 
     //endregion

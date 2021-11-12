@@ -17,5 +17,6 @@ internal fun NotificationEntity.convertToNotificationItem() =
         if(firstButton.isNotEmpty()) firstButton else null,
         if(secondButton.isNotEmpty()) secondButton else null,
         null,
+        null,
         null
     )

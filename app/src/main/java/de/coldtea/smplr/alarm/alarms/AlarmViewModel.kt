@@ -60,6 +60,10 @@ class AlarmViewModel : ViewModel() {
             action = ACTION_DISMISS
         }
 
+        val notificationDismissIntent = Intent(applicationContext, ActionReceiver::class.java).apply {
+            action = ACTION_NOTIFICATION_DISMISS
+        }
+
         fullScreenIntent.putExtra("SmplrText", "You did it, you crazy bastard you did it!")
 
         return smplrAlarmSet(applicationContext) {
@@ -88,6 +92,7 @@ class AlarmViewModel : ViewModel() {
                     secondButtonText { "Dismiss" }
                     firstButtonIntent { snoozeIntent }
                     secondButtonIntent { dismissIntent }
+                    notificationDismissedIntent { notificationDismissIntent }
                 }
             }
             infoPairs {
@@ -161,6 +166,7 @@ class AlarmViewModel : ViewModel() {
     companion object{
         internal const val ACTION_SNOOZE = "action_snooze"
         internal const val ACTION_DISMISS = "action_dismiss"
+        internal const val ACTION_NOTIFICATION_DISMISS = "action_notification_dismiss"
         internal const val HOUR = "hour"
         internal const val MINUTE = "minute"
     }
