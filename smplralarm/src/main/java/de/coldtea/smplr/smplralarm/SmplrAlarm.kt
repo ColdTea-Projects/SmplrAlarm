@@ -134,6 +134,7 @@ fun channel(lambda: ChannelManagerAPI.() -> Unit): NotificationChannelItem =
  * - secondButtonText
  * - firstButtonIntent
  * - secondButtonIntent
+ * - notificationDismissedIntent: The action intent which is executed when the notification is dismissed.
  */
 fun alarmNotification(lamda: AlarmNotificationAPI.() -> Unit): NotificationItem =
     AlarmNotificationAPI().apply(lamda).build()
