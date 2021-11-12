@@ -50,6 +50,16 @@ Maven
 **Warning:** Library requires minimum SDK version 24
 
 ## ChangeLog
+### [v1.2.0] 31.10.2021
+### Added
+- notificationReceivedIntent: Intent to receive the broadcast which is send when the alarm is fired.
+### Fixed
+- JSON conversion error on converting extrasKeySet of full screen intent. It is possible now to sen extras in format of String, Int, Long and Double
+### [v1.1.0] 10.07.2021
+### Added
+
+- infoPairs: New field in the alarm object which is used to pass information
+- Full screen intents also returns request id
 
 ### [v1.0.0] 02.06.2021
 
@@ -58,12 +68,6 @@ Maven
 - An alarm can consist of : hour, minute, weekdays, notification, notification channel, notification buttons and intents (max.29, intent, full screen intent, activity state.
 
 
-
-### [v1.1.0] 10.07.2021
-### Added
-
-- infoPairs: New field in the alarm object which is used to pass information
-- Full screen intents also returns request id
  
 ## How to use
 
@@ -269,3 +273,31 @@ When the alarm rings, intents as well as notifications provides the requestId. U
 
 
 Simple as that!
+
+## (New) v1.2.0 and above:
+
+### Catching alarms when they start ringing
+
+When the alarm rings on LockScreen SmplrAlarm fires the Activity which was assinged to the full screen intent and otherwise just a notification. Alongside this two visual action, SmplrAlarm also sends a broadcast with the BroadcastReceiver intent which has been assigned to _alarmReceivedIntent_ 
+
+
+	val alarmReceivedIntent = Intent(
+	    applicationContext,
+	    AlarmBroadcastReceiver::class.java // this class must be inherited from BroadcastReceiver
+	)
+	
+	smplrAlarmSet(applicationContext) {
+	    ...
+	    intent { onClickShortcutIntent }
+	    alarmReceivedIntent { alarmReceivedIntent }
+	    ...
+	}
+	
+Later when the alarm is fired, onReceive method of AlarmBroadcastReceiver will be called. In this class you can get alarmId as follows:
+
+	override fun onReceive(context: Context?, intent: Intent?) {
+	        requestId = intent?.getIntExtra(SmplrAlarmAPI.SMPLR_ALARM_REQUEST_ID, -1)?:return
+	        ...
+	    }
+    
+With this broadccast receiver, you can react when the alarm stars ringing, simple as that!
