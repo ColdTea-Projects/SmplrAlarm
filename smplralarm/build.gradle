@@ -67,7 +67,9 @@ project.afterEvaluate {
         publications {
             release(MavenPublication) {
                 from components.release
-                artifact androidSourcesJar // optional sources
+                groupId = 'com.github.ColdTea-Projects'
+                artifactId = 'SmplrAlarm'
+                version = '2.0.0'
             }
         }
     }
