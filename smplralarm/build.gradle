@@ -62,9 +62,6 @@ project.afterEvaluate {
         publications {
             release(MavenPublication) {
                 from components.release
-                groupId = 'com.github.ColdTea-Projects'
-                artifactId = 'SmplrAlarm'
-                version = '2.0.0'
             }
         }
     }
