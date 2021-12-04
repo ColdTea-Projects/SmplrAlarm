@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: "kotlin-kapt"
-apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion 31
@@ -59,16 +58,4 @@ dependencies {
 
     //adapter-delegates
     implementation 'com.hannesdorfmann:adapterdelegates4-kotlin-dsl:4.3.0'
-}
-
-task androidSourcesJar(type: Jar) {
-    classifier 'sources'
-    from android.sourceSets.main.java.srcDirs
-}
-
-project.afterEvaluate {
-    publishing {
-        publications {
-        }
-    }
 }

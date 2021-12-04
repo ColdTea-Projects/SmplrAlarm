@@ -69,10 +69,6 @@ project.afterEvaluate {
                 from components.release
                 artifact androidSourcesJar // optional sources
             }
-            debug(MavenPublication) {
-                from components.release
-                artifact androidSourcesJar // optional sources
-            }
         }
     }
 }
