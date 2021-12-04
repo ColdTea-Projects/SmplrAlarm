@@ -58,7 +58,7 @@ internal fun Context.showNotification(
                 setDeleteIntent(
                     this@showNotification.getBroadcast(
                         requestId,
-                        notificationItem.notificationDismissedIntent
+                        requireNotNull(notificationItem.notificationDismissedIntent)
                     )
                 )
             }
@@ -69,21 +69,21 @@ internal fun Context.showNotification(
                 setFullScreenIntent(pendingFullScreenIntent, true)
             }
 
-            if (notificationItem.firstButtonText != null) addAction(
+            if (notificationItem.firstButtonText != null && notificationItem.firstButtonIntent != null) addAction(
                 0,
                 notificationItem.firstButtonText,
                 this@showNotification.getBroadcast(
                     requestId,
-                    notificationItem.firstButtonIntent
+                    requireNotNull(notificationItem.firstButtonIntent)
                 )
             )
 
-            if (notificationItem.secondButtonText != null) addAction(
+            if (notificationItem.secondButtonText != null && notificationItem.secondButtonIntent != null) addAction(
                 0,
                 notificationItem.secondButtonText,
                 this@showNotification.getBroadcast(
                     requestId,
-                    notificationItem.secondButtonIntent
+                    requireNotNull(notificationItem.secondButtonIntent)
                 )
             )
         }
@@ -100,11 +100,11 @@ internal fun Context.showNotification(
 internal fun Context.getFullScreenIntent(requestId: Int, intent: Intent): PendingIntent =
     PendingIntent.getActivity(this, requestId, intent, 0)
 
-private fun Context.getBroadcast(requestId: Int, intent: Intent?): PendingIntent =
+private fun Context.getBroadcast(requestId: Int, intent: Intent): PendingIntent =
     PendingIntent.getBroadcast(
         this,
         requestId,
-        intent?.apply {
+        intent.apply {
             putExtra(SMPLR_ALARM_NOTIFICATION_ID, requestId)
         },
         0

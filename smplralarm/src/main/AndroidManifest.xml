@@ -12,7 +12,10 @@
         <receiver android:name=".receivers.AlarmReceiver" />
         <receiver android:name=".receivers.ActivateAppReceiver" />
 
-        <receiver android:name=".receivers.RebootReceiver" >
+        <receiver
+            android:name=".receivers.RebootReceiver"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
@@ -20,7 +23,9 @@
         </receiver>
 
         <receiver
-            android:name=".receivers.TimeChangeReceiver" >
+            android:name=".receivers.TimeChangeReceiver"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.TIME_SET" />
                 <action android:name="android.intent.action.DATE_CHANGED" />
