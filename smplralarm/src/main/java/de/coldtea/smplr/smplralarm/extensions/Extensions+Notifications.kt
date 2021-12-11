@@ -98,7 +98,7 @@ internal fun Context.showNotification(
 }
 
 internal fun Context.getFullScreenIntent(requestId: Int, intent: Intent): PendingIntent =
-    PendingIntent.getActivity(this, requestId, intent, 0)
+    PendingIntent.getActivity(this, requestId, intent, PendingIntent.FLAG_IMMUTABLE)
 
 private fun Context.getBroadcast(requestId: Int, intent: Intent): PendingIntent =
     PendingIntent.getBroadcast(
@@ -107,5 +107,5 @@ private fun Context.getBroadcast(requestId: Int, intent: Intent): PendingIntent 
         intent.apply {
             putExtra(SMPLR_ALARM_NOTIFICATION_ID, requestId)
         },
-        0
+        PendingIntent.FLAG_IMMUTABLE
     )

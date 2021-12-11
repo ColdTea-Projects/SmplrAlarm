@@ -271,7 +271,7 @@ class SmplrAlarmAPI(val context: Context) {
             context,
             requestCode,
             AlarmReceiver.build(context).putExtra(SMPLR_ALARM_RECEIVER_INTENT_ID, requestCode),
-            PendingIntent.FLAG_NO_CREATE
+            PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
         )
 
     }

@@ -61,7 +61,7 @@ class AlarmService(val context: Context) {
     fun resetAlarmTomorrow(alarmNotification: AlarmNotification) {
         val pendingIntent = getReceiverPendingIntent(
             alarmNotification.alarmNotificationId,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         setAlarm(
@@ -78,7 +78,7 @@ class AlarmService(val context: Context) {
 
         val pendingIntent = createReceiverPendingIntent(
             alarmNotification.alarmNotificationId,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         setAlarm(
@@ -92,11 +92,17 @@ class AlarmService(val context: Context) {
     }
 
     fun alarmExist(requestCode: Int): Boolean =
-        getReceiverPendingIntent(requestCode, PendingIntent.FLAG_NO_CREATE) != null
+        getReceiverPendingIntent(
+            requestCode,
+            PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
+        ) != null
 
     fun cancelAlarm(requestCode: Int) {
         val pendingIntent =
-            getReceiverPendingIntent(requestCode, PendingIntent.FLAG_NO_CREATE) ?: return
+            getReceiverPendingIntent(
+                requestCode,
+                PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
+            ) ?: return
         alarmManager.cancel(pendingIntent)
     }
 
@@ -108,7 +114,7 @@ class AlarmService(val context: Context) {
                 context,
                 AlarmReceiver::class.java
             ).putExtra(SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID, requestCode),
-            flag
+            flag or PendingIntent.FLAG_IMMUTABLE
         )
 
     private fun getReceiverPendingIntent(requestCode: Int, flag: Int) = PendingIntent.getBroadcast(
@@ -118,7 +124,7 @@ class AlarmService(val context: Context) {
             SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID,
             requestCode
         ),
-        flag
+        flag or PendingIntent.FLAG_IMMUTABLE
     )
 
     private fun createOpenAppPendingIntent(requestCode: Int, flag: Int) =
@@ -132,6 +138,6 @@ class AlarmService(val context: Context) {
                 SmplrAlarmReceiverObjects.SMPLR_ALARM_RECEIVER_INTENT_ID,
                 requestCode
             ),
-            flag
+            flag or PendingIntent.FLAG_IMMUTABLE
         )
 }
