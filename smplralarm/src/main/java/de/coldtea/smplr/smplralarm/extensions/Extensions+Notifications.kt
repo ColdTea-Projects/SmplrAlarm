@@ -27,6 +27,7 @@ private fun Context.initChannelAndReturnName(notificationChannelItem: Notificati
             val channel = NotificationChannel(channelId, name, importance).apply {
                 description = description
                 setShowBadge(showBadge)
+                setSound(null ,null)
             }
             notificationManager.createNotificationChannel(channel)
         }

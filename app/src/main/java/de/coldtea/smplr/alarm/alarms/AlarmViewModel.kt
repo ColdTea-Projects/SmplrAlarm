@@ -2,7 +2,6 @@ package de.coldtea.smplr.alarm.alarms
 
 import android.content.Context
 import android.content.Intent
-import androidx.core.app.NotificationManagerCompat.IMPORTANCE_LOW
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -129,11 +128,6 @@ class AlarmViewModel : ViewModel() {
                 if (weekInfo.sunday) sunday()
             }
             alarmReceivedIntent { alarmReceivedIntent }
-            notificationChannel {
-                channel {
-                    importance { IMPORTANCE_LOW }
-                }
-            }
             notification {
                 alarmNotification {
                     smallIcon { R.drawable.ic_baseline_alarm_on_24 }
