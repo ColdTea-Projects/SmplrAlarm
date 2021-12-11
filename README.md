@@ -50,20 +50,23 @@ Maven
 **Warning:** Library requires minimum SDK version 24
 
 ## ChangeLog
-### [2.0.0] 04.12.2021
+### [2.0.2] 11.12.2021
+
 1. Android 12 integration
 2. Java 11 integration
 3. Kotlin 1.5.31
 4. compileSdkVersion 31
-5. Dependency updates : 
-- org.jetbrains.kotlin:kotlin-stdlib:1.6.0
-- androidx.core:core-ktx:1.7.0
-- androidx.appcompat:appcompat:1.4.0
-- com.google.android.material:material:1.4.0
-- androidx.test.ext:junit:1.1.3
-- com.android.tools.build:gradle:7.0.3
-- com.google.gms:google-services:4.3.10
-- koin_version 3.1.4
+5. Dependency updates:
+  - org.jetbrains.kotlin:kotlin-stdlib:1.6.0
+  - androidx.core:core-ktx:1.7.0
+  - androidx.appcompat:appcompat:1.4.0
+  - com.google.android.material:material:1.4.0
+  - androidx.test.ext:junit:1.1.3
+  - com.android.tools.build:gradle:7.0.3
+  - com.google.gms:google-services:4.3.10
+  - koin_version 3.1.4
+6.Updateable notifications
+7.Notifications are muted
 
 ### [v1.3.0] 12.11.2021
 Added
@@ -174,6 +177,8 @@ Step-2: Implement them in the scope: alarmNotification{}
 Intents here that we require conveys a broadcast receiver. Please consult the following document to learn more about Broadcast Receivers:
 
 https://developer.android.com/guide/components/broadcasts
+
+!!! Notifications are updated in version 2.0.2. Please refer the section which lists the updates in version 2.0.2 !!!
 	
 ### Adding intents
 
@@ -342,3 +347,37 @@ Step-2: Implement them in the scope: alarmNotification{}
 	}
 
 After these steps are implemented, your ActionReceiver class will receive an action with key ACTION_NOTIFICATION_DISMISS when the user dismisses the notification, simple as that!
+
+## (New) 2.0.2 and above:
+
+### Now notifications are muted: 
+
+All notifications fired by smplrAlarm are without any sound from this version on. Notifications in this API were designed to use with alarms which are supposedly have their own sound. However, by setting up the alarm received intent, you can catch the broadcast at the alarm time and use this to play any sound you want for notifications.
+
+### Updatable notifications
+
+SmplrAlarm is even more flexible now! Version 2.0.2 and above now supports updating the notifications. The usage is exactly same with smplrAlarmSet(). All you need to do is :
+
+	smplrAlarmUpdate(requireContext().applicationContext) {
+			requestCode { binding.alarmId.text.toString().toInt() }
+			.
+			.
+			notification {
+			    NotificationItem(
+				smallIcon = R.drawable.ic_baseline_change_circle_24,
+				title = "I am changed",
+				message = "I am changed",
+				bigText = "I am changed",
+				...
+				..
+				.
+			    )
+			}
+			.
+			.
+		    }
+		    
+Simple as that!	    
+		   
+
+
