@@ -8,12 +8,14 @@ import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI
 import de.coldtea.smplr.smplralarm.extensions.activeDaysAsJsonString
 import de.coldtea.smplr.smplralarm.extensions.activeDaysAsWeekdaysList
 import de.coldtea.smplr.smplralarm.extensions.convertToNotificationItem
+import de.coldtea.smplr.smplralarm.models.NotificationItem
 import de.coldtea.smplr.smplralarm.models.WeekDays
 import de.coldtea.smplr.smplralarm.receivers.AlarmNotification
 import de.coldtea.smplr.smplralarm.receivers.extractAlarmNotificationEntity
 import de.coldtea.smplr.smplralarm.receivers.extractNotificationChannelEntity
 import de.coldtea.smplr.smplralarm.receivers.extractNotificationEntity
 import de.coldtea.smplr.smplralarm.repository.entity.AlarmNotificationEntity
+import de.coldtea.smplr.smplralarm.repository.entity.NotificationEntity
 import de.coldtea.smplr.smplralarm.repository.entity.convertToNotificationChannelItem
 import org.json.JSONException
 import org.json.JSONObject
@@ -58,7 +60,7 @@ internal class AlarmNotificationRepository(
             )
         )
 
-        if (alarmNotification.notificationItem.firstButtonText != null && alarmNotification.notificationItem.firstButtonIntent != null) {
+        if (alarmNotification.notificationItem?.firstButtonText != null && alarmNotification.notificationItem.firstButtonIntent != null) {
             saveIntent(
                 SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FIRST_BUTTON_INTENT_PREFIX,
                 alarmNotification.alarmNotificationId,
@@ -66,14 +68,14 @@ internal class AlarmNotificationRepository(
             )
         }
 
-        if (alarmNotification.notificationItem.secondButtonText != null && alarmNotification.notificationItem.secondButtonIntent != null) {
+        if (alarmNotification.notificationItem?.secondButtonText != null && alarmNotification.notificationItem.secondButtonIntent != null) {
             saveIntent(
                 SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_SECOND_BUTTON_INTENT_PREFIX,
                 alarmNotification.alarmNotificationId,
                 alarmNotification.notificationItem.secondButtonIntent
             )
         }
-        if (alarmNotification.notificationItem.notificationDismissedIntent != null) {
+        if (alarmNotification.notificationItem?.notificationDismissedIntent != null) {
             saveIntent(
                 SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_DISMISS_NOTIFICATION_INTENT_PREFIX,
                 alarmNotification.alarmNotificationId,
@@ -164,7 +166,8 @@ internal class AlarmNotificationRepository(
             alarmNotificationId = intentId,
             hour = alarmNotification.alarmNotificationEntity.hour,
             min = alarmNotification.alarmNotificationEntity.min,
-            weekDays = alarmNotification.alarmNotificationEntity.activeDaysAsWeekdaysList()?: listOf(),
+            weekDays = alarmNotification.alarmNotificationEntity.activeDaysAsWeekdaysList()
+                ?: listOf(),
             notificationChannelItem = alarmNotification.notificationChannelEntity.convertToNotificationChannelItem(),
             notificationItem = notificationItemWithButtons,
             intent = intent,
@@ -218,7 +221,8 @@ internal class AlarmNotificationRepository(
                     alarmNotificationId = alarmNotification.alarmNotificationEntity.alarmNotificationId,
                     hour = alarmNotification.alarmNotificationEntity.hour,
                     min = alarmNotification.alarmNotificationEntity.min,
-                    weekDays = alarmNotification.alarmNotificationEntity.activeDaysAsWeekdaysList()?: listOf(),
+                    weekDays = alarmNotification.alarmNotificationEntity.activeDaysAsWeekdaysList()
+                        ?: listOf(),
                     notificationChannelItem = alarmNotification.notificationChannelEntity.convertToNotificationChannelItem(),
                     notificationItem = notificationItemWithButtons,
                     intent = intent,
@@ -268,6 +272,47 @@ internal class AlarmNotificationRepository(
         alarmNotificationDatabase.daoNotification.deleteNotificationBefore(calendar.timeInMillis.toInt())
         alarmNotificationDatabase.daoAlarmNotification.deleteNotificationBefore(calendar.timeInMillis.toInt())
 
+    }
+
+    suspend fun updateNotification(intentId: Int, notificationItem: NotificationItem) {
+        val currentNotification =
+            alarmNotificationDatabase.daoNotification.getNotificationById(intentId)
+        val updatedNotificationEntity = NotificationEntity(
+            currentNotification.notificationId,
+            currentNotification.fkAlarmNotificationId,
+            notificationItem.smallIcon ?: currentNotification.smallIcon,
+            notificationItem.title ?: currentNotification.title,
+            notificationItem.message ?: currentNotification.message,
+            notificationItem.bigText ?: currentNotification.bigText,
+            notificationItem.autoCancel ?: currentNotification.autoCancel,
+            notificationItem.firstButtonText ?: currentNotification.firstButton,
+            notificationItem.secondButtonText ?: currentNotification.secondButton
+        )
+
+        alarmNotificationDatabase.daoNotification.update(updatedNotificationEntity)
+
+        if (notificationItem.firstButtonText != null && notificationItem.firstButtonIntent != null) {
+            saveIntent(
+                SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FIRST_BUTTON_INTENT_PREFIX,
+                intentId,
+                notificationItem.firstButtonIntent
+            )
+        }
+
+        if (notificationItem.secondButtonText != null && notificationItem.secondButtonIntent != null) {
+            saveIntent(
+                SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_SECOND_BUTTON_INTENT_PREFIX,
+                intentId,
+                notificationItem.secondButtonIntent
+            )
+        }
+        if (notificationItem.notificationDismissedIntent != null) {
+            saveIntent(
+                SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_DISMISS_NOTIFICATION_INTENT_PREFIX,
+                intentId,
+                notificationItem.notificationDismissedIntent
+            )
+        }
     }
 
     private fun saveIntent(prefix: String, requestId: Int, intent: Intent?) {
@@ -323,7 +368,7 @@ internal class AlarmNotificationRepository(
             )
 
             extrasKeySet?.map {
-                when(jsonObject.get(it)){
+                when (jsonObject.get(it)) {
                     is String -> intent.putExtra(it, jsonObject.getString(it))
                     is Int -> intent.putExtra(it, jsonObject.getInt(it))
                     is Long -> intent.putExtra(it, jsonObject.getLong(it))

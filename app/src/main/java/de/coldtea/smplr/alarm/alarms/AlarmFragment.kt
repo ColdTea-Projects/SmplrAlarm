@@ -8,11 +8,14 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import de.coldtea.smplr.alarm.R
 import de.coldtea.smplr.alarm.alarms.models.WeekInfo
 import de.coldtea.smplr.alarm.databinding.FragmentAlarmsBinding
 import de.coldtea.smplr.alarm.extensions.nowPlus
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI
+import de.coldtea.smplr.smplralarm.models.NotificationItem
 import de.coldtea.smplr.smplralarm.smplrAlarmRenewMissingAlarms
+import de.coldtea.smplr.smplralarm.smplrAlarmUpdate
 import java.util.*
 
 class AlarmFragment : Fragment() {
@@ -77,6 +80,21 @@ class AlarmFragment : Fragment() {
             binding.alarmId.setText(alarmId.toString())
         }
 
+        binding.setNoNotificationAlarm.setOnClickListener {
+
+            val weekInfo = binding.getWeekInfo()
+
+            val alarmId = viewModel.setNoNotificationAlarm(
+                binding.hour.text.toString().toInt(),
+                binding.minute.text.toString().toInt(),
+                weekInfo,
+                requireContext().applicationContext
+            )
+
+            binding.toastAlarm()
+            binding.alarmId.setText(alarmId.toString())
+        }
+
 
         binding.updateList.setOnClickListener {
             viewModel.requestAlarmList()
@@ -102,6 +120,20 @@ class AlarmFragment : Fragment() {
                 binding.isActive.isChecked,
                 requireContext().applicationContext
             )
+        }
+
+        binding.updateNotification.setOnClickListener {
+            smplrAlarmUpdate(requireContext().applicationContext) {
+                requestCode { binding.alarmId.text.toString().toInt() }
+                notification {
+                    NotificationItem(
+                        R.drawable.ic_baseline_change_circle_24,
+                        "I am changed",
+                        "I am changed",
+                        "I am changed"
+                    )
+                }
+            }
         }
 
         binding.cancelAlarm.setOnClickListener {

@@ -15,16 +15,16 @@ data class NotificationChannelItem(
 
 data class NotificationItem(
     @DrawableRes
-    val smallIcon: Int,
-    val title: String,
-    val message: String,
-    val bigText: String,
-    val autoCancel: Boolean,
-    val firstButtonText: String?,
-    val secondButtonText: String?,
-    var firstButtonIntent: Intent?,
-    var secondButtonIntent: Intent?,
-    var notificationDismissedIntent: Intent?
+    val smallIcon: Int? = null,
+    val title: String? = null,
+    val message: String? = null,
+    val bigText: String? = null,
+    val autoCancel: Boolean? = null,
+    val firstButtonText: String? = null,
+    val secondButtonText: String? = null,
+    var firstButtonIntent: Intent? = null,
+    var secondButtonIntent: Intent? = null,
+    var notificationDismissedIntent: Intent? = null
 )
 
 internal data class IntentNotificationItem(

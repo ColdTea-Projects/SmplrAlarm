@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import de.coldtea.smplr.smplralarm.R
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI.Companion.SMPLR_ALARM_NOTIFICATION_ID
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI.Companion.SMPLR_ALARM_REQUEST_ID
 import de.coldtea.smplr.smplralarm.models.NotificationChannelItem
@@ -46,12 +47,12 @@ internal fun Context.showNotification(
     val notification = NotificationCompat.Builder(this, channelId).apply {
         priority = NotificationCompat.PRIORITY_HIGH
         with(notificationItem) {
-            setSmallIcon(smallIcon)
+            setSmallIcon(smallIcon?: R.drawable.ic_baseline_notifications_active_24)
             setContentTitle(title)
             setContentText(message)
             setStyle(NotificationCompat.BigTextStyle().bigText(bigText))
             priority = NotificationCompat.PRIORITY_DEFAULT
-            setAutoCancel(autoCancel)
+            setAutoCancel(autoCancel?:true)
             setAllowSystemGeneratedContextualActions(false)
 
             if (notificationItem.notificationDismissedIntent != null){

@@ -43,13 +43,17 @@ internal class AlarmReceiver : BroadcastReceiver() {
 
                         val alarmNotification = it.getAlarmNotification(requestId)
 
-                        context.showNotification(
-                            requestId = requestId,
-                            notificationChannelItem = alarmNotification.notificationChannelItem,
-                            notificationItem = alarmNotification.notificationItem,
-                            alarmReceivedIntent = alarmNotification.alarmReceivedIntent,
-                            fullScreenIntent = alarmNotification.fullScreenIntent
-                        )
+                        alarmNotification.notificationChannelItem?.let { channel ->
+                            alarmNotification.notificationItem?.let { notification ->
+                                context.showNotification(
+                                    requestId = requestId,
+                                    notificationChannelItem = channel,
+                                    notificationItem = notification,
+                                    alarmReceivedIntent = alarmNotification.alarmReceivedIntent,
+                                    fullScreenIntent = alarmNotification.fullScreenIntent
+                                )
+                            }
+                        }
 
                         if (alarmNotification.weekDays.isNullOrEmpty())
                             it.deactivateSingleAlarmNotification(requestId)

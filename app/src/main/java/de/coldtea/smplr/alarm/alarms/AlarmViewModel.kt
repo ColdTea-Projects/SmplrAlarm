@@ -128,6 +128,60 @@ class AlarmViewModel : ViewModel() {
                 if (weekInfo.sunday) sunday()
             }
             alarmReceivedIntent { alarmReceivedIntent }
+            notification {
+                alarmNotification {
+                    smallIcon { R.drawable.ic_baseline_alarm_on_24 }
+                    title { "Simple alarm is ringing" }
+                    message { "Simple alarm is ringing"}
+                    bigText { "Simple alarm is ringing"}
+                    autoCancel { true }
+                    firstButtonText { "Snooze" }
+                    secondButtonText { "Dismiss" }
+                }
+            }
+        }
+    }
+
+    fun setNoNotificationAlarm(
+        hour: Int,
+        minute: Int,
+        weekInfo: WeekInfo,
+        applicationContext: Context
+    ): Int {
+
+        val fullScreenIntent = Intent(
+            applicationContext,
+            ActivityLockScreenAlarm::class.java
+        )
+
+        val alarmReceivedIntent = Intent(
+            applicationContext,
+            AlarmBroadcastReceiver::class.java
+        )
+
+        fullScreenIntent.putExtra("SmplrText", "You did it, you crazy bastard you did it!")
+
+        return smplrAlarmSet(applicationContext) {
+            hour { hour }
+            min { minute }
+            receiverIntent { fullScreenIntent }
+            alarmReceivedIntent { alarmReceivedIntent }
+            weekdays {
+                if (weekInfo.monday) monday()
+                if (weekInfo.tuesday) tuesday()
+                if (weekInfo.wednesday) wednesday()
+                if (weekInfo.thursday) thursday()
+                if (weekInfo.friday) friday()
+                if (weekInfo.saturday) saturday()
+                if (weekInfo.sunday) sunday()
+            }
+            infoPairs {
+                listOf(
+                    "a" to "b",
+                    "b" to "c",
+                    "c" to "d"
+                )
+            }
         }
     }
 

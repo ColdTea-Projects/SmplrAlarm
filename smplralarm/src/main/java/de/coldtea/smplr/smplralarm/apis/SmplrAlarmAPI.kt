@@ -46,10 +46,9 @@ class SmplrAlarmAPI(val context: Context) {
     private var infoPairs: List<Pair<String, String>>? = null
 
     private val isAlarmValid: Boolean
-        get() = hour > -1
-                && hour < 24
-                && min > -1
-                && min < 60
+        get() =
+            if (hour == -1 && min == -1) true
+        else hour > -1 && hour < 24 && min > -1 && min < 60
 
     //endregion
 
@@ -106,7 +105,7 @@ class SmplrAlarmAPI(val context: Context) {
         this.requestAPI = requestAPI()
     }
 
-    fun infoPairs( infoPairs: () -> List<Pair<String, String>> ){
+    fun infoPairs(infoPairs: () -> List<Pair<String, String>>) {
         this.infoPairs = infoPairs()
     }
 
@@ -168,7 +167,8 @@ class SmplrAlarmAPI(val context: Context) {
 
                 val updatedHour = if (hour == -1) alarmNotification.hour else hour
                 val updatedMinute = if (min == -1) alarmNotification.min else min
-                val updatedPairs = if (infoPairs == null) alarmNotification.infoPairs else infoPairs.convertToJson()
+                val updatedPairs =
+                    if (infoPairs == null) alarmNotification.infoPairs else infoPairs.convertToJson()
 
                 updateAlarmNotification(
                     requestCode,
@@ -178,13 +178,20 @@ class SmplrAlarmAPI(val context: Context) {
                     updatedActivation,
                     updatedPairs
                 )
+
+                if (notification != null) {
+                    notificationRepository.updateNotification(
+                        requestCode,
+                        requireNotNull(notification)
+                    )
+                }
+
                 if (updatedActivation) alarmService.setAlarm(
                     requestCode,
                     updatedHour,
                     updatedMinute,
                     weekdays
                 )
-
                 requestAPI?.requestAlarmList()
             } catch (ex: IllegalArgumentException) {
                 Timber.e("updateRepeatingAlarm: The alarm intended to be removed does not exist! ")
@@ -208,10 +215,12 @@ class SmplrAlarmAPI(val context: Context) {
         hour = hour,
         min = min,
         weekDays = weekdays,
-        notificationChannelItem = notificationChannel
-            ?: ChannelManagerAPI().build(),
-        notificationItem = notification
-            ?: AlarmNotificationAPI().build(),
+        notificationChannelItem = when {
+            notification == null && notificationChannel == null -> null
+            notification != null && notificationChannel == null -> ChannelManagerAPI().build()
+            else -> notificationChannel
+        },
+        notificationItem = notification,
         intent = intent,
         fullScreenIntent = receiverIntent,
         alarmReceivedIntent = alarmReceivedIntent,

@@ -26,8 +26,8 @@ data class AlarmNotification(
     val hour: Int,
     val min: Int,
     val weekDays: List<WeekDays>,
-    val notificationChannelItem: NotificationChannelItem,
-    val notificationItem: NotificationItem,
+    val notificationChannelItem: NotificationChannelItem?,
+    val notificationItem: NotificationItem?,
     val intent: Intent?,
     val fullScreenIntent: Intent?,
     val alarmReceivedIntent: Intent?,
@@ -49,21 +49,21 @@ internal fun AlarmNotification.extractNotificationEntity(fkAlarmNotificationId: 
     NotificationEntity(
         0,
         fkAlarmNotificationId,
-        notificationItem.smallIcon,
-        notificationItem.title,
-        notificationItem.message,
-        notificationItem.bigText,
-        notificationItem.autoCancel,
-        notificationItem.firstButtonText.orEmpty(),
-        notificationItem.secondButtonText.orEmpty()
+        notificationItem?.smallIcon?:0,
+        notificationItem?.title.orEmpty(),
+        notificationItem?.message.orEmpty(),
+        notificationItem?.bigText.orEmpty(),
+        notificationItem?.autoCancel?:false,
+        notificationItem?.firstButtonText.orEmpty(),
+        notificationItem?.secondButtonText.orEmpty()
     )
 
 internal fun AlarmNotification.extractNotificationChannelEntity(fkAlarmNotificationId: Int): NotificationChannelEntity =
     NotificationChannelEntity(
         0,
         fkAlarmNotificationId,
-        notificationChannelItem.importance,
-        notificationChannelItem.showBadge,
-        notificationChannelItem.name,
-        notificationChannelItem.description
+        notificationChannelItem?.importance?:0,
+        notificationChannelItem?.showBadge?:false,
+        notificationChannelItem?.name.orEmpty(),
+        notificationChannelItem?.description.orEmpty()
     )

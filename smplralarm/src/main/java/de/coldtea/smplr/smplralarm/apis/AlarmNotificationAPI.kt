@@ -12,11 +12,11 @@ class AlarmNotificationAPI {
     //region properties
 
     @DrawableRes
-    internal var smallIcon: Int = android.R.drawable.ic_lock_idle_alarm
-    internal var title: String = SMPLR_ALARM_DEFAULT_TITLE
-    internal var message: String = SMPLR_ALARM_DEFAULT_MESSAGE
-    internal var bigText: String = SMPLR_ALARM_DEFAULT_BIG_TEXT
-    internal var autoCancel: Boolean = true
+    internal var smallIcon: Int? = null
+    internal var title: String? = null
+    internal var message: String? = null
+    internal var bigText: String? = null
+    internal var autoCancel: Boolean? = null
     internal var firstButtonText: String? = null
     internal var secondButtonText: String? = null
     internal var firstButtonIntent: Intent? = null
@@ -84,16 +84,6 @@ class AlarmNotificationAPI {
             secondButtonIntent,
             notificationDismissedIntent
         )
-
-    //endregion
-
-    //region companion
-
-    companion object{
-        internal const val SMPLR_ALARM_DEFAULT_TITLE = "de.coldtea.smplr.alarm.channel"
-        internal const val SMPLR_ALARM_DEFAULT_MESSAGE = "Smplr Alarm"
-        internal const val SMPLR_ALARM_DEFAULT_BIG_TEXT = "Smplr Alarm is ringing!"
-    }
 
     //endregion
 }
