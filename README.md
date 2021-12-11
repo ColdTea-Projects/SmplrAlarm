@@ -57,16 +57,16 @@ Maven
 3. Kotlin 1.5.31
 4. compileSdkVersion 31
 5. Dependency updates:
-  - org.jetbrains.kotlin:kotlin-stdlib:1.6.0
-  - androidx.core:core-ktx:1.7.0
-  - androidx.appcompat:appcompat:1.4.0
-  - com.google.android.material:material:1.4.0
-  - androidx.test.ext:junit:1.1.3
-  - com.android.tools.build:gradle:7.0.3
-  - com.google.gms:google-services:4.3.10
-  - koin_version 3.1.4
-6.Updateable notifications
-7.Notifications are muted
+	  - org.jetbrains.kotlin:kotlin-stdlib:1.6.0
+	  - androidx.core:core-ktx:1.7.0
+	  - androidx.appcompat:appcompat:1.4.0
+	  - com.google.android.material:material:1.4.0
+	  - androidx.test.ext:junit:1.1.3
+	  - com.android.tools.build:gradle:7.0.3
+	  - com.google.gms:google-services:4.3.10
+	  - koin_version 3.1.4
+6. Updateable notifications
+7. Notifications are muted
 
 ### [v1.3.0] 12.11.2021
 Added
