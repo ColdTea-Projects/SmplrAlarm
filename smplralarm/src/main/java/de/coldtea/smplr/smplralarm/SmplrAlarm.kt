@@ -56,8 +56,12 @@ import de.coldtea.smplr.smplralarm.models.NotificationItem
  * - min : Minute of the hour.
  *
  * Optional arguments which will be substituted with dummy items
- * - alarmNotification: A data item which contains the data which will be used in course of action to create an Android Notification. For more detail please check out the API interface of the same name
- * - channel: A data item which contains the data which will be used in course of action to create an Android Notification Channel. For more detailed information please check out the API interface of the same name
+ * - alarmNotification: A data item which contains the data that is used to create an Android Notification.
+ * All notifications fired by smplrAlarm are without any sound. Notifications in this API were designed to use with alarms which are supposedly have their own
+ * sound. However, by setting up the alarm received intent, you can catch the broadcast at the alarm time and use this to play any sound you want for notifications.
+ * For more detail please check out the API interface of the same name
+ *
+ * - channel: A data item which is used to create an Android Notification Channel. For more detailed information please check out the API interface of the same name
  *
  * Optional arguments
  * - requestAPI: API interface to listen the changes on the database. It returns the list of the alarms in JSON format. For more detailed information please check out --> SmplrAlarmListRequestAPI
@@ -90,14 +94,15 @@ fun smplrAlarmRenewMissingAlarms(context: Context) =
 
 /**
  * API interface for updating the alarm.
- * This function only changes the time, repetition setup and activation state of the alarm.
- * To change the notification and intents, the current alarm must be cancelled and set a new.
- * Besides the context in the constructor, it requires a request code and following update parameters.
+ * This function updates the alarms. Besides the context in the constructor,
+ * it requires a request code and following update parameters.
  *
  * - Hour
  * - Minute
  * - isActive
  * - weekdays
+ * - info pairs
+ * - notifications
  */
 fun smplrAlarmUpdate(context: Context, lambda: SmplrAlarmAPI.() -> Unit) =
     SmplrAlarmAPI(context).apply(lambda).updateAlarm()
