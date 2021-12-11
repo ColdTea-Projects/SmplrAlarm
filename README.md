@@ -226,6 +226,8 @@ Update function supports only changing hour, minute, weekdays and whether the al
             }
             isActive { isActive }
         }
+	
+!!! Notifications are too updatable from version 2.0.2 on. Please refer the section which lists the updates in version 2.0.2 !!!
 
 ### Cancel an alarm
 
