@@ -55,8 +55,11 @@ Maven
 Dependency upgrades:
 
 Kotlin 1.6.10
+
 Gradle 7.0.4
+
 Room 2.4.2
+
 Moshi 1.13.0
 
 ### [2.0.2] 11.12.2021
