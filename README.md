@@ -59,6 +59,12 @@ Maven
 
 ## ChangeLog
 
+### [2.1.1] 20.04.2022
+
+- Fixed the problem with on click notification intent
+- Name change: On click notification intent name was changed from intent to contentIntent
+- Proguard rule update: keep class names under -> de.coldtea.smplr.smplralarm.models
+
 ### [2.1.0] 03.03.2022
 Dependency upgrades:
 
@@ -229,7 +235,7 @@ val fullScreenIntent = Intent(
 
 smplrAlarmSet(applicationContext) {
     ...
-    intent { onClickShortcutIntent }
+    contentIntent { onClickShortcutIntent } // name of this parameter is intent in the version 2.1.0 and earlier
     receiverIntent { fullScreenIntent }
     ...
 }
@@ -380,7 +386,7 @@ val alarmReceivedIntent = Intent(
 
 smplrAlarmSet(applicationContext) {
   ...
-  intent { onClickShortcutIntent }
+  contentIntent { onClickShortcutIntent } // name of this parameter is intent in the version 2.1.0 and earlier
   alarmReceivedIntent { alarmReceivedIntent }
   ...
 }
@@ -443,5 +449,20 @@ smplrAlarmUpdate(requireContext().applicationContext) {
                 bigText = "I am changed",
             )
         }
+}
+````
+
+## (New) 2.1.0 and above:
+
+### Namechange and repair:
+
+In earlier versions the parameter "intent" which is used as the activity to start when user clicks on the notification was misfunctioning. This problem is solved and the name of the parameter is changed to "contentIntent". Please change your code accordingly when you upgrade your library to this and/or later versions.
+
+````kotlin
+
+smplrAlarmSet(applicationContext) {
+  ...
+  contentIntent { onClickShortcutIntent }
+  ...
 }
 ````
