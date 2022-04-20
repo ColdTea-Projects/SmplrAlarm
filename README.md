@@ -452,7 +452,7 @@ smplrAlarmUpdate(requireContext().applicationContext) {
 }
 ````
 
-## (New) 2.1.0 and above:
+## (New) 2.1.1 and above:
 
 ### Namechange and repair:
 
