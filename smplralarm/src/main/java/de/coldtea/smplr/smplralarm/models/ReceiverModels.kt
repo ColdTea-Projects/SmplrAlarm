@@ -28,7 +28,7 @@ data class AlarmNotification(
     val weekDays: List<WeekDays>,
     val notificationChannelItem: NotificationChannelItem?,
     val notificationItem: NotificationItem?,
-    val intent: Intent?,
+    val contentIntent: Intent?,
     val fullScreenIntent: Intent?,
     val alarmReceivedIntent: Intent?,
     val isActive: Boolean,

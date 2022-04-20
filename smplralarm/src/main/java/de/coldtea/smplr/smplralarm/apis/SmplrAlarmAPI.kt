@@ -32,7 +32,7 @@ class SmplrAlarmAPI(val context: Context) {
     private var isActive: Boolean = true
 
     private var requestCode = -1
-    private var intent: Intent? = null
+    private var contentIntent: Intent? = null
     private var receiverIntent: Intent? = null
     private var alarmReceivedIntent: Intent? = null
 
@@ -73,8 +73,8 @@ class SmplrAlarmAPI(val context: Context) {
         this.requestCode = requestCode()
     }
 
-    fun intent(intent: () -> Intent) {
-        this.intent = intent()
+    fun contentIntent(contentIntent: () -> Intent) {
+        this.contentIntent = contentIntent()
     }
 
     fun receiverIntent(receiverIntent: () -> Intent) {
@@ -221,7 +221,7 @@ class SmplrAlarmAPI(val context: Context) {
             else -> notificationChannel
         },
         notificationItem = notification,
-        intent = intent,
+        contentIntent = contentIntent,
         fullScreenIntent = receiverIntent,
         alarmReceivedIntent = alarmReceivedIntent,
         isActive = true,

@@ -39,6 +39,7 @@ internal fun Context.showNotification(
     requestId: Int,
     notificationChannelItem: NotificationChannelItem,
     notificationItem: NotificationItem,
+    contentIntent: Intent? = null,
     alarmReceivedIntent: Intent? = null,
     fullScreenIntent: Intent? = null
 ) {
@@ -65,10 +66,17 @@ internal fun Context.showNotification(
                 )
             }
 
-            if (fullScreenIntent != null) {
-                val pendingFullScreenIntent = getFullScreenIntent(requestId, fullScreenIntent)
+            if (contentIntent != null) {
+                setContentIntent(
+                    getScreenIntent(requestId, contentIntent)
+                )
+            }
 
-                setFullScreenIntent(pendingFullScreenIntent, true)
+            if (fullScreenIntent != null) {
+                setFullScreenIntent(
+                    getScreenIntent(requestId, fullScreenIntent),
+                    true
+                )
             }
 
             if (notificationItem.firstButtonText != null && notificationItem.firstButtonIntent != null) addAction(
@@ -99,9 +107,13 @@ internal fun Context.showNotification(
     }
 }
 
-internal fun Context.getFullScreenIntent(requestId: Int, intent: Intent): PendingIntent =
-    PendingIntent.getActivity(this, requestId, intent, PendingIntent.FLAG_IMMUTABLE)
-
+internal fun Context.getScreenIntent(requestId: Int, intent: Intent): PendingIntent =
+    PendingIntent.getActivity(
+        this,
+        requestId,
+        intent,
+        PendingIntent.FLAG_IMMUTABLE
+    )
 private fun Context.getBroadcast(requestId: Int, intent: Intent): PendingIntent =
     PendingIntent.getBroadcast(
         this,

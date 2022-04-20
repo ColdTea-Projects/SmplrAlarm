@@ -39,9 +39,9 @@ internal class AlarmNotificationRepository(
     suspend fun insertAlarmNotification(alarmNotification: AlarmNotification) {
 
         saveIntent(
-            SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_INTENT_PREFIX,
+            SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_CONTENT_INTENT_PREFIX,
             alarmNotification.alarmNotificationId,
-            alarmNotification.intent
+            alarmNotification.contentIntent
         )
         saveIntent(
             SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX,
@@ -130,8 +130,8 @@ internal class AlarmNotificationRepository(
             SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX,
             intentId
         )
-        val intent = retrieveIntent(
-            SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_INTENT_PREFIX,
+        val contentIntent = retrieveIntent(
+            SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_CONTENT_INTENT_PREFIX,
             intentId
         )
         val alarmReceivedIntent = retrieveIntent(
@@ -160,8 +160,6 @@ internal class AlarmNotificationRepository(
                 )
             }
 
-
-
         return AlarmNotification(
             alarmNotificationId = intentId,
             hour = alarmNotification.alarmNotificationEntity.hour,
@@ -170,7 +168,7 @@ internal class AlarmNotificationRepository(
                 ?: listOf(),
             notificationChannelItem = alarmNotification.notificationChannelEntity.convertToNotificationChannelItem(),
             notificationItem = notificationItemWithButtons,
-            intent = intent,
+            contentIntent = contentIntent,
             fullScreenIntent = fullScreenIntent,
             alarmReceivedIntent = alarmReceivedIntent,
             isActive = alarmNotification.alarmNotificationEntity.isActive,
@@ -186,8 +184,8 @@ internal class AlarmNotificationRepository(
                     SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX,
                     alarmNotification.alarmNotificationEntity.alarmNotificationId
                 )
-                val intent = retrieveIntent(
-                    SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_INTENT_PREFIX,
+                val contentIntent = retrieveIntent(
+                    SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_CONTENT_INTENT_PREFIX,
                     alarmNotification.alarmNotificationEntity.alarmNotificationId
                 )
                 val alarmReceivedIntent = retrieveIntent(
@@ -225,7 +223,7 @@ internal class AlarmNotificationRepository(
                         ?: listOf(),
                     notificationChannelItem = alarmNotification.notificationChannelEntity.convertToNotificationChannelItem(),
                     notificationItem = notificationItemWithButtons,
-                    intent = intent,
+                    contentIntent = contentIntent,
                     fullScreenIntent = fullScreenIntent,
                     alarmReceivedIntent = alarmReceivedIntent,
                     isActive = alarmNotification.alarmNotificationEntity.isActive,
@@ -384,11 +382,11 @@ internal class AlarmNotificationRepository(
 
     }
 
-
     companion object {
         private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES =
             "smplr_alarm_intents_shared_preferences"
-        private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_INTENT_PREFIX = "INTENT_"
+        private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_CONTENT_INTENT_PREFIX =
+            "INTENT_"
         private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FULLSCREEN_INTENT_PREFIX =
             "FULLSCREEN_INTENT_"
         private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_ALARM_RECEIVED_INTENT_PREFIX =
@@ -396,7 +394,6 @@ internal class AlarmNotificationRepository(
 
         private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_BUNDLE_PREFIX = "BUNDLE_"
         private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_KEYSET_PREFIX = "KEYSET_"
-
 
         private var SMPLR_ALARM_INTENTS_SHARED_PREFERENCES_FIRST_BUTTON_INTENT_PREFIX =
             "FIRST_BUTTON_INTENT_"

@@ -69,7 +69,7 @@ class AlarmViewModel : ViewModel() {
         return smplrAlarmSet(applicationContext) {
             hour { hour }
             min { minute }
-            intent { onClickShortcutIntent }
+            contentIntent { onClickShortcutIntent }
             receiverIntent { fullScreenIntent }
             alarmReceivedIntent { alarmReceivedIntent }
             weekdays {
@@ -115,6 +115,13 @@ class AlarmViewModel : ViewModel() {
             applicationContext,
             AlarmBroadcastReceiver::class.java
         )
+        val onClickShortcutIntent = Intent(
+            applicationContext,
+            MainActivity::class.java
+        )
+
+        onClickShortcutIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+
         return smplrAlarmSet(applicationContext) {
             hour { hour }
             min { minute }
@@ -127,6 +134,7 @@ class AlarmViewModel : ViewModel() {
                 if (weekInfo.saturday) saturday()
                 if (weekInfo.sunday) sunday()
             }
+            contentIntent{ onClickShortcutIntent }
             alarmReceivedIntent { alarmReceivedIntent }
             notification {
                 alarmNotification {

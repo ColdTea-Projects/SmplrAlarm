@@ -49,6 +49,7 @@ internal class AlarmReceiver : BroadcastReceiver() {
                                     requestId = requestId,
                                     notificationChannelItem = channel,
                                     notificationItem = notification,
+                                    contentIntent = alarmNotification.contentIntent,
                                     alarmReceivedIntent = alarmNotification.alarmReceivedIntent,
                                     fullScreenIntent = alarmNotification.fullScreenIntent
                                 )

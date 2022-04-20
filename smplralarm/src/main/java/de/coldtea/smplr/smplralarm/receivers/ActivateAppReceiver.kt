@@ -3,7 +3,7 @@ package de.coldtea.smplr.smplralarm.receivers
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import de.coldtea.smplr.smplralarm.extensions.getFullScreenIntent
+import de.coldtea.smplr.smplralarm.extensions.getScreenIntent
 import de.coldtea.smplr.smplralarm.repository.AlarmNotificationRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,8 +28,8 @@ internal class ActivateAppReceiver : BroadcastReceiver() {
         repository?.let {
 
             val alarmNotification = it.getAlarmNotification(requestId)
-            if(alarmNotification.intent == null) return@let
-            context.getFullScreenIntent(requestId, alarmNotification.intent)
+            if(alarmNotification.contentIntent == null) return@let
+            context.getScreenIntent(requestId, alarmNotification.contentIntent)
         }
     }
 
