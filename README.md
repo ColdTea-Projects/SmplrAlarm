@@ -1,10 +1,10 @@
 # SmplrAlarm
 An Android convenience library to make setting an alarm way **simpler** than it is.
 
+![](https://img.shields.io/badge/Kotlin-1.6-brightgreen)
 [![](https://jitpack.io/v/ColdTea-Projects/SmplrAlarm.svg)](https://jitpack.io/#ColdTea-Projects/SmplrAlarm)
 ![](https://img.shields.io/badge/Minimum%20Api-24-green)
 ![](https://img.shields.io/badge/Build-passing-green)
-![](https://img.shields.io/badge/Kotlin-100%25-green)
 ![](https://img.shields.io/badge/License-MIT-green)
 
 ## What and Why?
